@@ -440,10 +440,17 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                 showTouchpadHelpDialog();
                 break;
             case R.id.main_menu_exit:
-                finish();
+                exit();
                 break;
         }
         return true;
+    }
+
+    private void exit() {
+        winHandler.stop();
+        ////midiHandler.stop();
+        if (environment != null) environment.stopEnvironmentComponents();
+        AppUtils.restartApplication(this);
     }
 
     private void setupWineSystemFiles() {
@@ -567,7 +574,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         envVars.put("BOX64_RCFILE", file.getAbsolutePath());
 
         guestProgramLauncherComponent.setEnvVars(envVars);
-        guestProgramLauncherComponent.setTerminationCallback((status) -> finish());
+        guestProgramLauncherComponent.setTerminationCallback((status) -> exit());
         environment.addComponent(guestProgramLauncherComponent);
 
         if (isGenerateWineprefix()) generateWineprefix();
