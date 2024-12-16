@@ -527,9 +527,20 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         if (container != null) {
             if (container.getStartupSelection() == Container.STARTUP_SELECTION_AGGRESSIVE) winHandler.killProcess("services.exe");
 
-            boolean wow64Mode = container.isWoW64Mode();
+            boolean wow64Mode;
+            if (shortcut != null)
+                wow64Mode = shortcut.getExtra("WoW64Mode", "1").equals("1");
+            else
+                wow64Mode = container.isWoW64Mode();
+
 //            String guestExecutable = wineInfo.getExecutable(this, wow64Mode)+" explorer /desktop=shell,"+xServer.screenInfo+" "+getWineStartCommand();
-            String guestExecutable = "wine explorer /desktop=shell,"+xServer.screenInfo+" "+getWineStartCommand();
+
+            String guestExecutable;
+            if (wow64Mode)
+                guestExecutable = "wine explorer /desktop=shell,"+xServer.screenInfo+" "+getWineStartCommand(); // Using WoW64 Wine
+            else
+                guestExecutable = "wine64 explorer /desktop=shell,"+xServer.screenInfo+" "+getWineStartCommand(); // Using bi-arch Wine
+
             guestProgramLauncherComponent.setWoW64Mode(wow64Mode);
             guestProgramLauncherComponent.setGuestExecutable(guestExecutable);
 

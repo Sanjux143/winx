@@ -582,7 +582,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/enable_experimental_wow64_mode"
                             android:checked="true"
-                            android:enabled="false"
+                            android:enabled="true"
                             android:layout_marginTop="8dp" />
                     </LinearLayout>
 

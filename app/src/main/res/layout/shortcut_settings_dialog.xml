@@ -462,6 +462,15 @@
                     </LinearLayout>
 
                     <CheckBox
+                        android:id="@+id/CBWoW64Mode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/enable_experimental_wow64_mode"
+                        android:checked="true"
+                        android:enabled="true"
+                        android:layout_marginTop="8dp" />
+
+                    <CheckBox
                         android:id="@+id/CBForceFullscreen"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

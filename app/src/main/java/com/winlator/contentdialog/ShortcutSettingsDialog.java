@@ -125,6 +125,9 @@ public class ShortcutSettingsDialog extends ContentDialog {
         final CheckBox cbForceFullscreen = findViewById(R.id.CBForceFullscreen);
         cbForceFullscreen.setChecked(shortcut.getExtra("forceFullscreen", "0").equals("1"));
 
+        final CheckBox cbWoW64Mode = findViewById(R.id.CBWoW64Mode);
+        cbWoW64Mode.setChecked(shortcut.getExtra("WoW64Mode", "1").equals("1"));
+
         final Spinner sBox86Preset = findViewById(R.id.SBox86Preset);
         Box86_64PresetManager.loadSpinner("box86", sBox86Preset, shortcut.getExtra("box86Preset", shortcut.container.getBox86Preset()));
 
@@ -192,6 +195,8 @@ public class ShortcutSettingsDialog extends ContentDialog {
                 updateExtra("midiSoundFont", shortcut.container.getMIDISoundFont(), midiSoundFont);
                 updateExtra("lc_all", shortcut.container.getLC_ALL(), lc_all);
                 shortcut.putExtra("forceFullscreen", cbForceFullscreen.isChecked() ? "1" : null);
+
+                shortcut.putExtra("WoW64Mode", cbWoW64Mode.isChecked() ? "1" : "0");
 
                 String wincomponents = ContainerDetailFragment.getWinComponents(getContentView());
                 updateExtra("wincomponents", shortcut.container.getWinComponents(), wincomponents);
