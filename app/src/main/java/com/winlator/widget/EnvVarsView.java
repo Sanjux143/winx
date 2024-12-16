@@ -34,9 +34,12 @@ public class EnvVarsView extends FrameLayout {
         {"WINEESYNC", "CHECKBOX", "0", "1"},
         {"TU_DEBUG", "SELECT_MULTIPLE", "startup", "nir", "nobin", "sysmem", "gmem", "forcebin", "layout", "noubwc", "nomultipos", "nolrz", "nolrzfc", "perf", "perfc", "flushall", "syncdraw", "push_consts_per_stage", "rast_order", "unaligned_store", "log_skip_gmem_ops", "dynamic", "bos", "3d_load", "fdm", "noconform", "rd"},
         {"DXVK_HUD", "SELECT_MULTIPLE", "devinfo", "fps", "frametimes", "submissions", "drawcalls", "pipelines", "descriptors", "memory", "gpuload", "version", "api", "cs", "compiler", "samplers"},
+        {"GALLIUM_HUD", "SELECT_MULTIPLE", "simple", "fps", "frametime", "cpu", "main-thread-busy", "API-thread-busy", "API-thread-offloaded-slots", "API-thread-direct-slots", "API-thread-num-syncs"},
         {"MESA_EXTENSION_MAX_YEAR", "NUMBER"},
         {"PULSE_LATENCY_MSEC", "NUMBER"},
-        {"MESA_VK_WSI_PRESENT_MODE", "SELECT", "immediate", "mailbox", "fifo", "relaxed"}
+        {"MESA_VK_WSI_PRESENT_MODE", "SELECT", "immediate", "mailbox", "fifo", "relaxed"},
+        {"BOX64_MMAP32", "CHECKBOX", "0", "1"},
+        {"BOX64_DYNAREC_WEAKBARRIER", "SELECT", "0", "1", "2"}
     };
     private final LinearLayout container;
     private final TextView emptyTextView;
