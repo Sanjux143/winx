@@ -222,7 +222,11 @@
     <string name="magnifier">Magnifier</string>
     <string name="bring_to_front">Bring to Front</string>
     <string name="options">Options</string>
-    <string name="enable_experimental_wow64_mode">Enable experimental WoW64 mode</string>
+    <string name="enable_experimental_wow64_mode">Enable WoW64 mode</string>
+    <string name="help_wow64_mode" translatable="false"><![CDATA[
+        If this option is <i><b>enabled</b></i>, WoW64 Wine is used (default).<br/><br/>
+        If this option is <i><b>disabled</b></i>, the regular bi-arch Wine is used with the <i><b>box32</b></i> feature.
+    ]]></string>
     <string name="logs">Logs</string>
     <string name="enable_wine_debug">Enable Wine debug</string>
     <string name="enable_box86_64_logs">Enable Box86/Box64 logs</string>

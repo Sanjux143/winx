@@ -128,6 +128,9 @@ public class ShortcutSettingsDialog extends ContentDialog {
         final CheckBox cbWoW64Mode = findViewById(R.id.CBWoW64Mode);
         cbWoW64Mode.setChecked(shortcut.getExtra("WoW64Mode", "1").equals("1"));
 
+        final View btHelpWoW64Mode = findViewById(R.id.WoW64ModeHelp);
+        btHelpWoW64Mode.setOnClickListener(v -> AppUtils.showHelpBox(context, v, R.string.help_wow64_mode));
+
         final Spinner sBox86Preset = findViewById(R.id.SBox86Preset);
         Box86_64PresetManager.loadSpinner("box86", sBox86Preset, shortcut.getExtra("box86Preset", shortcut.container.getBox86Preset()));
 

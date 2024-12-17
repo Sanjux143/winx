@@ -212,6 +212,9 @@ public class ContainerDetailFragment extends Fragment {
         final CheckBox cbWoW64Mode = view.findViewById(R.id.CBWoW64Mode);
         cbWoW64Mode.setChecked(!isEditMode() || container.isWoW64Mode());
 
+        final View btHelpWoW64Mode = view.findViewById(R.id.WoW64ModeHelp);
+        btHelpWoW64Mode.setOnClickListener(v -> AppUtils.showHelpBox(context, v, R.string.help_wow64_mode));
+
         final Spinner sStartupSelection = view.findViewById(R.id.SStartupSelection);
         byte previousStartupSelection = isEditMode() ? container.getStartupSelection() : -1;
         sStartupSelection.setSelection(previousStartupSelection != -1 ? previousStartupSelection : Container.STARTUP_SELECTION_ESSENTIAL);
