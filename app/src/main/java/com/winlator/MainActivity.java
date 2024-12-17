@@ -221,6 +221,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             tvGlibcExpVersionFork.setText(Html.fromHtml(glibcExpVersionForkHTML, Html.FROM_HTML_MODE_LEGACY));
             tvGlibcExpVersionFork.setMovementMethod(LinkMovementMethod.getInstance());
 
+            String glibcExpVersionModHTML = String.join("<br />",
+                    "alexvorxx (<a href=\"https://github.com/alexvorxx/winlator/\">Mod</a>)");
+            TextView tvglibcExpVersionModHTML = dialog.findViewById(R.id.TVGlibcExpVersionMod);
+            tvglibcExpVersionModHTML.setText(Html.fromHtml(glibcExpVersionModHTML, Html.FROM_HTML_MODE_LEGACY));
+            tvglibcExpVersionModHTML.setMovementMethod(LinkMovementMethod.getInstance());
 
             String glibcTermuxPacman = String.join("<br />",
                     "Termux-pacman (<a href=\"https://github.com/termux-pacman/glibc-packages\">github.com/termux-pacman/glibc-packages</a>)");
