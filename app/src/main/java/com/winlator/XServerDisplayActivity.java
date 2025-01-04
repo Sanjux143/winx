@@ -516,6 +516,15 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         String wineDebugChannels = preferences.getString("wine_debug_channels", SettingsFragment.DEFAULT_WINE_DEBUG_CHANNELS);
         envVars.put("WINEDEBUG", enableWineDebug && !wineDebugChannels.isEmpty() ? "+"+wineDebugChannels.replace(",", ",+") : "-all");
 
+        boolean enableBox64Trace = preferences.getBoolean("enable_box64_trace", false);
+
+        if (enableBox64Trace) {
+            envVars.put("BOX64_NOBANNER", "0");
+            envVars.put("BOX64_SHOWSEGV", "1");
+            envVars.put("BOX64_DLSYM_ERROR", "1");
+            envVars.put("BOX64_TRACE_FILE", "/storage/emulated/0/Download/Winlator/trace-%pid.txt");
+        }
+
         String rootPath = imageFs.getRootDir().getPath();
         FileUtils.clear(imageFs.getTmpDir());
 

@@ -230,6 +230,7 @@
     <string name="logs">Logs</string>
     <string name="enable_wine_debug">Enable Wine debug</string>
     <string name="enable_box86_64_logs">Enable Box86/Box64 logs</string>
+    <string name="enable_box64_trace" translatable="false">Enable Box64 trace (Download/Winlator)</string>
     <string name="export">Export</string>
     <string name="logs_exported_to">Logs exported to</string>
     <string name="general">General</string>
