@@ -18,7 +18,7 @@ import java.util.EnumMap;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class XServer {
-    public enum Lockable {WINDOW_MANAGER, PIXMAP_MANAGER, DRAWABLE_MANAGER, GRAPHIC_CONTEXT_MANAGER, INPUT_DEVICE, CURSOR_MANAGER, SHMSEGMENT_MANAGER}
+    public enum Lockable {WINDOW_MANAGER, PIXMAP_MANAGER, COLORMAP_MANAGER,DRAWABLE_MANAGER, GRAPHIC_CONTEXT_MANAGER, INPUT_DEVICE, CURSOR_MANAGER, SHMSEGMENT_MANAGER}
     public static final short VERSION = 11;
     public static final String VENDOR_NAME = "Elbrus Technologies, LLC";
     public static final Charset LATIN1_CHARSET = Charset.forName("latin1");
@@ -30,6 +30,7 @@ public class XServer {
     public final SelectionManager selectionManager;
     public final DrawableManager drawableManager;
     public final WindowManager windowManager;
+    public final ColormapManager colormapManager;
     public final CursorManager cursorManager;
     public final Keyboard keyboard = Keyboard.createKeyboard(this);
     public final Pointer pointer = new Pointer(this);
@@ -52,6 +53,7 @@ public class XServer {
 
         pixmapManager = new PixmapManager();
         drawableManager = new DrawableManager(this);
+        colormapManager = new ColormapManager();
         cursorManager = new CursorManager(drawableManager);
         windowManager = new WindowManager(screenInfo, drawableManager);
         selectionManager = new SelectionManager(windowManager);

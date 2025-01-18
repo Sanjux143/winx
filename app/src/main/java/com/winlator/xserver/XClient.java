@@ -33,6 +33,7 @@ public class XClient implements XResourceManager.OnResourceLifecycleListener {
             xServer.pixmapManager.addOnResourceLifecycleListener(this);
             xServer.graphicsContextManager.addOnResourceLifecycleListener(this);
             xServer.cursorManager.addOnResourceLifecycleListener(this);
+            xServer.colormapManager.addOnResourceLifecycleListener(this);
         }
     }
 
@@ -96,6 +97,7 @@ public class XClient implements XResourceManager.OnResourceLifecycleListener {
 
             xServer.windowManager.removeOnResourceLifecycleListener(this);
             xServer.pixmapManager.removeOnResourceLifecycleListener(this);
+            xServer.colormapManager.removeOnResourceLifecycleListener(this);
             xServer.graphicsContextManager.removeOnResourceLifecycleListener(this);
             xServer.cursorManager.removeOnResourceLifecycleListener(this);
             xServer.resourceIDs.free(resourceIDBase);

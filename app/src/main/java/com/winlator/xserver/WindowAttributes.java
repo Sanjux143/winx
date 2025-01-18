@@ -24,6 +24,7 @@ public class WindowAttributes {
     public enum WinGravity {UNMAP, NORTH_WEST, NORTH, NORTH_EAST, WEST, CENTER, EAST, SOUTH_WEST, SOUTH, SOUTH_EAST, STATIC}
     private int backingPixel = 0;
     private int backingPlanes = 1;
+    private int colormap = 0;
     private BackingStore backingStore = BackingStore.NOT_USEFUL;
     private BitGravity bitGravity = BitGravity.CENTER;
     private Cursor cursor;
@@ -150,7 +151,7 @@ public class WindowAttributes {
                 case FLAG_BORDER_PIXMAP:
                 case FLAG_BORDER_PIXEL:
                 case FLAG_COLORMAP:
-                    inputStream.skip(4);
+                    colormap = inputStream.readInt();
                     break;
             }
         }
