@@ -74,7 +74,7 @@
         <item>0.3.2 (Default)</item>
     </string-array>
     <string-array name="box64_version_entries">
-        <item>0.3.1-6d1e30c</item>
+        <item>0.3.3-c9f01d9</item>
     </string-array>
     <string-array name="dinput_mapper_type_entries">
         <item>@string/dinput_legacy</item>
