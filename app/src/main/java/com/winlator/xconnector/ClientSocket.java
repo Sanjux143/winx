@@ -11,7 +11,7 @@ public class ClientSocket {
     private final ArrayDeque<Integer> ancillaryFds = new ArrayDeque<>();
 
     static {
-        System.loadLibrary("winlator");
+        System.loadLibrary("winlator7");
     }
 
     public ClientSocket(int fd) {

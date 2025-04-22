@@ -249,6 +249,8 @@
     <string name="enabled_async">Enable Async</string>
     <string name="enabled_async_cache">Enable Async Cache</string>
     <string name="vkd3d_feature_level">VKD3D Feature Level</string>
+    <string name="vulkan_version" translatable="false">Vulkan Version</string>
+    <string name="exposed_extensions" translatable="false">Exposed Extensions</string>
     <string name="box64_rc_file">Box64 RCFile</string>
     <string name="filter">Filter</string>
     <string name="all">All</string>

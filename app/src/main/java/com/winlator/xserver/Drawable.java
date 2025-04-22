@@ -20,8 +20,10 @@ public class Drawable extends XResource {
     private Callback<Drawable> onDestroyListener;
     public final Object renderLock = new Object();
 
+    private boolean blank = true; ///
+
     static {
-        System.loadLibrary("winlator");
+        System.loadLibrary("winlator7");
     }
 
     public Drawable(int id, int width, int height, Visual visual) {
@@ -35,6 +37,7 @@ public class Drawable extends XResource {
     public static Drawable fromBitmap(Bitmap bitmap) {
         Drawable drawable = new Drawable(0, bitmap.getWidth(), bitmap.getHeight(), null);
         fromBitmap(bitmap, drawable.data);
+        drawable.blank = false; ///
         return drawable;
     }
 
@@ -53,6 +56,7 @@ public class Drawable extends XResource {
 
     public void setData(ByteBuffer data) {
         this.data = data;
+        this.blank = false; ///
     }
 
     private short getStride() {
@@ -175,6 +179,20 @@ public class Drawable extends XResource {
 
         texture.setNeedsUpdate(true);
         if (onDrawListener != null) onDrawListener.run();
+    }
+
+    ///
+    public void forceUpdate() {
+        texture.setNeedsUpdate(true);
+        blank = false;
+        Runnable runnable = this.onDrawListener;
+        if (runnable != null)
+            runnable.run();
+    }
+
+    ///
+    public boolean isBlank() {
+        return this.blank;
     }
 
     private static native void drawBitmap(short width, short height, ByteBuffer srcData, ByteBuffer dstData);

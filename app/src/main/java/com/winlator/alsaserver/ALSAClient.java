@@ -34,7 +34,7 @@ public class ALSAClient {
     private AudioTrack track = null;
 
     static {
-        System.loadLibrary("winlator");
+        System.loadLibrary("winlator7");
     }
 
     public static int getPCMEncoding(DataType paramDataType) {

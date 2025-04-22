@@ -15,7 +15,7 @@ public class SysVSharedMemory {
     private int maxSHMemoryId = 0;
 
     static {
-        System.loadLibrary("winlator");
+        System.loadLibrary("winlator7");
     }
 
     private static class SHMemory {

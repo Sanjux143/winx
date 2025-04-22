@@ -78,6 +78,7 @@ import com.winlator.xenvironment.components.NetworkInfoUpdateComponent;
 import com.winlator.xenvironment.components.PulseAudioComponent;
 import com.winlator.xenvironment.components.SysVSharedMemoryComponent;
 import com.winlator.xenvironment.components.VirGLRendererComponent;
+import com.winlator.xenvironment.components.VortekRendererComponent; ///
 import com.winlator.xenvironment.components.XServerComponent;
 import com.winlator.xserver.Property;
 import com.winlator.xserver.ScreenInfo;
@@ -582,6 +583,12 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         if (graphicsDriver.startsWith("virgl")) {
             environment.addComponent(new VirGLRendererComponent(xServer, UnixSocketConfig.createSocket(rootPath, UnixSocketConfig.VIRGL_SERVER_PATH)));
         }
+        ///
+        else if (graphicsDriver.startsWith("vortek")) {
+            //VortekRendererComponent.Options options = VortekRendererComponent.Options.fromKeyValueSet(this.graphicsDriverConfig); /// Temporary
+            VortekRendererComponent.Options options = new VortekRendererComponent.Options();
+            environment.addComponent(new VortekRendererComponent(xServer, UnixSocketConfig.createSocket(rootPath, UnixSocketConfig.VORTEK_SERVER_PATH), options));
+        }
 
         RCManager manager = new RCManager(this);
         manager.loadRCFiles();
@@ -760,6 +767,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
 
         if (changed) {
             FileUtils.delete(new File(imageFs.getLib64Dir(), "libvulkan_freedreno.so"));
+            FileUtils.delete(new File(imageFs.getLib64Dir(), "libvulkan_vortek.so"));
             FileUtils.delete(new File(imageFs.getLib64Dir(), "libGL.so.1"));
             container.putExtra("graphicsDriver", graphicsDriver);
             container.saveData();
@@ -812,6 +820,25 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                     contentsManager.applyContent(profile);
                 else
                     TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, "graphics_driver/virgl-" + DefaultVersion.VIRGL + ".tzst", rootDir);
+            }
+        }
+        ///
+        else if (graphicsDriver.startsWith("vortek")) {
+            envVars.put("GALLIUM_DRIVER", "zink");
+            envVars.put("ZINK_CONTEXT_THREADED", "1");
+            envVars.put("MESA_GL_VERSION_OVERRIDE", "3.3");
+            envVars.put("WINEVKUSEPLACEDADDR", "1");
+            envVars.put("VORTEK_SERVER_PATH", rootDir + UnixSocketConfig.VORTEK_SERVER_PATH);
+            if (dxwrapper.equals("dxvk")) {
+                dxwrapperConfig.put("constantBufferRangeCheck", "1");
+                DXVKConfigDialog.setEnvVars(this, dxwrapperConfig, envVars);
+            }
+            else if (dxwrapper.equals("vkd3d"))
+                VKD3DConfigDialog.setEnvVars(this, dxwrapperConfig, envVars);
+
+            if (changed) {
+                 TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, "graphics_driver/vortek-" + DefaultVersion.VORTEK + ".tzst", rootDir);
+                 TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, "graphics_driver/zink-" + DefaultVersion.ZINK + ".tzst", rootDir);
             }
         }
     }

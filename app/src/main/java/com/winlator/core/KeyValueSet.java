@@ -33,6 +33,17 @@ public class KeyValueSet implements Iterable<String[]> {
         return "";
     }
 
+    ///
+    public String get(String key1, String key2) {
+        if (this.data.isEmpty())
+            return key2;
+        for (String[] arrayOfString : this) {
+            if (arrayOfString[0].equals(key1))
+                return arrayOfString[1];
+        }
+        return key2;
+    }
+
     public void put(String key, Object value) {
         int[] range = indexOfKey(key);
         if (range != null) {
