@@ -38,6 +38,7 @@ import com.winlator.contentdialog.AddEnvVarDialog;
 import com.winlator.contentdialog.ContentDialog;
 import com.winlator.contentdialog.DXVKConfigDialog;
 import com.winlator.contentdialog.VKD3DConfigDialog;
+import com.winlator.contentdialog.VortekConfigDialog;
 import com.winlator.contents.ContentProfile;
 import com.winlator.contents.ContentsManager;
 import com.winlator.core.AppUtils;
@@ -146,14 +147,20 @@ public class ContainerDetailFragment extends Fragment {
         loadScreenSizeSpinner(view, isEditMode() ? container.getScreenSize() : Container.DEFAULT_SCREEN_SIZE);
 
         final Spinner sGraphicsDriver = view.findViewById(R.id.SGraphicsDriver);
-        final Spinner sDXWrapper = view.findViewById(R.id.SDXWrapper);
 
         final View vDXWrapperConfig = view.findViewById(R.id.BTDXWrapperConfig);
+
+        final Spinner sDXWrapper = view.findViewById(R.id.SDXWrapper);
+
+        final View vGraphicsDriverConfig = view.findViewById(R.id.GraphicsDriverConfig); ///
+
         vDXWrapperConfig.setTag(isEditMode() ? container.getDXWrapperConfig() : "");
+
+        vGraphicsDriverConfig.setTag(isEditMode() ? container.getGraphicsDriverConfig() : ""); ///
 
         setupDXWrapperSpinner(sDXWrapper, vDXWrapperConfig);
         updateGraphicsDriverSpinner(getContext(), contentsManager, sGraphicsDriver);
-        loadGraphicsDriverSpinner(sGraphicsDriver, sDXWrapper, isEditMode() ? container.getGraphicsDriver() : Container.DEFAULT_GRAPHICS_DRIVER,
+        loadGraphicsDriverSpinner(sGraphicsDriver, sDXWrapper, vGraphicsDriverConfig, isEditMode() ? container.getGraphicsDriver() : Container.DEFAULT_GRAPHICS_DRIVER,
             isEditMode() ? container.getDXWrapper() : Container.DEFAULT_DXWRAPPER);
 
         view.findViewById(R.id.BTHelpDXWrapper).setOnClickListener((v) -> AppUtils.showHelpBox(context, v, R.string.dxwrapper_help_content));
@@ -262,6 +269,7 @@ public class ContainerDetailFragment extends Fragment {
                 String screenSize = getScreenSize(view);
                 String envVars = envVarsView.getEnvVars();
                 String graphicsDriver = StringUtils.parseIdentifier(sGraphicsDriver.getSelectedItem());
+                String graphicsDriverConfig = vGraphicsDriverConfig.getTag().toString(); ///
                 String dxwrapper = StringUtils.parseIdentifier(sDXWrapper.getSelectedItem());
                 String dxwrapperConfig = vDXWrapperConfig.getTag().toString();
                 String audioDriver = StringUtils.parseIdentifier(sAudioDriver.getSelectedItem());
@@ -295,6 +303,7 @@ public class ContainerDetailFragment extends Fragment {
                     container.setGraphicsDriver(graphicsDriver);
                     container.setDXWrapper(dxwrapper);
                     container.setDXWrapperConfig(dxwrapperConfig);
+                    container.setGraphicsDriverConfig(graphicsDriverConfig); ///
                     container.setAudioDriver(audioDriver);
                     container.setWinComponents(wincomponents);
                     container.setDrives(drives);
@@ -322,6 +331,7 @@ public class ContainerDetailFragment extends Fragment {
                     data.put("cpuList", cpuList);
                     data.put("cpuListWoW64", cpuListWoW64);
                     data.put("graphicsDriver", graphicsDriver);
+                    data.put("graphicsDriverConfig", graphicsDriverConfig); ///
                     data.put("dxwrapper", dxwrapper);
                     data.put("dxwrapperConfig", dxwrapperConfig);
                     data.put("audioDriver", audioDriver);
@@ -523,7 +533,7 @@ public class ContainerDetailFragment extends Fragment {
         }
     }
 
-    public static void loadGraphicsDriverSpinner(final Spinner sGraphicsDriver, final Spinner sDXWrapper, String selectedGraphicsDriver, String selectedDXWrapper) {
+    public static void loadGraphicsDriverSpinner(final Spinner sGraphicsDriver, final Spinner sDXWrapper, final View vGraphicsDriverConfig, String selectedGraphicsDriver, String selectedDXWrapper) {
         final Context context = sGraphicsDriver.getContext();
         final String[] dxwrapperEntries = context.getResources().getStringArray(R.array.dxwrapper_entries);
 
@@ -543,6 +553,13 @@ public class ContainerDetailFragment extends Fragment {
         sGraphicsDriver.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ///
+                String graphicsDriver = StringUtils.parseIdentifier(sGraphicsDriver.getSelectedItem());
+                if (graphicsDriver.startsWith("vortek")) {
+                    vGraphicsDriverConfig.setOnClickListener((v) -> (new VortekConfigDialog(vGraphicsDriverConfig)).show());
+                    vGraphicsDriverConfig.setVisibility(View.VISIBLE);
+                } else
+                    vGraphicsDriverConfig.setVisibility(View.GONE);
                 update.run();
             }
 

@@ -5,7 +5,7 @@ package com.winlator.xenvironment.components;
 */
 
 import androidx.annotation.Keep;
-///import com.winlator.contentdialog.VortekConfigDialog;
+import com.winlator.contentdialog.VortekConfigDialog;
 import com.winlator.core.GPUHelper;
 import com.winlator.core.KeyValueSet;
 import com.winlator.renderer.GPUImage;
@@ -153,7 +153,7 @@ public class VortekRendererComponent extends EnvironmentComponent implements Con
     
     public int vkMaxVersion = VortekRendererComponent.VK_MAX_VERSION;
     
-   /* public static Options fromKeyValueSet(KeyValueSet param1KeyValueSet) {
+    public static Options fromKeyValueSet(KeyValueSet param1KeyValueSet) {
       if (param1KeyValueSet == null || param1KeyValueSet.isEmpty())
         return new Options(); 
       Options options = new Options();
@@ -168,6 +168,6 @@ public class VortekRendererComponent extends EnvironmentComponent implements Con
       } 
       options.maxDeviceMemory = param1KeyValueSet.getInt("maxDeviceMemory", 4096);
       return options;
-    } */ /// Temporary
+    }
   }
 }

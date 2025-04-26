@@ -33,6 +33,14 @@ public class KeyValueSet implements Iterable<String[]> {
         return "";
     }
 
+    public void put(String key, Object value) {
+        int[] range = indexOfKey(key);
+        if (range != null) {
+            data = StringUtils.replace(data, range[0], range[1], key+"="+value);
+        }
+        else data = (!data.isEmpty() ? data+"," : "")+key+"="+value;
+    }
+
     ///
     public String get(String key1, String key2) {
         if (this.data.isEmpty())
@@ -44,12 +52,23 @@ public class KeyValueSet implements Iterable<String[]> {
         return key2;
     }
 
-    public void put(String key, Object value) {
-        int[] range = indexOfKey(key);
-        if (range != null) {
-            data = StringUtils.replace(data, range[0], range[1], key+"="+value);
+    ///
+    public int getInt(String str1, int int1) {
+        try {
+            str1 = get(str1);
+            if (!str1.isEmpty()) {
+                int i = Integer.parseInt(str1);
+                int1 = i;
+            }
+            return int1;
+        } catch (NumberFormatException numberFormatException) {
+            return int1;
         }
-        else data = (!data.isEmpty() ? data+"," : "")+key+"="+value;
+    }
+
+    ///
+    public boolean isEmpty() {
+        return this.data.isEmpty();
     }
 
     @NonNull

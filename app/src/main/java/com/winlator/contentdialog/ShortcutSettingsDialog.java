@@ -67,10 +67,14 @@ public class ShortcutSettingsDialog extends ContentDialog {
         ContainerDetailFragment.updateGraphicsDriverSpinner(context, contentsManager, sGraphicsDriver);
 
         final View vDXWrapperConfig = findViewById(R.id.BTDXWrapperConfig);
+        final View vGraphicsDriverConfig = findViewById(R.id.GraphicsDriverConfig); ///
+
         vDXWrapperConfig.setTag(shortcut.getExtra("dxwrapperConfig", shortcut.container.getDXWrapperConfig()));
 
+        vGraphicsDriverConfig.setTag(shortcut.getExtra("graphicsDriverConfig", shortcut.container.getGraphicsDriverConfig())); ///
+
         ContainerDetailFragment.setupDXWrapperSpinner(sDXWrapper, vDXWrapperConfig);
-        ContainerDetailFragment.loadGraphicsDriverSpinner(sGraphicsDriver, sDXWrapper, shortcut.getExtra("graphicsDriver", shortcut.container.getGraphicsDriver()),
+        ContainerDetailFragment.loadGraphicsDriverSpinner(sGraphicsDriver, sDXWrapper, vGraphicsDriverConfig, shortcut.getExtra("graphicsDriver", shortcut.container.getGraphicsDriver()),
             shortcut.getExtra("dxwrapper", shortcut.container.getDXWrapper()));
 
         findViewById(R.id.BTHelpDXWrapper).setOnClickListener((v) -> AppUtils.showHelpBox(context, v, R.string.dxwrapper_help_content));
@@ -175,6 +179,7 @@ public class ShortcutSettingsDialog extends ContentDialog {
             }
             else {
                 String graphicsDriver = StringUtils.parseIdentifier(sGraphicsDriver.getSelectedItem());
+                String graphicsDriverConfig = vGraphicsDriverConfig.getTag().toString(); ///
                 String dxwrapper = StringUtils.parseIdentifier(sDXWrapper.getSelectedItem());
                 String dxwrapperConfig = vDXWrapperConfig.getTag().toString();
                 String audioDriver = StringUtils.parseIdentifier(sAudioDriver.getSelectedItem());
@@ -192,6 +197,7 @@ public class ShortcutSettingsDialog extends ContentDialog {
 
                 updateExtra("screenSize", shortcut.container.getScreenSize(), screenSize);
                 updateExtra("graphicsDriver", shortcut.container.getGraphicsDriver(), graphicsDriver);
+                updateExtra("graphicsDriverConfig", shortcut.container.getGraphicsDriverConfig(), graphicsDriverConfig); ///
                 updateExtra("dxwrapper", shortcut.container.getDXWrapper(), dxwrapper);
                 updateExtra("dxwrapperConfig", shortcut.container.getDXWrapperConfig(), dxwrapperConfig);
                 updateExtra("audioDriver", shortcut.container.getAudioDriver(), audioDriver);

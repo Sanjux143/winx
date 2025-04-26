@@ -41,6 +41,7 @@ public class Container {
     private String screenSize = DEFAULT_SCREEN_SIZE;
     private String envVars = DEFAULT_ENV_VARS;
     private String graphicsDriver = DEFAULT_GRAPHICS_DRIVER;
+    private String graphicsDriverConfig = ""; ///
     private String dxwrapper = DEFAULT_DXWRAPPER;
     private String dxwrapperConfig = "";
     private String wincomponents = DEFAULT_WINCOMPONENTS;
@@ -95,6 +96,16 @@ public class Container {
 
     public String getGraphicsDriver() {
         return graphicsDriver;
+    }
+
+    ///
+    public String getGraphicsDriverConfig() {
+        return graphicsDriverConfig;
+    }
+
+    ///
+    public void setGraphicsDriverConfig(String graphicsDriverConfig) {
+        this.graphicsDriverConfig = graphicsDriverConfig != null ? graphicsDriverConfig : "";
     }
 
     public void setGraphicsDriver(String graphicsDriver) {
@@ -357,6 +368,7 @@ public class Container {
             data.put("graphicsDriver", graphicsDriver);
             data.put("dxwrapper", dxwrapper);
             if (!dxwrapperConfig.isEmpty()) data.put("dxwrapperConfig", dxwrapperConfig);
+            if (!graphicsDriverConfig.isEmpty()) data.put("graphicsDriverConfig", graphicsDriverConfig); ///
             data.put("audioDriver", audioDriver);
             data.put("wincomponents", wincomponents);
             data.put("drives", drives);
@@ -383,6 +395,7 @@ public class Container {
     public void loadData(JSONObject data) throws JSONException {
         wineVersion = WineInfo.MAIN_WINE_VERSION.identifier();
         dxwrapperConfig = "";
+        graphicsDriverConfig = ""; ///
         checkObsoleteOrMissingProperties(data);
 
         for (Iterator<String> it = data.keys(); it.hasNext(); ) {
@@ -414,6 +427,10 @@ public class Container {
                     break;
                 case "dxwrapperConfig" :
                     setDXWrapperConfig(data.getString(key));
+                    break;
+                ///
+                case "graphicsDriverConfig" :
+                    setGraphicsDriverConfig(data.getString(key));
                     break;
                 case "drives" :
                     setDrives(data.getString(key));

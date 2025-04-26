@@ -116,6 +116,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
     private String audioDriver = Container.DEFAULT_AUDIO_DRIVER;
     private String dxwrapper = Container.DEFAULT_DXWRAPPER;
     private KeyValueSet dxwrapperConfig;
+    private KeyValueSet graphicsDriverConfig; ///
     private WineInfo wineInfo;
     private final EnvVars envVars = new EnvVars();
     private boolean firstTimeBoot = false;
@@ -233,6 +234,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             midiSoundFont = container.getMIDISoundFont();
             dxwrapper = container.getDXWrapper();
             String dxwrapperConfig = container.getDXWrapperConfig();
+            String graphicsDriverConfig = container.getGraphicsDriverConfig(); ///
             screenSize = container.getScreenSize();
             winHandler.setInputType((byte) container.getInputType());
             lc_all = container.getLC_ALL();
@@ -243,6 +245,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                 midiSoundFont = shortcut.getExtra("midiSoundFont", container.getMIDISoundFont());
                 dxwrapper = shortcut.getExtra("dxwrapper", container.getDXWrapper());
                 dxwrapperConfig = shortcut.getExtra("dxwrapperConfig", container.getDXWrapperConfig());
+                graphicsDriverConfig = shortcut.getExtra("graphicsDriverConfig", shortcut.container.getGraphicsDriverConfig()); ///
                 screenSize = shortcut.getExtra("screenSize", container.getScreenSize());
                 lc_all = shortcut.getExtra("lc_all", container.getLC_ALL());
 
@@ -585,8 +588,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         }
         ///
         else if (graphicsDriver.startsWith("vortek")) {
-            //VortekRendererComponent.Options options = VortekRendererComponent.Options.fromKeyValueSet(this.graphicsDriverConfig); /// Temporary
-            VortekRendererComponent.Options options = new VortekRendererComponent.Options();
+            VortekRendererComponent.Options options = VortekRendererComponent.Options.fromKeyValueSet(this.graphicsDriverConfig);
             environment.addComponent(new VortekRendererComponent(xServer, UnixSocketConfig.createSocket(rootPath, UnixSocketConfig.VORTEK_SERVER_PATH), options));
         }
 
@@ -610,6 +612,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         winHandler.start();
         envVars.clear();
         dxwrapperConfig = null;
+        graphicsDriverConfig = null; ///
     }
 
     private void setupUI() {
