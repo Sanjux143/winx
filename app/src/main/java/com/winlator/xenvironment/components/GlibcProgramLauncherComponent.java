@@ -131,9 +131,9 @@ public class GlibcProgramLauncherComponent extends GuestProgramLauncherComponent
 
         String wineBinString;
         if (wow64Mode)
-            wineBinString = "/bin_wow64"; // Using WoW64 Wine
+            wineBinString = "/bin"; // Using WoW64 Wine
         else
-            wineBinString = "/bin"; // Using bi-arch Wine
+            wineBinString = "/bin_wine64"; // Using bi-arch Wine
 
         String winePath = wineProfile == null ? imageFs.getWinePath() + wineBinString
                 : ContentsManager.getSourceFile(context, wineProfile, wineProfile.wineBinPath).getAbsolutePath();
