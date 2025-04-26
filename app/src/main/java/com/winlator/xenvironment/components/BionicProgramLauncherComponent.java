@@ -223,7 +223,17 @@ public class BionicProgramLauncherComponent extends GuestProgramLauncherComponen
         }
 
         // Construct the command without Box64 to the Wine executable
-        String command = imageFs.getWinePath() + "/bin/" + guestExecutable;
+        String command = "";
+        String overriddenCommand = envVars.get("GUEST_PROGRAM_LAUNCHER_COMMAND");
+        if (overriddenCommand != null) {
+            String[] parts = overriddenCommand.split(";");
+            for (String part : parts)
+                command += part + " ";
+            command = command.trim();
+        }
+        else {
+            command = imageFs.getWinePath() + "/bin/" + guestExecutable;
+        }
 
         // **Maybe remove this: Set execute permissions for box64 if necessary (Glibc/Proot artifact)
         File box64File = new File(rootDir, "/usr/local/bin/box64");
