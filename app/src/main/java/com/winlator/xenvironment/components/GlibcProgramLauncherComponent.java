@@ -129,14 +129,18 @@ public class GlibcProgramLauncherComponent extends GuestProgramLauncherComponent
         envVars.put("TMPDIR", imageFs.getRootDir().getPath() + "/tmp");
         envVars.put("DISPLAY", ":0");
 
-        String wineBinString;
-        if (wow64Mode)
+        String wineBinString, winePath;
+        if (wow64Mode) {
             wineBinString = "/bin"; // Using WoW64 Wine
-        else
+            winePath = wineProfile == null ? imageFs.getWinePath() + wineBinString
+                    : ContentsManager.getSourceFile(context, wineProfile, wineProfile.wineBinPath).getAbsolutePath();
+        }
+        else {
             wineBinString = "/bin_wine64"; // Using bi-arch Wine
+            winePath = wineProfile == null ? imageFs.getWinePath() + wineBinString
+                    : ContentsManager.getSourceFile(context, wineProfile, wineProfile.wineBinPath + "_wine64").getAbsolutePath();
+        }
 
-        String winePath = wineProfile == null ? imageFs.getWinePath() + wineBinString
-                : ContentsManager.getSourceFile(context, wineProfile, wineProfile.wineBinPath).getAbsolutePath();
         envVars.put("PATH", winePath + ":" +
                 imageFs.getRootDir().getPath() + "/usr/bin:" +
                 imageFs.getRootDir().getPath() + "/usr/local/bin");
