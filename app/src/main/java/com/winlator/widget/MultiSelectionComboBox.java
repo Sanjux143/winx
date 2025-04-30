@@ -15,6 +15,7 @@ import androidx.appcompat.widget.ListPopupWindow;
 
 import com.winlator.core.UnitUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class MultiSelectionComboBox extends AppCompatTextView {
@@ -51,6 +52,16 @@ public class MultiSelectionComboBox extends AppCompatTextView {
         String result = "";
         for (String item : items) if (selectedItemSet.contains(item)) result += (!result.isEmpty() ? "," : "")+item;
         return result;
+    }
+
+    ///
+    public String[] getSelectedItems() {
+        ArrayList<String> arrayList = new ArrayList();
+        for (String str : this.items) {
+            if (this.selectedItemSet.contains(str))
+                arrayList.add(str);
+        }
+        return arrayList.<String>toArray(new String[0]);
     }
 
     @Override

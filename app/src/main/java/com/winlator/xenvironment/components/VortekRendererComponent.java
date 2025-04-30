@@ -6,7 +6,6 @@ package com.winlator.xenvironment.components;
 
 import androidx.annotation.Keep;
 import com.winlator.contentdialog.VortekConfigDialog;
-import com.winlator.core.GPUHelper;
 import com.winlator.core.KeyValueSet;
 import com.winlator.renderer.GPUImage;
 import com.winlator.renderer.Texture;
@@ -155,7 +154,8 @@ public class VortekRendererComponent extends EnvironmentComponent implements Con
     
     public static Options fromKeyValueSet(KeyValueSet param1KeyValueSet) {
       if (param1KeyValueSet == null || param1KeyValueSet.isEmpty())
-        return new Options(); 
+        return new Options();
+
       Options options = new Options();
       String str1 = param1KeyValueSet.get("exposedDeviceExtensions", "all");
       if (!str1.isEmpty() && !str1.equals("all"))

@@ -100,12 +100,14 @@ public class Container {
 
     ///
     public String getGraphicsDriverConfig() {
-        return graphicsDriverConfig;
+        return this.graphicsDriverConfig;
     }
 
     ///
     public void setGraphicsDriverConfig(String graphicsDriverConfig) {
-        this.graphicsDriverConfig = graphicsDriverConfig != null ? graphicsDriverConfig : "";
+        if (graphicsDriverConfig == null)
+            graphicsDriverConfig = "";
+        this.graphicsDriverConfig = graphicsDriverConfig;
     }
 
     public void setGraphicsDriver(String graphicsDriver) {

@@ -152,7 +152,7 @@ public class ContainerDetailFragment extends Fragment {
 
         final Spinner sDXWrapper = view.findViewById(R.id.SDXWrapper);
 
-        final View vGraphicsDriverConfig = view.findViewById(R.id.GraphicsDriverConfig); ///
+        final View vGraphicsDriverConfig = view.findViewById(R.id.GraphicsDriverConfig1); ///
 
         vDXWrapperConfig.setTag(isEditMode() ? container.getDXWrapperConfig() : "");
 

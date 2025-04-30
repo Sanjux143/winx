@@ -139,7 +139,7 @@
 
                 <ImageButton
                     style="@style/ListMenuButton"
-                    android:id="@+id/GraphicsDriverConfig"
+                    android:id="@+id/GraphicsDriverConfig1"
                     android:src="@drawable/icon_settings"
                     android:visibility="gone" />
 

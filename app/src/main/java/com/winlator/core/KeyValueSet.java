@@ -56,9 +56,9 @@ public class KeyValueSet implements Iterable<String[]> {
     public int getInt(String str1, int int1) {
         try {
             str1 = get(str1);
+            str1 = str1.replaceAll("\\D", "");
             if (!str1.isEmpty()) {
-                int i = Integer.parseInt(str1);
-                int1 = i;
+                int1 = Integer.parseInt(str1);
             }
             return int1;
         } catch (NumberFormatException numberFormatException) {

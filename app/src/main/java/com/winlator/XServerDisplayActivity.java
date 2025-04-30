@@ -234,7 +234,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             midiSoundFont = container.getMIDISoundFont();
             dxwrapper = container.getDXWrapper();
             String dxwrapperConfig = container.getDXWrapperConfig();
-            String graphicsDriverConfig = container.getGraphicsDriverConfig(); ///
+            graphicsDriverConfig = new KeyValueSet(container.getGraphicsDriverConfig()); ///
             screenSize = container.getScreenSize();
             winHandler.setInputType((byte) container.getInputType());
             lc_all = container.getLC_ALL();
@@ -245,7 +245,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                 midiSoundFont = shortcut.getExtra("midiSoundFont", container.getMIDISoundFont());
                 dxwrapper = shortcut.getExtra("dxwrapper", container.getDXWrapper());
                 dxwrapperConfig = shortcut.getExtra("dxwrapperConfig", container.getDXWrapperConfig());
-                graphicsDriverConfig = shortcut.getExtra("graphicsDriverConfig", shortcut.container.getGraphicsDriverConfig()); ///
+                graphicsDriverConfig = new KeyValueSet(shortcut.getExtra("graphicsDriverConfig", shortcut.container.getGraphicsDriverConfig())); ///
                 screenSize = shortcut.getExtra("screenSize", container.getScreenSize());
                 lc_all = shortcut.getExtra("lc_all", container.getLC_ALL());
 

@@ -10,10 +10,8 @@ import android.widget.Spinner;
 
 import com.winlator.R;
 import com.winlator.core.AppUtils;
-import com.winlator.core.DefaultVersion;
 import com.winlator.core.GPUHelper;
 import com.winlator.core.KeyValueSet;
-import com.winlator.core.StringUtils;
 import com.winlator.widget.MultiSelectionComboBox;
 import com.winlator.xenvironment.components.VortekRendererComponent;
 
@@ -59,8 +57,9 @@ public class VortekConfigDialog extends ContentDialog {
     AppUtils.setSpinnerSelectionFromValue(SMaxDeviceMemory, config.get("maxDeviceMemory", String.valueOf(4096)));
 
     setOnConfirmCallback(() -> {
-      config.put("vkMaxVersion", SVulkanVersion.getSelectedItem().toString());
       config.put("maxDeviceMemory", SMaxDeviceMemory.getSelectedItem().toString());
+      config.put("vkMaxVersion", SVulkanVersion.getSelectedItem().toString());
+      config.put("exposedDeviceExtensions", String.join("|", multiSelectionComboBox.getSelectedItems()));
       anchor.setTag(config.toString());
     });
   }
