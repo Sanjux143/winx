@@ -38,6 +38,7 @@ import com.winlator.contentdialog.AddEnvVarDialog;
 import com.winlator.contentdialog.ContentDialog;
 import com.winlator.contentdialog.DXVKConfigDialog;
 import com.winlator.contentdialog.VKD3DConfigDialog;
+import com.winlator.contentdialog.VirGLConfigDialog;
 import com.winlator.contentdialog.VortekConfigDialog;
 import com.winlator.contents.ContentProfile;
 import com.winlator.contents.ContentsManager;
@@ -557,6 +558,9 @@ public class ContainerDetailFragment extends Fragment {
                 String graphicsDriver = StringUtils.parseIdentifier(sGraphicsDriver.getSelectedItem());
                 if (graphicsDriver.startsWith("vortek")) {
                     vGraphicsDriverConfig.setOnClickListener((v) -> (new VortekConfigDialog(vGraphicsDriverConfig)).show());
+                    vGraphicsDriverConfig.setVisibility(View.VISIBLE);
+                } else if (graphicsDriver.startsWith("virgl")) {
+                    vGraphicsDriverConfig.setOnClickListener((v) -> (new VirGLConfigDialog(vGraphicsDriverConfig)).show());
                     vGraphicsDriverConfig.setVisibility(View.VISIBLE);
                 } else
                     vGraphicsDriverConfig.setVisibility(View.GONE);

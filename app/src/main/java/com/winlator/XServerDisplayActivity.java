@@ -36,6 +36,7 @@ import com.winlator.contentdialog.DXVKConfigDialog;
 import com.winlator.contentdialog.DebugDialog;
 import com.winlator.contentdialog.NavigationDialog;
 import com.winlator.contentdialog.VKD3DConfigDialog;
+import com.winlator.contentdialog.VirGLConfigDialog;
 import com.winlator.contents.ContentProfile;
 import com.winlator.contents.ContentsManager;
 import com.winlator.core.AppUtils;
@@ -814,9 +815,8 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             envVars.put("GALLIUM_DRIVER", "virpipe");
             envVars.put("VIRGL_NO_READBACK", "true");
             envVars.put("VIRGL_SERVER_PATH", rootDir + UnixSocketConfig.VIRGL_SERVER_PATH);
-            envVars.put("MESA_EXTENSION_OVERRIDE", "-GL_EXT_vertex_array_bgra");
-            envVars.put("MESA_GL_VERSION_OVERRIDE", "3.1");
             envVars.put("vblank_mode", "0");
+            VirGLConfigDialog.setEnvVars(this.graphicsDriverConfig, this.envVars); ///
             if (changed) {
                 ContentProfile profile = contentsManager.getProfileByEntryName(graphicsDriver);
                 if (profile != null)

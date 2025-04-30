@@ -71,6 +71,22 @@ public class KeyValueSet implements Iterable<String[]> {
         return this.data.isEmpty();
     }
 
+    ///
+    public boolean getBoolean(String paramString) {
+        return getBoolean(paramString, false);
+    }
+
+    ///
+    public boolean getBoolean(String paramString, boolean paramBoolean) {
+        paramString = get(paramString);
+        if (!paramString.isEmpty()) {
+            if (paramString.equals("1") || paramString.equals("t") || paramString.equals("true"))
+                return true;
+            paramBoolean = false;
+        }
+        return paramBoolean;
+    }
+
     @NonNull
     @Override
     public Iterator<String[]> iterator() {
