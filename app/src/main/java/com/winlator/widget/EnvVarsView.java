@@ -39,7 +39,8 @@ public class EnvVarsView extends FrameLayout {
         {"PULSE_LATENCY_MSEC", "NUMBER"},
         {"MESA_VK_WSI_PRESENT_MODE", "SELECT", "immediate", "mailbox", "fifo", "relaxed"},
         {"BOX64_MMAP32", "CHECKBOX", "0", "1"},
-        {"BOX64_DYNAREC_WEAKBARRIER", "SELECT", "0", "1", "2"}
+        {"BOX64_DYNAREC_WEAKBARRIER", "SELECT", "0", "1", "2"},
+        {"WINE_DISABLE_FULLSCREEN_HACK", "CHECKBOX", "0", "1"}
     };
     private final LinearLayout container;
     private final TextView emptyTextView;
