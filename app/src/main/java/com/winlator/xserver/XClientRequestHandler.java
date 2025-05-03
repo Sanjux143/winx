@@ -1,5 +1,7 @@
 package com.winlator.xserver;
 
+import android.util.Log;
+
 import com.winlator.xconnector.Client;
 import com.winlator.xconnector.RequestHandler;
 import com.winlator.xconnector.XInputStream;
@@ -428,7 +430,7 @@ public class XClientRequestHandler implements RequestHandler {
                         Extension extension = client.xServer.extensions.get(opcode);
                         if (extension != null) extension.handleRequest(client, inputStream, outputStream);
                     }
-                    else throw new UnsupportedOperationException("Unsupported opcode "+opcode+".");
+                    else Log.d("XClientRequestHandler", "Unsupported opcode " + opcode);
                     break;
             }
         }
