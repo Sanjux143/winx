@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Winlator</string>
+    <string name="run">Запустить</string>
+    <string name="edit">Редактировать</string>
+    <string name="remove">Удалить</string>
+    <string name="add">Добавить</string>
+    <string name="shortcuts">Ярлыки</string>
+    <string name="containers">Контейнеры</string>
+    <string name="input_controls">Управление вводом</string>
+    <string name="no_items_to_display">Нет элементов для отображения</string>
+    <string name="new_container">Новый контейнер</string>
+    <string name="edit_container">Редактировать контейнер</string>
+    <string name="creating_container">Создание контейнера…</string>
+    <string name="removing_container">Удаление контейнера…</string>
+    <string name="duplicating_container">Дублирование контейнера…</string>
+    <string name="installing_system_files">Установка системных файлов…</string>
+    <string name="updating_system_files">Обновление системных файлов…</string>
+    <string name="starting_up">Запуск…</string>
+    <string name="unable_to_install_system_files">Невозможно установить системные файлы</string>
+    <string name="keyboard">Клавиатура</string>
+    <string name="toggle_fullscreen">Полный экран</string>
+    <string name="exit">Выход</string>
+    <string name="no_control_element_selected">Элемент управления не выбран</string>
+    <string name="scale">Масштаб</string>
+    <string name="shape">Форма</string>
+    <string name="type">Тип</string>
+    <string name="binding">Привязка</string>
+    <string name="binding_secondary">Вторичная привязка</string>
+    <string name="binding_up">Привязка Вверх</string>
+    <string name="binding_right">Привязка Вправо</string>
+    <string name="binding_down">Привязка Вниз</string>
+    <string name="binding_left">Привязка Влево</string>
+    <string name="overlay_opacity">Прозрачность оверлея</string>
+    <string name="profile">Профиль</string>
+    <string name="select_profile">Выбрать профиль</string>
+    <string name="profile_name">Имя профиля</string>
+    <string name="name">Имя</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Отмена</string>
+    <string name="untitled">Без названия</string>
+    <string name="no_profile_selected">Профиль не выбран</string>
+    <string name="no_profile_found">Профиль не найден</string>
+    <string name="do_you_want_to_remove_this_profile">Вы хотите удалить профиль?</string>
+    <string name="do_you_want_to_duplicate_this_profile">Вы хотите дублировать профиль?</string>
+    <string name="do_you_want_to_duplicate_this_preset">Вы хотите дублировать предустановку?</string>
+    <string name="do_you_want_to_remove_this_container">Вы хотите удалить контейнер?</string>
+    <string name="do_you_want_to_duplicate_this_container">Вы хотите дублировать контейнер?</string>
+    <string name="do_you_want_to_remove_this_shortcut">Вы хотите удалить ярлык?</string>
+    <string name="do_you_want_to_remove_this_controller">Вы хотите удалить контроллер?</string>
+    <string name="do_you_want_to_remove_this_wine_version">Вы хотите удалить эту версию Wine?</string>
+    <string name="do_you_want_to_remove_this_preset">Вы хотите удалить предустановку?</string>
+    <string name="do_you_want_to_end_this_process">Вы хотите завершить процесс?</string>
+    <string name="controls_editor">Редактор управления</string>
+    <string name="enabled">Включено</string>
+    <string name="disabled">Выключено</string>
+    <string name="container">Контейнер</string>
+    <string name="screen_size">Размер экрана</string>
+    <string name="new_environment_variable">Новая переменная среды</string>
+    <string name="environment_variables">Переменные среды</string>
+    <string name="value">Значение</string>
+    <string name="processor_affinity">Соответствие процессоров</string>
+    <string name="processor_affinity_32_bit_apps">Соответствие процессоров (32-bit)</string>
+    <string name="cursor_speed">Скорость курсора</string>
+    <string name="relative_mouse_movement">Относительное движение мыши</string>
+    <string name="toggle_switch">Режим переключателя</string>
+    <string name="profile_exported_to">Профиль экспортирован в</string>
+    <string name="unable_to_import_profile">Невозможно импортировать профиль</string>
+    <string name="wine_configuration">Конфигурация Wine</string>
+    <string name="registry_keys">Ключи реестра</string>
+    <string name="csmt">CSMT (Command Stream Multi-Thread)</string>
+    <string name="gpu_name">Имя GPU</string>
+    <string name="offscreen_rendering_mode">Offscreen Rendering Mode</string>
+    <string name="strict_shader_math">Strict Shader Math</string>
+    <string name="video_memory_size">Объем видеопамяти</string>
+    <string name="show_fps">Показывать FPS</string>
+    <string name="none">Ничего</string>
+    <string name="custom_text">Произвольный текст</string>
+    <string name="icon">Иконка</string>
+    <string name="import_profile">Импорт профиля</string>
+    <string name="export_profile">Экспорт профиля</string>
+    <string name="touchpad_help">Подсказки для тачпада</string>
+    <string name="touchpad_help_mouse_left_click_title">Щелчок левой кнопкой мыши</string>
+    <string name="touchpad_help_mouse_left_click_description">Коротко нажмите одним пальцем</string>
+    <string name="touchpad_help_mouse_right_click_title">Щелчок правой кнопкой мыши</string>
+    <string name="touchpad_help_mouse_right_click_description">Нажмите одним пальцем и коротко нажмите другим пальцем.</string>
+    <string name="touchpad_help_mouse_scroll_wheel_title">Колесо прокрутки мыши</string>
+    <string name="touchpad_help_mouse_scroll_wheel_description">Нажмите двумя пальцами и двигайте</string>
+    <string name="touchpad_help_main_menu_title">Главное меню</string>
+    <string name="touchpad_help_main_menu_description">Нажмите четырьмя пальцами</string>
+    <string name="duplicate">Дублировать</string>
+    <string name="about">О программе</string>
+    <string name="credits_and_third_party_apps">Авторы и сторонние приложения</string>
+    <string name="external_controllers">Внешние контроллеры</string>
+    <string name="graphics_driver">Графический драйвер</string>
+    <string name="audio_driver">Аудио драйвер</string>
+    <string name="loading">Загрузка…</string>
+    <string name="press_any_button_on_your_controller">Нажмите любую кнопку на вашем контроллере</string>
+    <string name="bindings">привязки</string>
+    <string name="show_touchscreen_controls">Показать элементы управления сенсорным экраном</string>
+    <string name="dxwrapper" translatable="false">DX Wrapper</string>
+    <string name="mouse_warp_override">Переопределение мыши</string>
+    <string name="direct3d" translatable="false">Direct3D</string>
+    <string name="directsound" translatable="false">DirectSound</string>
+    <string name="directmusic" translatable="false">DirectMusic</string>
+    <string name="directplay" translatable="false">DirectPlay</string>
+    <string name="directshow" translatable="false">DirectShow</string>
+    <string name="directx" translatable="false">DirectX</string>
+    <string name="vcrun2010" translatable="false">Visual C++ 2010</string>
+    <string name="wmdecoder" translatable="false">Windows Media Decoder</string>
+    <string name="settings">Настройки</string>
+    <string name="exec_arguments">Аргументы Exec</string>
+    <string name="win_components">Компоненты Windows</string>
+    <string name="drives">Диски</string>
+    <string name="force_fullscreen">Полноэкранный режим</string>
+    <string name="range">Диапазон</string>
+    <string name="enable">Включить</string>
+    <string name="disable">Выключить</string>
+    <string name="force">Принудительно</string>
+    <string name="installed_wine">Установленный Wine</string>
+    <string name="install_wine">Установка Wine</string>
+    <string name="arch" translatable="false">Arch</string>
+    <string name="version">Версия</string>
+    <string name="unable_to_install_wine">Невозможно установить Wine</string>
+    <string name="unable_to_remove_this_wine_version">Невозможно удалить эту версию Wine</string>
+    <string name="wine_version">Версия Wine</string>
+    <string name="removing_wine">Удаление Wine…</string>
+    <string name="preparing_installation">Подготовка к установке…</string>
+    <string name="finishing_installation">Завершение установки…</string>
+    <string name="storage_info">Информация о хранилище</string>
+    <string name="drive_c">Диск C:</string>
+    <string name="cache">Кэш</string>
+    <string name="total">Всего</string>
+    <string name="clear_cache">Очистить кэш</string>
+    <string name="estimated_used_space">Расчетное используемое место</string>
+    <string name="advanced">Продвинутые</string>
+    <string name="box86_box64" translatable="false">Box86/Box64</string>
+    <string name="system">Система</string>
+    <string name="box86_preset">Предустановка Box86</string>
+    <string name="box64_preset">Предустановка Box64</string>
+    <string name="box86_version">Версия Box86</string>
+    <string name="box64_version">Версия Box64</string>
+    <string name="letter">Буква</string>
+    <string name="target_path">Путь к диску</string>
+    <string name="xserver" translatable="false">XServer</string>
+    <string name="use_dri3_extension">Использовать расширение DRI3</string>
+    <string name="width">Ширина</string>
+    <string name="height">Высота</string>
+    <string name="old">старый</string>
+    <string name="_new">новый</string>
+    <string name="task_manager">Диспетчер задач</string>
+    <string name="process_name">Имя процесса</string>
+    <string name="pid">PID</string>
+    <string name="memory">Память</string>
+    <string name="end_process">Завершить процесс</string>
+    <string name="new_task">Новая задача</string>
+    <string name="processes">Процессы</string>
+    <string name="orientation">Ориентация</string>
+    <string name="horizontal">Горизонтальная</string>
+    <string name="vertical">Вертикальная</string>
+    <string name="open_file">Открыть файл</string>
+    <string name="download_file">Загрузить файл</string>
+    <string name="do_you_want_to_download_the_selected_profiles">Хотите загрузить выбранные профили?</string>
+    <string name="downloading_file">Загрузка файла…</string>
+    <string name="unable_to_load_profile_list">Невозможно загрузить список профилей</string>
+    <string name="_copy">Копия</string>
+    <string name="installed_version">Установленная версия</string>
+    <string name="unable_to_download_file">Невозможно загрузить файл</string>
+    <string name="stability">Stability (Стабильная)</string>
+    <string name="compatibility">Compatibility (Совместимая)</string>
+    <string name="intermediate">Intermediate (Средняя)</string>
+    <string name="performance">Performance (Производительная)</string>
+    <string name="preset">Предустановка</string>
+    <string name="you_cannot_remove_this_preset">Вы не можете удалить эту предустановку</string>
+    <string name="dxwrapper_help_content" translatable="false"><![CDATA[
+        <i><b>WineD3D</b></i> представляет собой слой трансляции DirectX 1-11 в OpenGL.<br /><br />
+        <i><b>DXVK</b></i> представляет собой слой трансляции Direct3D 9-11 в Vulkan.<br /><br />
+        <i><b>VKD3D</b></i> представляет собой слой трансляции Direct3D 12 API в Vulkan.<br /><br />
+        <i><b>CNC DDraw</b></i> представляет собой реализацию DirectDraw для лучшей совместимости с классическими играми.
+    ]]></string>
+    <string name="box86_64_env_var_help__dynarec_safeflags" translatable="false"><![CDATA[
+        Обработка флагов в кодах операций CALL/RET<br /><br />
+        <b>0</b> : Обрабатывает CALL/RET так, как будто ему никогда не нужны флаги (быстрее, нестабильнее)<br />
+        <b>1</b> : Большинству RET потребуются флаги, большинству CALLS — нет.<br />
+        <b>2</b> : Всем CALL/RET потребуются флаги (медленнее)
+    ]]></string>
+    <string name="box86_64_env_var_help__dynarec_fastnan" translatable="false">Генерация -NAN как на x86</string>
+    <string name="box86_64_env_var_help__dynarec_fastround" translatable="false">Генерация точного округления x86</string>
+    <string name="box86_64_env_var_help__dynarec_x87double" translatable="false">Использование Float/Double для эмуляции x87</string>
+    <string name="box86_64_env_var_help__dynarec_bigblock" translatable="false"><![CDATA[
+        Dynarec building BigBlock<br /><br />
+        <b>0</b> : Не пытаться построить блок как можно большего размера.<br />
+        <b>1</b> : Построить блок Dynarec как можно большего размера.<br />
+        <b>2</b> : Построить блок Dynarec большего размера (продолжить, когда блоки перекрываются, но только для блоков в памяти elf)<br />
+        <b>3</b> : Построить блок Dynarec большего размера (продолжить, если блок перекрывается, для всех типов памяти)
+    ]]></string>
+    <string name="box86_64_env_var_help__dynarec_strongmem" translatable="false"><![CDATA[
+        Simulation of Strong Memory model<br /><br />
+        <b>0</b> : Не пытаться делать что-то особенное.<br />
+        <b>1</b> : Включить барьер памяти при записи в память (в некоторых кодах операций MOV)<br />
+        <b>2</b> : То же, что в 1, плюс барьер памяти при каждой записи в память с использованием MOV<br />
+        <b>3</b> : То же, что в 2, плюс барьер памяти при чтении из памяти и некоторых кодах операций SSE/SSE2
+    ]]></string>
+    <string name="box86_64_env_var_help__dynarec_forward" translatable="false">Определяет максимально допустимое значение forward при построении блока</string>
+    <string name="box86_64_env_var_help__dynarec_callret" translatable="false">Оптимизация кодов операций CALL/RET</string>
+    <string name="box86_64_env_var_help__dynarec_wait" translatable="false">Определяет, будет ли Dynarec ждать готовности FillBlock</string>
+    <string name="box86_64_env_var_help__avx" translatable="false"><![CDATA[
+        Реализованы AVX и AVX2, а также расширения BMI1, BMI2, ADX, FMA, F16C и RDANDR!<br /><br />
+        <b>0</b> : Отключить расширение AVX<br />
+        <b>1</b> : Включить расширения AVX, BMI1, F16C и VAES.<br />
+        <b>2</b> : То же, что в 1, плюс включить AVX2, BMI2, FMA, ADX,VPCLMULQDQ и RDRAND.<br />\
+    ]]></string>
+    <string name="box86_64_env_var_help__maxcpu" translatable="false">Максимальное количество доступных ядер ЦП.</string>
+    <string name="box86_64_env_var_help__unityplayer" translatable="false">Обнаружить UnityPlayer.dll и применить настройки strongmem</string>
+    <string name="columns">Столбцы</string>
+    <string name="directinput_mapper_type">Тип маппера DirectInput</string>
+    <string name="desktop">Рабочий стол</string>
+    <string name="theme">Тема</string>
+    <string name="background">Фон</string>
+    <string name="max_device_memory">Максимальный объем памяти</string>
+    <string name="frame_rate">Частота кадров</string>
+    <string name="configuration">Конфигурация</string>
+    <string name="browse">Просмотреть</string>
+    <string name="magnifier">Лупа</string>
+    <string name="bring_to_front">Вынести на передний план</string>
+    <string name="options">Опции</string>
+    <string name="enable_experimental_wow64_mode">Включить режим WoW64</string>
+    <string name="help_wow64_mode" translatable="false"><![CDATA[
+        Если эта опция <i><b>включена</b></i>, используется WoW64 Wine (по умолчанию).<br/><br/>
+        Если эта опция <i><b>выключена</b></i>, используется обычный Wine вместе с <i><b>Box32</b></i>.
+    ]]></string>
+    <string name="logs">Логи</string>
+    <string name="enable_wine_debug">Включить отладку Wine</string>
+    <string name="enable_box86_64_logs">Включить логи Box86/Box64</string>
+    <string name="enable_box64_trace" translatable="false">Включить трассировку Box64 (Download/Winlator)</string>
+    <string name="export">Экспорт</string>
+    <string name="logs_exported_to">Логи экспортированы в</string>
+    <string name="general">Общие</string>
+    <string name="msg_warning_install_wine">Предупреждение: установка новой версии Wine рекомендуется только в целях тестирования.</string>
+    <string name="startup_selection">Тип запуска</string>
+    <string name="wine_debug_channel">Канал отладки Wine</string>
+    <string name="game_controller">Игровой контроллер</string>
+    <string name="as_button">Кнопка</string>
+    <string name="as_axis">Ось</string>
+    <string name="both">Оба</string>
+    <string name="trigger_type">Тип триггера</string>
+    <string name="use_glibc">Использовать нативный Glibc вместо Proot</string>
+    <string name="experimental">Экспериментальный</string>
+    <string name="glibc_exp_edition">Экспериментальная версия Glibc</string>
+    <string name="enabled_async">Включить Async</string>
+    <string name="enabled_async_cache">Включить Async Cache</string>
+    <string name="vkd3d_feature_level">Уровень функций VKD3D</string>
+    <string name="vulkan_version" translatable="false">Версия Vulkan</string>
+    <string name="opengl_version" translatable="false">Версия OpenGL</string>
+    <string name="disableVertexArrayBGRA" translatable="false">Disable vertex array BGRA</string>
+    <string name="exposed_extensions" translatable="false">Доступные расширения</string>
+    <string name="box64_rc_file">Box64 RCFile</string>
+    <string name="filter">Фильтр</string>
+    <string name="all">Все</string>
+    <string name="group">Группа</string>
+    <string name="new_group">Новая группа</string>
+    <string name="import_group">Импорт группы</string>
+    <string name="new_file">Новый файл</string>
+    <string name="new_item">Новый элемент</string>
+    <string name="group_edit">Редактировать группу</string>
+    <string name="group_name">Имя группы</string>
+    <string name="do_you_want_to_duplicate_this_group">Вы хотите дублировать эту группу?</string>
+    <string name="do_you_want_to_remove_this_group">Вы хотите удалить эту группу?</string>
+    <string name="do_you_want_to_duplicate_this_process">Вы хотите дублировать этот процесс?</string>
+    <string name="do_you_want_to_remove_this_process">Вы хотите удалить этот процесс?</string>
+    <string name="do_you_want_to_remove_this_variable">Вы хотите удалить эту переменную?</string>
+    <string name="variable_name">Имя переменной</string>
+    <string name="variable_already_exists">Переменная уже существует</string>
+    <string name="cannot_remove_default_profile">Невозможно удалить профиль по умолчанию.</string>
+    <string name="cannot_edit_default_profile">Невозможно редактировать профиль по умолчанию.</string>
+    <string name="do_you_want_to_restore_default_profile">Хотите восстановить профиль по умолчанию?</string>
+    <string name="box86_64_rc_files">RC File</string>
+    <string name="simulate_touch_screen">Имитировать сенсорный экран</string>
+    <string name="install_content">Установить компонент</string>
+    <string name="content_type">Тип компонента</string>
+    <string name="contents">Компоненты</string>
+    <string name="do_you_want_to_install_content">Хотите установить дополнительный компонент?</string>
+    <string name="pls_make_sure_content_trustworthy">Компонент содержит исполняемые файлы. Небезопасные исполняемые файлы могут поставить под угрозу безопасность ваших данных или устройства. Перед установкой, ПОЖАЛУЙСТА, убедитесь, что устанавливаемый вами дополнительный компонент заслуживает доверия.</string>
+    <string name="content_suffix_is_wcp_packed_xz_zst">Файлы компонентов имеют расширение .wcp и сжаты с использованием форматов xz или zst.</string>
+    <string name="installing_content">Установка компонента…</string>
+    <string name="unable_to_install_content">Невозможно установить компонент.</string>
+    <string name="install_failed">Установка не удалась</string>
+    <string name="file_cannot_be_recognied">Файл не может быть распознан.</string>
+    <string name="profile_not_found_in_content">Профиль не найден в компоненте.</string>
+    <string name="profile_cannot_be_recognized">Профиль не может быть распознан</string>
+    <string name="content_already_exist">Компонент, который вы пытаетесь установить, уже существует.</string>
+    <string name="content_info">Информация о компоненте</string>
+    <string name="version_code">Код версии</string>
+    <string name="description">Описание</string>
+    <string name="file_list">Список файлов</string>
+    <string name="_continue">Продолжить</string>
+    <string name="content_installed_success">Компонент успешно установлен!</string>
+    <string name="content_cannot_be_trusted">Компонент нельзя проверить.</string>
+    <string name="content_is_incomplete">Компонент неполный</string>
+    <string name="warning_content_has_untrusted_files">Предупреждение: Дополнительный компонент содержит ненадежные файлы. Как правило, следующие файлы не следует изменять. Пожалуйста, решите, продолжать ли установку.</string>
+    <string name="warning">Предупреждение</string>
+    <string name="do_you_want_to_remove_this_content">Вы хотите удалить этот компонент?</string>
+    <string name="add_to_home_screen">Добавить на главный экран</string>
+    <string name="shortcut_not_available">Этот ярлык больше недоступен. Пожалуйста, удалите или создайте его заново.</string>
+    <string name="enable_file_provider">Включить File Provider</string>
+    <string name="take_effect_next_startup">Эта опция вступит в силу при следующем запуске.</string>
+    <string name="imagefs">Imagefs</string>
+    <string name="reinstall_imagefs">Переустановить Imagefs</string>
+    <string name="do_you_want_to_reinstall_imagefs">Хотите переустановить Imagefs? Эта операция восстановит системные файлы, ваши контейнеры не будут изменены.</string>
+    <string name="unable_to_remove_content_since_container_using">Невозможно удалить компонент, поскольку в данный момент контейнер использует этот Wine.</string>
+    <string name="get_more_contents_form_github">Вы можете получить другие компоненты здесь: https://github.com/longjunyu2/winlator/releases</string>
+    <string name="midi_sound_font">Звуковой шрифт MIDI</string>
+    <string name="sound">Звук</string>
+    <string name="do_you_want_to_remove_this_sound_font">Вы хотите удалить звуковой шрифт?</string>
+    <string name="sound_font_removed_success">Звуковой шрифт успешно удален!</string>
+    <string name="sound_font_removed_failed">Звуковой шрифт не удалось удалить!</string>
+    <string name="sound_font_installed_success">Звуковой шрифт успешно установлен!</string>
+    <string name="sound_font_installed_failed">Звуковой шрифт не удалось установить!</string>
+    <string name="sound_font_already_exist">Звуковой шрифт, который вы хотите установить, уже существует.</string>
+    <string name="installing_soundfont">Установка звукового шрифта…</string>
+    <string name="sound_font_bad_format">Неверный формат звукового шрифта.</string>
+    <string name="cannot_remove_default_sound_font">Невозможно удалить звуковой шрифт по умолчанию</string>
+    <string name="enable_dinput_for_wine_game">Включить DInput для игр в Wine</string>
+    <string name="enable_xinput_for_wine_game">Включить XInput для игр в Wine</string>
+    <string name="dinput_legacy">Устаревший (старые геймпады)</string>
+    <string name="dinput_modern">Современный (Xinput)</string>
+    <string name="mixed">Смешанный</string>
+    <string name="help_xinput"><![CDATA[
+        Если ваша игра использует <i><b>XInput API</b></i> для поддержки игрового контроллера, включите эту опцию.<br/><br/>
+        Эта опция повлияет как на <i><b>виртуальные</b></i> (предоставляемые управлением вводом), так и на <i><b>физические</b></i> игровые контроллеры.
+    ]]></string>
+    <string name="help_dinput"><![CDATA[
+        Если ваша игра использует <i><b>DInput API</b></i> для поддержки игрового контроллера, включите эту опцию.<br/><br/>
+        Эта опция повлияет как на <i><b>виртуальные</b></i> (предоставляемые управлением вводом), так и на <i><b>физические</b></i> игровые контроллеры.
+    ]]></string>
+    <string name="enable_xinput_and_dinput_same_time">Некоторые игры могут поддерживать оба API. Включение XInput и DInput одновременно в таких играх может вызвать проблемы с управлением, как это было в таких играх, как The Binding of Isaac и серии Resident Evil.</string>
+    <string name="startup_normal">Нормальный (Загрузить все службы)</string>
+    <string name="startup_essential">Основной (Загрузить только основные службы)</string>
+    <string name="startup_aggressive">Агрессивный (Остановить службы при запуске)</string>
+    <string name="lc_all" translatable="false">LC_ALL</string>
+    <string name="help_trigger_mode"><![CDATA[
+        Эта опция зависит от <i><b>физического контроллера</b></i>, который вы используете.<br/><br/>
+        <i><b>Ось</b></i>: Выберите это, если триггер на вашем контроллере линейный (с диапазоном движения).<br/><br/>
+        <i><b>Кнопка</b></i>: Выберите это, если триггер на вашем контроллере — это кнопка (похожа на переключатель).<br/><br/>
+        <i><b>Note</b></i>: Для линейных триггеров использование <i><b>Кнопки</b></i> приведет к потере линейных данных.<br/>
+    ]]></string>
+    <string name="toggle_orientation">Ориентация</string>
+    <string name="help_file_provider"><![CDATA[
+        <i><b>File Provider</b></i> обеспечивает доступ к внутренним данным Winlator через файловый менеджер Android.<br/><br/>
+    ]]></string>
+    <string name="reconfigure">Переконфигурировать</string>
+    <string name="do_you_want_to_reconfigure_wine">Хотите переконфигурировать этот контейнер при следующем запуске? Это удалит временную метку для запуска конфигурации Wine.</string>
+    <string name="virtual_buttons_haptics">Тактильный отклик от виртуальных кнопок</string>
+
+    <!-- OpenXR specific text -->
+    <string name="use_xr">Использовать интеграцию OpenXR</string>
+    <string name="xr" translatable="false">XR</string>
+    <string name="primary_controller">Основной контроллер</string>
+    <string name="left_controller">Левый контроллер</string>
+    <string name="right_controller">Правый контроллер</string>
+    <string name="button_a">Кнопка A</string>
+    <string name="button_b">Кнопка B</string>
+    <string name="button_x">Кнопка X</string>
+    <string name="button_y">Кнопка Y</string>
+    <string name="button_grip">Кнопка захвата</string>
+    <string name="button_trigger">Кнопка триггера</string>
+    <string name="thumbstick_left">Джойстик влево</string>
+    <string name="thumbstick_right">Джойстик вправо</string>
+    <string name="thumbstick_up">Джойстик вверх</string>
+    <string name="thumbstick_down">Джойстик вниз</string>
+</resources>

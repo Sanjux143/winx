@@ -210,6 +210,7 @@
         <b>1</b> : enable AVX, BMI1, F16C and VAES extension.<br />
         <b>2</b> : All 1 plus enable AVX2, BMI2, FMA, ADX,VPCLMULQDQ and RDRAND.<br />\
     ]]></string>
+    <string name="box86_64_env_var_help__maxcpu" translatable="false">Maximum CPU cores exposed.</string>
     <string name="box86_64_env_var_help__unityplayer" translatable="false">Detect UnityPlayer.dll and apply strongmem settings</string>
     <string name="columns">Columns</string>
     <string name="directinput_mapper_type">DirectInput Mapper Type</string>
@@ -226,7 +227,7 @@
     <string name="enable_experimental_wow64_mode">Enable WoW64 mode</string>
     <string name="help_wow64_mode" translatable="false"><![CDATA[
         If this option is <i><b>enabled</b></i>, WoW64 Wine is used (default).<br/><br/>
-        If this option is <i><b>disabled</b></i>, the regular bi-arch Wine is used with the <i><b>box32</b></i> feature.
+        If this option is <i><b>disabled</b></i>, the regular bi-arch Wine is used with the <i><b>Box32</b></i> feature.
     ]]></string>
     <string name="logs">Logs</string>
     <string name="enable_wine_debug">Enable Wine debug</string>
