@@ -208,7 +208,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 "DXVK (<a href=\"https://github.com/doitsujin/dxvk\">github.com/doitsujin/dxvk</a>)",
                 "VKD3D (<a href=\"https://gitlab.winehq.org/wine/vkd3d\">gitlab.winehq.org/wine/vkd3d</a>)",
                 "D8VK (<a href=\"https://github.com/AlpyneDreams/d8vk\">github.com/AlpyneDreams/d8vk</a>)",
-                "CNC DDraw (<a href=\"https://github.com/FunkyFr3sh/cnc-ddraw\">github.com/FunkyFr3sh/cnc-ddraw</a>)"
+                "CNC DDraw (<a href=\"https://github.com/FunkyFr3sh/cnc-ddraw\">github.com/FunkyFr3sh/cnc-ddraw</a>)",
+                "Termux-pacman (<a href=\"https://github.com/termux-pacman/glibc-packages\">github.com/termux-pacman/glibc-packages</a>)"
             );
 
             TextView tvCreditsAndThirdPartyApps = dialog.findViewById(R.id.TVCreditsAndThirdPartyApps);
@@ -226,12 +227,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             TextView tvglibcExpVersionModHTML = dialog.findViewById(R.id.TVGlibcExpVersionMod);
             tvglibcExpVersionModHTML.setText(Html.fromHtml(glibcExpVersionModHTML, Html.FROM_HTML_MODE_LEGACY));
             tvglibcExpVersionModHTML.setMovementMethod(LinkMovementMethod.getInstance());
-
-            String glibcTermuxPacman = String.join("<br />",
-                    "Termux-pacman (<a href=\"https://github.com/termux-pacman/glibc-packages\">github.com/termux-pacman/glibc-packages</a>)");
-            TextView tvGlibcTermuxPacman = dialog.findViewById(R.id.TVGlibcTermuxPacman);
-            tvGlibcTermuxPacman.setText(Html.fromHtml(glibcTermuxPacman, Html.FROM_HTML_MODE_LEGACY));
-            tvGlibcTermuxPacman.setMovementMethod(LinkMovementMethod.getInstance());
         }
         catch (PackageManager.NameNotFoundException e) {}
 
