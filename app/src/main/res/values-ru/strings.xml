@@ -188,14 +188,14 @@
     <string name="box86_64_env_var_help__dynarec_fastround" translatable="false">Генерация точного округления x86</string>
     <string name="box86_64_env_var_help__dynarec_x87double" translatable="false">Использование Float/Double для эмуляции x87</string>
     <string name="box86_64_env_var_help__dynarec_bigblock" translatable="false"><![CDATA[
-        Dynarec building BigBlock<br /><br />
+        Построение Dynarec BigBlock<br /><br />
         <b>0</b> : Не пытаться построить блок как можно большего размера.<br />
         <b>1</b> : Построить блок Dynarec как можно большего размера.<br />
         <b>2</b> : Построить блок Dynarec большего размера (продолжить, когда блоки перекрываются, но только для блоков в памяти elf)<br />
         <b>3</b> : Построить блок Dynarec большего размера (продолжить, если блок перекрывается, для всех типов памяти)
     ]]></string>
     <string name="box86_64_env_var_help__dynarec_strongmem" translatable="false"><![CDATA[
-        Simulation of Strong Memory model<br /><br />
+        Симуляция модели Strong Memory<br /><br />
         <b>0</b> : Не пытаться делать что-то особенное.<br />
         <b>1</b> : Включить барьер памяти при записи в память (в некоторых кодах операций MOV)<br />
         <b>2</b> : То же, что в 1, плюс барьер памяти при каждой записи в память с использованием MOV<br />
@@ -342,7 +342,7 @@
         Эта опция зависит от <i><b>физического контроллера</b></i>, который вы используете.<br/><br/>
         <i><b>Ось</b></i>: Выберите это, если триггер на вашем контроллере линейный (с диапазоном движения).<br/><br/>
         <i><b>Кнопка</b></i>: Выберите это, если триггер на вашем контроллере — это кнопка (похожа на переключатель).<br/><br/>
-        <i><b>Note</b></i>: Для линейных триггеров использование <i><b>Кнопки</b></i> приведет к потере линейных данных.<br/>
+        <i><b>Примечание</b></i>: Для линейных триггеров использование <i><b>Кнопки</b></i> приведет к потере линейных данных.<br/>
     ]]></string>
     <string name="toggle_orientation">Ориентация</string>
     <string name="help_file_provider"><![CDATA[
