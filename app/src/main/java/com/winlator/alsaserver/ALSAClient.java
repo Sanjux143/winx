@@ -98,13 +98,17 @@ public class ALSAClient {
 
         if (!isValidBufferSize()) return;
 
-        AudioFormat format = (new AudioFormat.Builder()).setEncoding(getPCMEncoding(this.dataType)).setSampleRate(this.sampleRate).setChannelMask(getChannelConfig(this.channels)).build();
-        AudioTrack track1 = (new AudioTrack.Builder()).setPerformanceMode(AudioTrack.PERFORMANCE_MODE_LOW_LATENCY).setAudioFormat(format).setBufferSizeInBytes(getBufferSizeInBytes()).build();
-        this.track = track1;
-        this.bufferCapacity = track1.getBufferCapacityInFrames();
+        try {
+            AudioFormat format = (new AudioFormat.Builder()).setEncoding(getPCMEncoding(this.dataType)).setSampleRate(this.sampleRate).setChannelMask(getChannelConfig(this.channels)).build();
+            AudioTrack track1 = (new AudioTrack.Builder()).setPerformanceMode(AudioTrack.PERFORMANCE_MODE_LOW_LATENCY).setAudioFormat(format).setBufferSizeInBytes(getBufferSizeInBytes()).build();
+            this.track = track1;
+            this.bufferCapacity = track1.getBufferCapacityInFrames();
 
-        this.track.setVolume(volume);
-        this.track.play();
+            this.track.setVolume(volume);
+            this.track.play();
+        } catch (Exception e) {
+            //throw new RuntimeException(e);
+        }
     }
 
     public void start() {
