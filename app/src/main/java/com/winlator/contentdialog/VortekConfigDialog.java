@@ -6,6 +6,7 @@ package com.winlator.contentdialog;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.Spinner;
 
 import com.winlator.R;
@@ -40,6 +41,7 @@ public class VortekConfigDialog extends ContentDialog {
     final Spinner SVulkanVersion = findViewById(R.id.SVulkanVersion);
     final Spinner SMaxDeviceMemory = findViewById(R.id.SMaxDeviceMemory);
     MultiSelectionComboBox multiSelectionComboBox = findViewById(R.id.CBExposedExtensions);
+    final CheckBox CBuseCompatibleZink = findViewById(R.id.CBuseCompatibleZink);
 
     String[] arrayOfString = GPUHelper.vkGetDeviceExtensions();
     ///multiSelectionComboBox.setPopupWindowWidth(360);
@@ -55,8 +57,10 @@ public class VortekConfigDialog extends ContentDialog {
     } 
     AppUtils.setSpinnerSelectionFromValue(SVulkanVersion, config.get("vkMaxVersion", DEFAULT_VK_MAX_VERSION));
     AppUtils.setSpinnerSelectionFromValue(SMaxDeviceMemory, config.get("maxDeviceMemory", String.valueOf(4096)));
+    CBuseCompatibleZink.setChecked(config.getBoolean("useCompatibleZink", false));
 
     setOnConfirmCallback(() -> {
+      config.put("useCompatibleZink", CBuseCompatibleZink.isChecked());
       config.put("maxDeviceMemory", SMaxDeviceMemory.getSelectedItem().toString());
       config.put("vkMaxVersion", SVulkanVersion.getSelectedItem().toString());
       config.put("exposedDeviceExtensions", String.join("|", multiSelectionComboBox.getSelectedItems()));

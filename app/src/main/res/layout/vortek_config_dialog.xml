@@ -40,5 +40,22 @@
             android:layout_width="match_parent"
             android:id="@+id/CBExposedExtensions"
             android:entries="@array/max_device_memory_entries" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/CBuseCompatibleZink" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/zink_compatible" />
+
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

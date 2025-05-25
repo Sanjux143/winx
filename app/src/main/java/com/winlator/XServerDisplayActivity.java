@@ -841,8 +841,11 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
 
             if (changed) {
                  TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, "graphics_driver/vortek-" + DefaultVersion.VORTEK + ".tzst", rootDir);
-                 TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, "graphics_driver/zink-" + DefaultVersion.ZINK + ".tzst", rootDir);
             }
+            if (this.graphicsDriverConfig.getBoolean("useCompatibleZink", true))
+                TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, "graphics_driver/zink-" + DefaultVersion.ZINK_COMPAT + ".tzst", rootDir);
+            else
+                TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, "graphics_driver/zink-" + DefaultVersion.ZINK + ".tzst", rootDir);
         }
     }
 
