@@ -107,6 +107,8 @@
     <string name="directshow" translatable="false">DirectShow</string>
     <string name="directx" translatable="false">DirectX</string>
     <string name="vcrun2010" translatable="false">Visual C++ 2010</string>
+    <string name="vcrun2005" translatable="false">Visual C++ 2005</string>
+    <string name="xaudio" translatable="false">XAudio</string>
     <string name="wmdecoder" translatable="false">Windows Media Decoder</string>
     <string name="settings">Настройки</string>
     <string name="exec_arguments">Аргументы Exec</string>
