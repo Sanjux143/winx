@@ -12,29 +12,25 @@ public class GPUImage extends Texture {
     private ByteBuffer virtualData;
     private short stride;
     private static boolean supported = false;
-    private boolean locked = false; ///
-    private int nativeHandle; ///
+    private boolean locked = false;
+    private int nativeHandle;
 
     static {
         System.loadLibrary("winlator7");
     }
 
     public GPUImage(short width, short height) {
-        hardwareBufferPtr = createHardwareBuffer(width, height);
-        if (hardwareBufferPtr != 0) virtualData = lockHardwareBuffer(hardwareBufferPtr);
+        this(width, height, true, true);
     }
 
-    ///
-    public GPUImage(short paramShort1, short paramShort2, boolean paramBoolean) {
-        //hardwareBufferPtr = createHardwareBuffer(paramShort1, paramShort2, paramBoolean); /// Temporary
-        hardwareBufferPtr = createHardwareBuffer(paramShort1, paramShort2);
-        if (paramBoolean && hardwareBufferPtr != 0) {
+    public GPUImage(short width, short height, boolean cpuAccess, boolean format) {
+        hardwareBufferPtr = createHardwareBuffer(width, height, cpuAccess, format);
+        if (cpuAccess && hardwareBufferPtr != 0) {
             lockHardwareBuffer(hardwareBufferPtr);
             locked = true;
         }
     }
 
-    ///
     public long getHardwareBufferPtr() {
         return hardwareBufferPtr;
     }
@@ -68,7 +64,7 @@ public class GPUImage extends Texture {
     @Override
     public void destroy() {
         destroyImageKHR(imageKHRPtr);
-        destroyHardwareBuffer(hardwareBufferPtr);
+        destroyHardwareBuffer(hardwareBufferPtr, locked);
         virtualData = null;
         imageKHRPtr = 0;
         hardwareBufferPtr = 0;
@@ -87,20 +83,18 @@ public class GPUImage extends Texture {
         gpuImage.destroy();
     }
 
-    ///
     @Keep
-    private void setNativeHandle(int paramInt) {
-        nativeHandle = paramInt;
+    private void setNativeHandle(int nativeHandle) {
+        this.nativeHandle = nativeHandle;
     }
 
-    ///
     public int getNativeHandle() {
         return nativeHandle;
     }
 
-    private native long createHardwareBuffer(short width, short height);
+    private native long createHardwareBuffer(short width, short height, boolean cpuAccess, boolean format);
 
-    private native void destroyHardwareBuffer(long hardwareBufferPtr);
+    private native void destroyHardwareBuffer(long hardwareBufferPtr, boolean locked);
 
     private native ByteBuffer lockHardwareBuffer(long hardwareBufferPtr);
 

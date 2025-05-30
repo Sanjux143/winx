@@ -13,6 +13,7 @@
 #include <string.h>
 
 #define printf(...) __android_log_print(ANDROID_LOG_DEBUG, "System.out", __VA_ARGS__);
+#define HAL_PIXEL_FORMAT_RGBA_8888 1
 #define HAL_PIXEL_FORMAT_BGRA_8888 5
 
 EGLImageKHR createImageKHR(AHardwareBuffer* hardwareBuffer, int textureId) {
@@ -34,13 +35,13 @@ EGLImageKHR createImageKHR(AHardwareBuffer* hardwareBuffer, int textureId) {
     return imageKHR;
 }
 
-AHardwareBuffer* createHardwareBuffer(int width, int height) {
-    AHardwareBuffer_Desc buffDesc = {};
+AHardwareBuffer* createHardwareBuffer(int width, int height, bool cpuAccess, bool format) {
+    AHardwareBuffer_Desc buffDesc = {0};
     buffDesc.width = width;
     buffDesc.height = height;
     buffDesc.layers = 1;
-    buffDesc.usage = AHARDWAREBUFFER_USAGE_CPU_WRITE_OFTEN;
-    buffDesc.format = HAL_PIXEL_FORMAT_BGRA_8888;
+    buffDesc.usage = cpuAccess ? AHARDWAREBUFFER_USAGE_CPU_WRITE_OFTEN : AHARDWAREBUFFER_USAGE_GPU_COLOR_OUTPUT;
+    buffDesc.format = format ? HAL_PIXEL_FORMAT_BGRA_8888 : HAL_PIXEL_FORMAT_RGBA_8888;
 
     AHardwareBuffer *hardwareBuffer = NULL;
     AHardwareBuffer_allocate(&buffDesc, &hardwareBuffer);
@@ -50,8 +51,8 @@ AHardwareBuffer* createHardwareBuffer(int width, int height) {
 
 JNIEXPORT jlong JNICALL
 Java_com_winlator_renderer_GPUImage_createHardwareBuffer(JNIEnv *env, jclass obj, jshort width,
-                                                         jshort height) {
-    return (jlong)createHardwareBuffer(width, height);
+                                                         jshort height, jboolean cpuAccess, jboolean format) {
+    return (jlong)createHardwareBuffer(width, height, cpuAccess, format);
 }
 
 JNIEXPORT jlong JNICALL
@@ -62,10 +63,13 @@ Java_com_winlator_renderer_GPUImage_createImageKHR(JNIEnv *env, jclass obj,
 
 JNIEXPORT void JNICALL
 Java_com_winlator_renderer_GPUImage_destroyHardwareBuffer(JNIEnv *env, jclass obj,
-                                                          jlong hardwareBufferPtr) {
+                                                          jlong hardwareBufferPtr, jboolean locked) {
     AHardwareBuffer* hardwareBuffer = (AHardwareBuffer*)hardwareBufferPtr;
     if (hardwareBuffer) {
-        AHardwareBuffer_unlock(hardwareBuffer, NULL);
+        if (locked) {
+            AHardwareBuffer_unlock(hardwareBuffer, NULL);
+            locked = false;
+        }
         AHardwareBuffer_release(hardwareBuffer);
     }
 }

@@ -61,9 +61,8 @@ public class VortekRendererComponent extends EnvironmentComponent implements Con
       if (!(texture instanceof GPUImage)) {
         XServerView xServerView = (this.xServer.getRenderer()).xServerView;
         Objects.requireNonNull(texture);
-        ////xServerView.queueEvent(new VortekRendererComponent$$ExternalSyntheticLambda0(texture));
         xServerView.queueEvent(texture::destroy);
-        drawable.setTexture((Texture)new GPUImage(drawable.width, drawable.height, false));
+        drawable.setTexture((Texture)new GPUImage(drawable.width, drawable.height, false, false));
       } 
       return ((GPUImage)drawable.getTexture()).getHardwareBufferPtr();
     } 
