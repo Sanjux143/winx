@@ -254,7 +254,6 @@
     <string name="opengl_version" translatable="false">Версия OpenGL</string>
     <string name="disableVertexArrayBGRA" translatable="false">Disable vertex array BGRA</string>
     <string name="exposed_extensions" translatable="false">Доступные расширения</string>
-    <string name="zink_compatible" translatable="false">Использовать совместимый Zink</string>
     <string name="box64_rc_file">Box64 RCFile</string>
     <string name="filter">Фильтр</string>
     <string name="all">Все</string>

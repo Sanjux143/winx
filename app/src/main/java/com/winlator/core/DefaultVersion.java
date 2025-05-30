@@ -5,7 +5,6 @@ public abstract class DefaultVersion {
     public static final String BOX64 = "0.3.5-11563f3";
     public static final String TURNIP = "24.1.0";
     public static final String ZINK = "22.2.0";
-    public static final String ZINK_COMPAT = "22.2.0-compat";
     public static final String VIRGL = "23.1.9";
     public static final String VORTEK = "1.0"; ///
     public static final String DXVK = "1.10.3-async";
