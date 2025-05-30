@@ -391,6 +391,9 @@ public class ContainerDetailFragment extends Fragment {
             Spinner sVideoMemorySize = view.findViewById(R.id.SVideoMemorySize);
             registryEditor.setStringValue("Software\\Wine\\Direct3D", "VideoMemorySize", StringUtils.parseNumber(sVideoMemorySize.getSelectedItem()));
 
+            Spinner sRenderer = view.findViewById(R.id.SRenderer);
+            registryEditor.setStringValue("Software\\Wine\\Direct3D", "renderer", sRenderer.getSelectedItem().toString().toLowerCase(Locale.ENGLISH));
+
             Spinner sMouseWarpOverride = view.findViewById(R.id.SMouseWarpOverride);
             registryEditor.setStringValue("Software\\Wine\\DirectInput", "MouseWarpOverride", sMouseWarpOverride.getSelectedItem().toString().toLowerCase(Locale.ENGLISH));
 
@@ -454,6 +457,11 @@ public class ContainerDetailFragment extends Fragment {
             Spinner sVideoMemorySize = view.findViewById(R.id.SVideoMemorySize);
             String videoMemorySize = registryEditor.getStringValue("Software\\Wine\\Direct3D", "VideoMemorySize", "2048");
             AppUtils.setSpinnerSelectionFromNumber(sVideoMemorySize, videoMemorySize);
+
+            List<String> rendererList = Arrays.asList("gl", "vulkan", "no3d");
+            Spinner sRenderer = view.findViewById(R.id.SRenderer);
+            sRenderer.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, rendererList));
+            AppUtils.setSpinnerSelectionFromValue(sRenderer, registryEditor.getStringValue("Software\\Wine\\Direct3D", "renderer", "gl"));
 
             List<String> mouseWarpOverrideList = Arrays.asList(context.getString(R.string.disable), context.getString(R.string.enable), context.getString(R.string.force));
             Spinner sMouseWarpOverride = view.findViewById(R.id.SMouseWarpOverride);

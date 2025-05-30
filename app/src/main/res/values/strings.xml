@@ -73,6 +73,7 @@
     <string name="offscreen_rendering_mode">Offscreen Rendering Mode</string>
     <string name="strict_shader_math">Strict Shader Math</string>
     <string name="video_memory_size">Video Memory Size</string>
+    <string name="renderer" translatable="false">Renderer</string>
     <string name="show_fps">Show FPS</string>
     <string name="none">None</string>
     <string name="custom_text">Custom Text</string>
