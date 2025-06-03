@@ -548,7 +548,7 @@ public class ContainerDetailFragment extends Fragment {
 
         Runnable update = () -> {
             String graphicsDriver = StringUtils.parseIdentifier(sGraphicsDriver.getSelectedItem());
-            boolean addAll = graphicsDriver.startsWith("turnip") || graphicsDriver.startsWith("vortek");
+            boolean addAll = graphicsDriver.startsWith("turnip") || graphicsDriver.startsWith("vortek") || graphicsDriver.startsWith("llvmpipe");
 
             ArrayList<String> items = new ArrayList<>();
             for (String value : dxwrapperEntries)

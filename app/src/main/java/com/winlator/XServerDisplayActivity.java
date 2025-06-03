@@ -771,6 +771,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
 
         if (changed) {
             FileUtils.delete(new File(imageFs.getLib64Dir(), "libvulkan_freedreno.so"));
+            FileUtils.delete(new File(imageFs.getLib64Dir(), "libvulkan_lvp.so"));
             FileUtils.delete(new File(imageFs.getLib64Dir(), "libvulkan_vortek.so"));
             FileUtils.delete(new File(imageFs.getLib64Dir(), "libGL.so.1"));
             container.putExtra("graphicsDriver", graphicsDriver);
@@ -842,6 +843,22 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             if (changed) {
                  TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, "graphics_driver/vortek-" + DefaultVersion.VORTEK + ".tzst", rootDir);
                  TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, "graphics_driver/zink-" + DefaultVersion.ZINK + ".tzst", rootDir);
+            }
+        }
+        else if (graphicsDriver.startsWith("llvmpipe")) {
+            if (dxwrapper.equals("dxvk"))
+                DXVKConfigDialog.setEnvVars(this, dxwrapperConfig, envVars);
+            else if (dxwrapper.equals("vkd3d"))
+                VKD3DConfigDialog.setEnvVars(this, dxwrapperConfig, envVars);
+
+            boolean useDRI3 = preferences.getBoolean("use_dri3", true);
+            if (!useDRI3) {
+                envVars.put("MESA_VK_WSI_PRESENT_MODE", "immediate");
+                envVars.put("MESA_VK_WSI_DEBUG", "sw");
+            }
+
+            if (changed) {
+                TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, "graphics_driver/llvmpipe-" + DefaultVersion.LLVMPIPE + ".tzst", rootDir);
             }
         }
     }

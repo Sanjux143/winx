@@ -19,6 +19,7 @@
         <item>Turnip-24.1.0</item>
         <item>VirGL-23.1.9</item>
         <item>Vortek-1.0</item>
+        <item>LLVMPipe-25.0.0</item>
     </string-array>
     <string-array name="audio_driver_entries">
         <item>ALSA</item>
