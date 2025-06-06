@@ -209,7 +209,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 "DXVK (<a href=\"https://github.com/doitsujin/dxvk\">github.com/doitsujin/dxvk</a>)",
                 "VKD3D (<a href=\"https://gitlab.winehq.org/wine/vkd3d\">gitlab.winehq.org/wine/vkd3d</a>)",
                 "D8VK (<a href=\"https://github.com/AlpyneDreams/d8vk\">github.com/AlpyneDreams/d8vk</a>)",
-                "CNC DDraw (<a href=\"https://github.com/FunkyFr3sh/cnc-ddraw\">github.com/FunkyFr3sh/cnc-ddraw</a>)"
+                "CNC DDraw (<a href=\"https://github.com/FunkyFr3sh/cnc-ddraw\">github.com/FunkyFr3sh/cnc-ddraw</a>)",
+                "Original Winlator(<a href=\"https://github.com/brunodev85/winlator\">github.com/brunodev85/winlator</a>)",
+                "Winlator Bionic (<a href=\"https://github.com/Pipetto-crypto/winlator/tree/winlator_bionic\">github.com/Pipetto-crypto/winlator</a>)"
             );
 
             TextView tvCreditsAndThirdPartyApps = dialog.findViewById(R.id.TVCreditsAndThirdPartyApps);
