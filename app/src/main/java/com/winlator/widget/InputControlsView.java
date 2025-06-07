@@ -504,7 +504,13 @@ public class InputControlsView extends View {
                     if (pointerButton != null) {
                         xServer.injectPointerButtonPress(pointerButton);
                     }
-                    else xServer.injectKeyPress(binding.keycode);
+                    else {
+                        int keysym = xServer.keyboard.KeycodeToKeysym(binding.keycode);
+                        if (keysym != 0)
+                            xServer.injectKeyPress(binding.keycode, keysym);
+                        else
+                            xServer.injectKeyPress(binding.keycode);
+                    }
                 }
                 else {
                     if (pointerButton != null) {
