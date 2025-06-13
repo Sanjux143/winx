@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,8 +35,19 @@ import com.winlator.core.PreloaderDialog;
 import com.winlator.xenvironment.ImageFs;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.util.Log;
+import androidx.annotation.RequiresApi;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+import com.winlator.X11Activity;
 
 public class ContainersFragment extends Fragment {
     private RecyclerView recyclerView;
@@ -142,13 +154,61 @@ public class ContainersFragment extends Fragment {
             return data.size();
         }
 
-        private void runContainer(Container container) {
-            if (!XrActivity.isEnabled(getContext())) {
-                Intent intent = new Intent(getContext(), XServerDisplayActivity.class);
-                intent.putExtra("container_id", container.id);
-                requireActivity().startActivity(intent);
+        @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+        private void launchXLorie() {
+            PackageManager pm = getActivity().getPackageManager();
+            PackageInfo info;
+            try {
+                ///info = pm.getPackageInfo(getActivity().getPackageName(), PackageManager.PackageInfoFlags.of(0));
+                info = pm.getPackageInfo(getActivity().getPackageName(), PackageManager.GET_META_DATA);
             }
-            else XrActivity.openIntent(getActivity(), container.id, null);
+            catch (PackageManager.NameNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+            ProcessBuilder builder = new ProcessBuilder("/system/bin/app_process", "/", "com.winlator.CmdEntryPoint", ":0");
+            builder.redirectErrorStream(true);
+            builder.environment().put("CLASSPATH", info.applicationInfo.sourceDir);
+            builder.environment().put("WINLATOR_X11_DEBUG", "1");
+            Log.i("SourceDir: ", info.applicationInfo.sourceDir);
+            builder.environment().put("TMPDIR", "/data/data/com.winlator/files/imagefs/usr/tmp");
+            builder.environment().put("XKB_CONFIG_ROOT", "/data/data/com.winlator/files/imagefs/usr/share/X11/xkb");
+            Thread t = new Thread(new Runnable(){
+                @Override
+                public void run() {
+                    try {
+                        Process x11Process = builder.start();
+                        Intent x11Lorie = new Intent(getActivity(), X11Activity.class);
+                        getActivity().startActivity(x11Lorie);
+                        BufferedReader br = new BufferedReader(new InputStreamReader(x11Process.getInputStream()));
+                        String line;
+                        while ((line = br.readLine()) != null) {
+                            Log.d("X11Loader", line);
+                        }
+                    }
+                    catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+            t.start();
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+        private void runContainer(Container container) {
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+            boolean isX11LorieEnabled = sp.getBoolean("use_lorie", false);
+            if(isX11LorieEnabled) {
+                ///if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    launchXLorie();
+                ///}
+            }
+            else {
+                if (!XrActivity.isEnabled(getContext())) {
+                    Intent intent = new Intent(getContext(), XServerDisplayActivity.class);
+                    intent.putExtra("container_id", container.id);
+                    requireActivity().startActivity(intent);
+                } else XrActivity.openIntent(getActivity(), container.id, null);
+            }
         }
 
         private void showListItemMenu(View anchorView, Container container) {

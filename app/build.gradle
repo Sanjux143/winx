@@ -45,6 +45,18 @@ android {
             version '3.22.1'
         }
     }
+
+    // If you want to preserve the Termux-X11 approach to buildFeatures:
+    buildFeatures {
+        aidl true
+        buildConfig true
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs += 'src/main/aidl' // Add AIDL directory to Java sources
+        }
+    }
 }
 
 dependencies {
