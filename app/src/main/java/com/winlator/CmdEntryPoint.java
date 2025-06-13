@@ -205,11 +205,16 @@ public class CmdEntryPoint extends ICmdEntryInterface.Stub {
     public native ParcelFileDescriptor getLogcatOutput();
     private static native boolean connected();
 
-    static {
+    static
+    {
         String path = "lib/" + "arm64-v8a" + "/libXlorie.so";
         ClassLoader loader = CmdEntryPoint.class.getClassLoader();
         URL res = loader != null ? loader.getResource(path) : null;
-        String libPath = res != null ? res.getFile().replace("file:", "") : null;
+        String resPath = res.getFile();
+        String resPath1 = resPath.replace("file:", "");
+        String resPath2 = resPath1.replace("/base.apk!", "");
+        String resPath3 = resPath2.replace("arm64-v8a", "arm64");
+        String libPath = res != null ? resPath3 : null;
         if (libPath != null) {
             try {
                 System.load(libPath);
@@ -219,7 +224,7 @@ public class CmdEntryPoint extends ICmdEntryInterface.Stub {
                 System.exit(134);
             }
         } else {
-            // It is critical only when it is not running in Android application process
+// It is critical only when it is not running in Android application process
             if (mActivity.getInstance() == null) {
                 System.err.println("Failed to acquire native library. Did you install the right apk? Try the universal one.");
                 System.exit(134);
