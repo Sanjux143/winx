@@ -165,7 +165,7 @@ public class ContainersFragment extends Fragment {
             catch (PackageManager.NameNotFoundException e) {
                 throw new RuntimeException(e);
             }
-            ProcessBuilder builder = new ProcessBuilder("/system/bin/app_process", "/", "com.winlator.CmdEntryPoint", ":0");
+            ProcessBuilder builder = new ProcessBuilder("/system/bin/app_process", "/", "com.winlator.CmdEntryPoint", ":0", "-legacy-drawing");
             builder.redirectErrorStream(true);
             builder.environment().put("CLASSPATH", info.applicationInfo.sourceDir);
             builder.environment().put("WINLATOR_X11_DEBUG", "1");
