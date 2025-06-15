@@ -81,6 +81,22 @@ public abstract class Box86_64PresetManager {
 
             }
         }
+        else if (id.equals(Box86_64Preset.SPECIAL)) {
+            envVars.put(ucPrefix+"_DYNAREC_SAFEFLAGS", "0");
+            envVars.put(ucPrefix+"_DYNAREC_FASTNAN", "1");
+            envVars.put(ucPrefix+"_DYNAREC_FASTROUND", "1");
+            envVars.put(ucPrefix+"_DYNAREC_X87DOUBLE", "0");
+            envVars.put(ucPrefix+"_DYNAREC_BIGBLOCK", "3");
+            envVars.put(ucPrefix+"_DYNAREC_STRONGMEM", "0");
+            envVars.put(ucPrefix+"_DYNAREC_FORWARD", "512");
+            envVars.put(ucPrefix+"_DYNAREC_CALLRET", "1");
+            envVars.put(ucPrefix+"_DYNAREC_WAIT", "1");
+            if (ucPrefix.equals("BOX64")) {
+                envVars.put("BOX64_AVX", "2");
+                envVars.put("BOX64_UNITYPLAYER", "0");
+
+            }
+        }
         else if (id.startsWith(Box86_64Preset.CUSTOM)) {
             for (String[] preset : customPresetsIterator(prefix, context)) {
                 if (preset[0].equals(id)) {
@@ -99,6 +115,7 @@ public abstract class Box86_64PresetManager {
         presets.add(new Box86_64Preset(Box86_64Preset.COMPATIBILITY, context.getString(R.string.compatibility)));
         presets.add(new Box86_64Preset(Box86_64Preset.INTERMEDIATE, context.getString(R.string.intermediate)));
         presets.add(new Box86_64Preset(Box86_64Preset.PERFORMANCE, context.getString(R.string.performance)));
+        presets.add(new Box86_64Preset(Box86_64Preset.SPECIAL, context.getString(R.string.special)));
         for (String[] preset : customPresetsIterator(prefix, context)) presets.add(new Box86_64Preset(preset[0], preset[1]));
         return presets;
     }

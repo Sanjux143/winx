@@ -172,6 +172,7 @@
     <string name="compatibility">Compatibility (Совместимая)</string>
     <string name="intermediate">Intermediate (Средняя)</string>
     <string name="performance">Performance (Производительная)</string>
+    <string name="special">Special (Специальная)</string>
     <string name="preset">Предустановка</string>
     <string name="you_cannot_remove_this_preset">Вы не можете удалить эту предустановку</string>
     <string name="dxwrapper_help_content" translatable="false"><![CDATA[
