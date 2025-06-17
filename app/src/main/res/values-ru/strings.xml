@@ -306,7 +306,7 @@
     <string name="add_to_home_screen">Добавить на главный экран</string>
     <string name="shortcut_not_available">Этот ярлык больше недоступен. Пожалуйста, удалите или создайте его заново.</string>
     <string name="enable_file_provider">Включить File Provider</string>
-    <string name="use_lorie">Использовать Lorie X Server</string>
+    <string name="use_lorie">Использовать Lorie X Server (в разработке)</string>
     <string name="take_effect_next_startup">Эта опция вступит в силу при следующем запуске.</string>
     <string name="imagefs">Imagefs</string>
     <string name="reinstall_imagefs">Переустановить Imagefs</string>

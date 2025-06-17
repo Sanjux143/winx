@@ -4,8 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +24,7 @@ import android.widget.Spinner;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -91,8 +96,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.Executors;
@@ -153,9 +161,11 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         AppUtils.hideSystemUI(this);
         AppUtils.keepScreenOn(this);
         setContentView(R.layout.xserver_display_activity);
@@ -268,6 +278,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         preloaderDialog.show(R.string.starting_up);
 
         inputControlsManager = new InputControlsManager(this);
+
         xServer = new XServer(new ScreenInfo(screenSize));
         xServer.setWinHandler(winHandler);
         boolean[] winStarted = {false};
@@ -344,6 +355,11 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             configChangedCallback = runnable;
         } else
             runnable.run();
+
+        SharedPreferences sp = android.preference.PreferenceManager.getDefaultSharedPreferences(this);
+        boolean isX11LorieEnabled = sp.getBoolean("use_lorie", false);
+        if(isX11LorieEnabled)
+            launchXLorie();
     }
 
     @Override
@@ -1214,5 +1230,44 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             frameRatingWindowId = -1;
             runOnUiThread(() -> frameRating.setVisibility(View.GONE));
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    private void launchXLorie() {
+        PackageManager pm = getPackageManager();
+        PackageInfo info;
+        try {
+            ///info = pm.getPackageInfo(getActivity().getPackageName(), PackageManager.PackageInfoFlags.of(0));
+            info = pm.getPackageInfo(getPackageName(), PackageManager.GET_META_DATA);
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        ProcessBuilder builder = new ProcessBuilder("/system/bin/app_process", "/", "com.winlator.CmdEntryPoint", ":0", "-legacy-drawing");
+        builder.redirectErrorStream(true);
+        builder.environment().put("CLASSPATH", info.applicationInfo.sourceDir);
+        builder.environment().put("WINLATOR_X11_DEBUG", "1");
+        Log.i("SourceDir: ", info.applicationInfo.sourceDir);
+        builder.environment().put("TMPDIR", "/data/data/com.winlator/files/imagefs/usr/tmp");
+        builder.environment().put("XKB_CONFIG_ROOT", "/data/data/com.winlator/files/imagefs/usr/share/X11/xkb");
+        Thread t = new Thread(new Runnable(){
+            @Override
+            public void run() {
+                try {
+                    Process x11Process = builder.start();
+                    Intent x11Lorie = new Intent(getBaseContext(), X11Activity.class);
+                    startActivity(x11Lorie);
+                    BufferedReader br = new BufferedReader(new InputStreamReader(x11Process.getInputStream()));
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        Log.d("X11Loader", line);
+                    }
+                }
+                catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        t.start();
     }
 }
