@@ -781,8 +781,9 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
     }
 
     private void extractGraphicsDriverFiles() {
+        int cacheContainerId = preferences.getInt("cache_container_id", 0);
         String cacheId = container.getExtra("graphicsDriver");
-        boolean changed = !cacheId.equals(graphicsDriver);
+        boolean changed = (!cacheId.equals(graphicsDriver)) || (cacheContainerId != container.id);
         File rootDir = imageFs.getRootDir();
 
         if (changed) {
@@ -792,6 +793,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             FileUtils.delete(new File(imageFs.getLib64Dir(), "libGL.so.1"));
             container.putExtra("graphicsDriver", graphicsDriver);
             container.saveData();
+            preferences.edit().putInt("cache_container_id", container.id).apply();
         }
 
         if (graphicsDriver.startsWith("turnip")) {
