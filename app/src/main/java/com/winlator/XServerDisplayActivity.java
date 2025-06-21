@@ -487,17 +487,19 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         }
 
         String dxwrapper = this.dxwrapper;
-        String dxwrapper2 = null;
+        String dxwrapper2 = "";
         if (dxwrapper.contains("dxvk") || dxwrapper.contains("vkd3d")) {
             dxwrapper = "dxvk-" + dxwrapperConfig.get("dxvk_version");
             dxwrapper2 = "vkd3d-" + dxwrapperConfig.get("vkd3dVersion");
         }
 
-        if (!dxwrapper.equals(container.getExtra("dxwrapper"))) {
+        if (!dxwrapper.equals(container.getExtra("dxwrapper")) || !dxwrapper2.equals(container.getExtra("dxwrapper2"))) {
             extractDXWrapperFiles(dxwrapper);
-            if (dxwrapper2 != null)
+            if (!dxwrapper2.isEmpty())
                 extractDXWrapperFiles(dxwrapper2);
+
             container.putExtra("dxwrapper", dxwrapper);
+            container.putExtra("dxwrapper2", dxwrapper2);
             containerDataChanged = true;
         }
 
