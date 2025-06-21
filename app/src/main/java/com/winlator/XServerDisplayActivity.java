@@ -37,10 +37,9 @@ import com.winlator.container.Container;
 import com.winlator.container.ContainerManager;
 import com.winlator.container.Shortcut;
 import com.winlator.contentdialog.ContentDialog;
-import com.winlator.contentdialog.DXVKConfigDialog;
+import com.winlator.contentdialog.DXVK_VKD3DConfigDialog;
 import com.winlator.contentdialog.DebugDialog;
 import com.winlator.contentdialog.NavigationDialog;
-import com.winlator.contentdialog.VKD3DConfigDialog;
 import com.winlator.contentdialog.VirGLConfigDialog;
 import com.winlator.contents.ContentProfile;
 import com.winlator.contents.ContentsManager;
@@ -264,7 +263,8 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                 if (!inputType.isEmpty()) winHandler.setInputType(Byte.parseByte(inputType));
             }
 
-            if (dxwrapper.equals("dxvk") || dxwrapper.equals("vkd3d")) this.dxwrapperConfig = DXVKConfigDialog.parseConfig(dxwrapperConfig);
+            if (dxwrapper.contains("dxvk") || dxwrapper.contains("vkd3d"))
+                this.dxwrapperConfig = DXVK_VKD3DConfigDialog.parseConfig(dxwrapperConfig);
 
             if (!wineInfo.isWin64()) {
                 onExtractFileListener = (file, size) -> {
@@ -487,13 +487,16 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         }
 
         String dxwrapper = this.dxwrapper;
-        if (dxwrapper.equals("dxvk"))
-            dxwrapper = "dxvk-"+dxwrapperConfig.get("version");
-        else if (dxwrapper.equals("vkd3d"))
-            dxwrapper = "vkd3d-"+dxwrapperConfig.get("vkd3dVersion");
+        String dxwrapper2 = null;
+        if (dxwrapper.contains("dxvk") || dxwrapper.contains("vkd3d")) {
+            dxwrapper = "dxvk-" + dxwrapperConfig.get("dxvk_version");
+            dxwrapper2 = "vkd3d-" + dxwrapperConfig.get("vkd3dVersion");
+        }
 
         if (!dxwrapper.equals(container.getExtra("dxwrapper"))) {
             extractDXWrapperFiles(dxwrapper);
+            if (dxwrapper2 != null)
+                extractDXWrapperFiles(dxwrapper2);
             container.putExtra("dxwrapper", dxwrapper);
             containerDataChanged = true;
         }
@@ -797,10 +800,8 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         }
 
         if (graphicsDriver.startsWith("turnip")) {
-            if (dxwrapper.equals("dxvk"))
-                DXVKConfigDialog.setEnvVars(this, dxwrapperConfig, envVars);
-            else if (dxwrapper.equals("vkd3d"))
-                VKD3DConfigDialog.setEnvVars(this, dxwrapperConfig, envVars);
+            if (dxwrapper.contains("dxvk") || dxwrapper.contains("vkd3d"))
+                DXVK_VKD3DConfigDialog.setEnvVars(this, dxwrapperConfig, envVars);
 
             envVars.put("GALLIUM_DRIVER", "zink");
             envVars.put("TU_OVERRIDE_HEAP_SIZE", "4096");
@@ -851,12 +852,10 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             envVars.put("MESA_GL_VERSION_OVERRIDE", "3.3");
             envVars.put("WINEVKUSEPLACEDADDR", "1");
             envVars.put("VORTEK_SERVER_PATH", rootDir + UnixSocketConfig.VORTEK_SERVER_PATH);
-            if (dxwrapper.equals("dxvk")) {
+            if (dxwrapper.contains("dxvk") || dxwrapper.contains("vkd3d")) {
                 dxwrapperConfig.put("constantBufferRangeCheck", "1");
-                DXVKConfigDialog.setEnvVars(this, dxwrapperConfig, envVars);
+                DXVK_VKD3DConfigDialog.setEnvVars(this, dxwrapperConfig, envVars);
             }
-            else if (dxwrapper.equals("vkd3d"))
-                VKD3DConfigDialog.setEnvVars(this, dxwrapperConfig, envVars);
 
             if (changed) {
                  TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, "graphics_driver/vortek-" + DefaultVersion.VORTEK + ".tzst", rootDir);
@@ -864,10 +863,8 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             }
         }
         else if (graphicsDriver.startsWith("llvmpipe")) {
-            if (dxwrapper.equals("dxvk"))
-                DXVKConfigDialog.setEnvVars(this, dxwrapperConfig, envVars);
-            else if (dxwrapper.equals("vkd3d"))
-                VKD3DConfigDialog.setEnvVars(this, dxwrapperConfig, envVars);
+            if (dxwrapper.contains("dxvk") || dxwrapper.contains("vkd3d"))
+                DXVK_VKD3DConfigDialog.setEnvVars(this, dxwrapperConfig, envVars);
 
             boolean useDRI3 = preferences.getBoolean("use_dri3", true);
             if (!useDRI3) {
