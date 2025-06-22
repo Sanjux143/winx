@@ -223,6 +223,9 @@
     <string name="desktop">Desktop</string>
     <string name="theme">Theme</string>
     <string name="background">Background</string>
+    <string name="system_font" translatable="false">System Font</string>
+    <string name="dpi" translatable="false">DPI (Font Size)</string>
+    <string name="dpi_default" translatable="false">96 dpi</string>
     <string name="max_device_memory">Max Device Memory</string>
     <string name="frame_rate">Frame Rate</string>
     <string name="configuration">Configuration</string>

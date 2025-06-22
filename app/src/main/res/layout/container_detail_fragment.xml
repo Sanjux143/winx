@@ -326,6 +326,43 @@
                                 android:layout_height="wrap_content"
                                 android:visibility="gone" />
                         </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/system_font" />
+
+                        <Spinner
+                            style="@style/ComboBox"
+                            android:id="@+id/SFont"
+                            android:layout_width="match_parent"
+                            android:entries="@array/desktop_system_fonts" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="8dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/dpi" />
+
+                            <TextView
+                                android:id="@+id/TVDPI"
+                                android:text="@string/dpi_default"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+
+                        <SeekBar
+                            android:id="@+id/SBDPI"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:min="96"
+                            android:max="240" />
                     </LinearLayout>
 
                     <TextView

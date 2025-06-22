@@ -114,6 +114,18 @@
         <item>Image</item>
         <item>Solid Color</item>
     </string-array>
+    <string-array name="desktop_system_fonts">
+        <item>Arial</item>
+        <item>Andale Mono</item>
+        <item>Comic Sans MS</item>
+        <item>Courier New</item>
+        <item>Georgia</item>
+        <item>Impact</item>
+        <item>Tahoma</item>
+        <item>Times New Roman</item>
+        <item>Trebuchet MS</item>
+        <item>Verdana</item>
+    </string-array>
     <string-array name="startup_selection_entries">
         <item>@string/startup_normal</item>
         <item>@string/startup_essential</item>

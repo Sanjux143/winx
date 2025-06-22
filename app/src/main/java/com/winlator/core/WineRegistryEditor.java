@@ -156,6 +156,24 @@ public class WineRegistryEditor implements Closeable {
         return value != null ? Integer.decode("0x" + value.substring(6)) : fallback;
     }
 
+    public byte[] getHexValues(String key, String name) {
+        key = getRawValue(key, name);
+        if (key != null && key.startsWith("hex:")) {
+            String[] arrayOfString = key.replace("hex:", "").replace("\\\n  ", "").split(",");
+            byte[] arrayOfByte = new byte[arrayOfString.length];
+            for (byte b = 0; b < arrayOfString.length; b++) {
+                try {
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.append("0x");
+                    stringBuilder.append(arrayOfString[b]);
+                    arrayOfByte[b] = Integer.decode(stringBuilder.toString()).byteValue();
+                } catch (NumberFormatException numberFormatException) {}
+            }
+            return arrayOfByte;
+        }
+        return null;
+    }
+
     public void setDwordValue(String key, String name, int value) {
         setRawValue(key, name, "dword:"+String.format("%08x", value));
     }
@@ -178,6 +196,16 @@ public class WineRegistryEditor implements Closeable {
         StringBuilder data = new StringBuilder();
         for (byte b : bytes) data.append(String.format(Locale.ENGLISH, "%02x", Byte.toUnsignedInt(b)));
         setHexValue(key, name, data.toString());
+    }
+
+    public void setHexValues(String key, String name, byte[] bytes) {
+        StringBuilder stringBuilder = new StringBuilder();
+        int i = bytes.length;
+        for (byte b = 0; b < i; b++) {
+            byte b1 = bytes[b];
+            stringBuilder.append(String.format(Locale.ENGLISH, "%02x", new Object[] { Integer.valueOf(Byte.toUnsignedInt(b1)) }));
+        }
+        setHexValue(key, name, stringBuilder.toString());
     }
 
     private String getRawValue(String key, String name) {

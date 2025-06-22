@@ -303,4 +303,14 @@ public abstract class WineUtils {
             }
         }
     }
+
+    public static void setSystemFont(WineRegistryEditor registryEditor, String paramString) {
+        byte[] arrayOfByte = (new MSLogFont()).setFaceName(paramString).toByteArray();
+        registryEditor.setHexValues("Control Panel\\Desktop\\WindowMetrics", "CaptionFont", (new MSLogFont()).setFaceName(paramString).setWeight(700).toByteArray());
+        registryEditor.setHexValues("Control Panel\\Desktop\\WindowMetrics", "IconFont", arrayOfByte);
+        registryEditor.setHexValues("Control Panel\\Desktop\\WindowMetrics", "MenuFont", arrayOfByte);
+        registryEditor.setHexValues("Control Panel\\Desktop\\WindowMetrics", "MessageFont", arrayOfByte);
+        registryEditor.setHexValues("Control Panel\\Desktop\\WindowMetrics", "SmCaptionFont", arrayOfByte);
+        registryEditor.setHexValues("Control Panel\\Desktop\\WindowMetrics", "StatusFont", arrayOfByte);
+    }
 }

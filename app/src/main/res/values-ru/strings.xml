@@ -220,6 +220,8 @@
     <string name="desktop">Рабочий стол</string>
     <string name="theme">Тема</string>
     <string name="background">Фон</string>
+    <string name="system_font">Системный шрифт</string>
+    <string name="dpi">DPI (Размер шрифта)</string>
     <string name="max_device_memory">Максимальный объем памяти</string>
     <string name="frame_rate">Частота кадров</string>
     <string name="configuration">Конфигурация</string>

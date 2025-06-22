@@ -19,6 +19,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -56,6 +57,7 @@ import com.winlator.widget.CPUListView;
 import com.winlator.widget.ColorPickerView;
 import com.winlator.widget.EnvVarsView;
 import com.winlator.widget.ImagePickerView;
+import com.winlator.win32.MSLogFont;
 import com.winlator.winhandler.WinHandler;
 import com.winlator.xserver.XKeycode;
 
@@ -369,6 +371,12 @@ public class ContainerDetailFragment extends Fragment {
     private void saveWineRegistryKeys(View view) {
         File userRegFile = new File(container.getRootDir(), ".wine/user.reg");
         try (WineRegistryEditor registryEditor = new WineRegistryEditor(userRegFile)) {
+            Spinner sFont = view.findViewById(R.id.SFont);
+            WineUtils.setSystemFont(registryEditor, sFont.getSelectedItem().toString());
+
+            SeekBar sbDPI = view.findViewById(R.id.SBDPI);
+            registryEditor.setDwordValue("Control Panel\\Desktop", "LogPixels", sbDPI.getProgress());
+
             Spinner sCSMT = view.findViewById(R.id.SCSMT);
             registryEditor.setDwordValue("Software\\Wine\\Direct3D", "csmt", sCSMT.getSelectedItemPosition() != 0 ? 3 : 0);
 
@@ -435,6 +443,26 @@ public class ContainerDetailFragment extends Fragment {
         File userRegFile = new File(containerDir, ".wine/user.reg");
 
         try (WineRegistryEditor registryEditor = new WineRegistryEditor(userRegFile)) {
+            Spinner sFont = view.findViewById(R.id.SFont);
+            MSLogFont mSLogFont = new MSLogFont();
+            AppUtils.setSpinnerSelectionFromValue(sFont, mSLogFont.fromByteArray(registryEditor.getHexValues("Control Panel\\Desktop\\WindowMetrics", "CaptionFont")).getFaceName());
+
+            TextView tvDPI = view.findViewById(R.id.TVDPI);
+            SeekBar sbDPI = view.findViewById(R.id.SBDPI);
+            sbDPI.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    tvDPI.setText(progress + " dpi");
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {}
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {}
+            });
+            sbDPI.setProgress(registryEditor.getDwordValue("Control Panel\\Desktop", "LogPixels", Integer.valueOf(96)).intValue());
+
             List<String> stateList = Arrays.asList(context.getString(R.string.disable), context.getString(R.string.enable));
             Spinner sCSMT = view.findViewById(R.id.SCSMT);
             sCSMT.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, stateList));
