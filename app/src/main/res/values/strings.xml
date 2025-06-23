@@ -148,6 +148,7 @@
     <string name="letter">Letter</string>
     <string name="target_path">Target Path</string>
     <string name="xserver" translatable="false">XServer</string>
+    <string name="mouse_and_touchpad" translatable="false">Mouse and Touchpad</string>
     <string name="use_dri3_extension">Use DRI3 extension</string>
     <string name="width">Width</string>
     <string name="height">Height</string>

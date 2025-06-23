@@ -145,6 +145,7 @@
     <string name="letter">Буква</string>
     <string name="target_path">Путь к диску</string>
     <string name="xserver" translatable="false">XServer</string>
+    <string name="mouse_and_touchpad">Мышь и сенсорный экран</string>
     <string name="use_dri3_extension">Использовать расширение DRI3</string>
     <string name="width">Ширина</string>
     <string name="height">Высота</string>

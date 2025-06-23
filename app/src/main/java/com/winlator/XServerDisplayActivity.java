@@ -672,6 +672,9 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             rootView.addView(frameRating);
         }
 
+        boolean simTouchScreenMain = preferences.getBoolean("simTouchScreen", true);
+        touchpadView.setSimTouchScreen(simTouchScreenMain);
+
         if (shortcut != null) {
             String controlsProfile = shortcut.getExtra("controlsProfile");
             if (!controlsProfile.isEmpty()) {
@@ -680,7 +683,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             }
 
             String simTouchScreen = shortcut.getExtra("simTouchScreen");
-            touchpadView.setSimTouchScreen(simTouchScreen.equals("1"));
+            touchpadView.setSimTouchScreen(simTouchScreen.equals("1") || simTouchScreenMain);
         }
 
         AppUtils.observeSoftKeyboardVisibility(drawerLayout, renderer::setScreenOffsetYRelativeToCursor);
