@@ -174,6 +174,9 @@ public class SettingsFragment extends Fragment {
         final CheckBox cbSimulateTouchScreen = view.findViewById(R.id.CBSimulateTouchScreen);
         cbSimulateTouchScreen.setChecked(preferences.getBoolean("simTouchScreen", false));
 
+        final CheckBox cbCapturePointerOnExternalMouse = view.findViewById(R.id.CBCapturePointerOnExternalMouse);
+        cbCapturePointerOnExternalMouse.setChecked(preferences.getBoolean("capture_pointer_on_external_mouse", true));
+
         final CheckBox cbHaptics = view.findViewById(R.id.CBHaptics);
         cbHaptics.setChecked(preferences.getBoolean("haptics", false));
 
@@ -255,6 +258,7 @@ public class SettingsFragment extends Fragment {
             editor.putString("box86_preset", Box86_64PresetManager.getSpinnerSelectedId(sBox86Preset));
             editor.putString("box64_preset", Box86_64PresetManager.getSpinnerSelectedId(sBox64Preset));
             editor.putBoolean("simTouchScreen", cbSimulateTouchScreen.isChecked());
+            editor.putBoolean("capture_pointer_on_external_mouse", cbCapturePointerOnExternalMouse.isChecked());
             editor.putBoolean("haptics", cbHaptics.isChecked());
             editor.putBoolean("use_dri3", cbUseDRI3.isChecked());
             editor.putBoolean("use_xr", cbUseXR.isChecked());

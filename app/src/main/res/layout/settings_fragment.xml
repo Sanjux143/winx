@@ -238,11 +238,16 @@
                         android:text="@string/simulate_touch_screen" />
 
                     <CheckBox
+                        android:id="@+id/CBCapturePointerOnExternalMouse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/capture_pointer" />
+
+                    <CheckBox
                         android:id="@+id/CBHaptics"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/virtual_buttons_haptics"
-                        android:layout_marginTop="8dp" />
+                        android:text="@string/virtual_buttons_haptics" />
                 </LinearLayout>
 
                 <TextView

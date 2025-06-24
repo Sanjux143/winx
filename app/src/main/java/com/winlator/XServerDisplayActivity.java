@@ -85,6 +85,8 @@ import com.winlator.xenvironment.components.SysVSharedMemoryComponent;
 import com.winlator.xenvironment.components.VirGLRendererComponent;
 import com.winlator.xenvironment.components.VortekRendererComponent; ///
 import com.winlator.xenvironment.components.XServerComponent;
+import com.winlator.xserver.Pointer;
+import com.winlator.math.XForm;
 import com.winlator.xserver.Property;
 import com.winlator.xserver.ScreenInfo;
 import com.winlator.xserver.Window;
@@ -144,6 +146,8 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
     private String lc_all = "";
     PreloaderDialog preloaderDialog = null;
     private Runnable configChangedCallback = null;
+    private boolean capturePointerOnExternalMouse = true;
+    private final float[] xform = XForm.getInstance();
 
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
@@ -360,6 +364,32 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         boolean isX11LorieEnabled = sp.getBoolean("use_lorie", false);
         if(isX11LorieEnabled)
             launchXLorie();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            if (capturePointerOnExternalMouse) {
+                touchpadView.setFocusable(View.FOCUSABLE);
+                touchpadView.setFocusableInTouchMode(true);
+                touchpadView.requestFocus();
+                touchpadView.requestPointerCapture();
+
+                touchpadView.setOnCapturedPointerListener(new View.OnCapturedPointerListener() {
+                    @Override
+                    public boolean onCapturedPointer(View view, MotionEvent event) {
+                        handleCapturedPointer(event);
+                        return true;
+                    }
+                });
+            }
+        } else {
+            if (touchpadView != null) {
+                touchpadView.releasePointerCapture();
+                touchpadView.setOnCapturedPointerListener(null);
+            }
+        }
     }
 
     @Override
@@ -652,6 +682,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         rootView.addView(xServerView);
 
         globalCursorSpeed = preferences.getFloat("cursor_speed", 1.0f);
+        capturePointerOnExternalMouse = preferences.getBoolean("capture_pointer_on_external_mouse", true);
         touchpadView = new TouchpadView(this, xServer);
         touchpadView.setSensitivity(globalCursorSpeed);
         touchpadView.setFourFingersTapCallback(() -> {
@@ -1273,5 +1304,56 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             }
         });
         t.start();
+    }
+
+    private void handleCapturedPointer(MotionEvent event) {
+
+        boolean handled = false;
+
+        // Update XServer pointer position
+        float dx = event.getX();
+        float dy = event.getY();
+
+        xServer.injectPointerMoveDelta((int) dx, (int) dy);
+
+        int actionButton = event.getActionButton();
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_BUTTON_PRESS:
+                if (actionButton == MotionEvent.BUTTON_PRIMARY) {
+                    xServer.injectPointerButtonPress(Pointer.Button.BUTTON_LEFT);
+                } else if (actionButton == MotionEvent.BUTTON_SECONDARY) {
+                    xServer.injectPointerButtonPress(Pointer.Button.BUTTON_RIGHT);
+                } else if (actionButton == MotionEvent.BUTTON_TERTIARY) {
+                    xServer.injectPointerButtonPress(Pointer.Button.BUTTON_MIDDLE); // Handle middle mouse button press
+                }
+                handled = true;
+                break;
+            case MotionEvent.ACTION_BUTTON_RELEASE:
+                if (actionButton == MotionEvent.BUTTON_PRIMARY) {
+                    xServer.injectPointerButtonRelease(Pointer.Button.BUTTON_LEFT);
+                } else if (actionButton == MotionEvent.BUTTON_SECONDARY) {
+                    xServer.injectPointerButtonRelease(Pointer.Button.BUTTON_RIGHT);
+                } else if (actionButton == MotionEvent.BUTTON_TERTIARY) {
+                    xServer.injectPointerButtonRelease(Pointer.Button.BUTTON_MIDDLE); // Handle middle mouse button release
+                }
+                handled = true;
+                break;
+            case MotionEvent.ACTION_HOVER_MOVE:
+                float[] transformedPoint = XForm.transformPoint(xform, event.getX(), event.getY());
+                xServer.injectPointerMove((int)transformedPoint[0], (int)transformedPoint[1]);
+                handled = true;
+                break;
+            case MotionEvent.ACTION_SCROLL:
+                float scrollY = event.getAxisValue(MotionEvent.AXIS_VSCROLL);
+                if (scrollY <= -1.0f) {
+                    xServer.injectPointerButtonPress(Pointer.Button.BUTTON_SCROLL_DOWN);
+                    xServer.injectPointerButtonRelease(Pointer.Button.BUTTON_SCROLL_DOWN);
+                } else if (scrollY >= 1.0f) {
+                    xServer.injectPointerButtonPress(Pointer.Button.BUTTON_SCROLL_UP);
+                    xServer.injectPointerButtonRelease(Pointer.Button.BUTTON_SCROLL_UP);
+                }
+                handled = true;
+                break;
+        }
     }
 }
