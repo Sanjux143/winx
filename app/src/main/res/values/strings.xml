@@ -418,7 +418,7 @@ E.g. <b>META</b> for <i>META key</i>, \n
     <string name="pref_displayStretch" translatable="false">Stretch to fit display</string>
     <string name="pref_Reseed" translatable="false">Reseed screen while soft keyboard is open</string>
     <string name="pref_Reseed_summary" translatable="false">The screen size will be adjusted while Soft Keyboard is open.</string>
-    <string name="pref_PIP0" translatable="false">PIP mode</string>
+    <string name="pref_PIP" translatable="false">PIP mode</string>
     <string name="pref_PIP_summary" translatable="false">Show app in picture-in-picture mode when home button or recents button is pressed</string>
     <string name="pref_fullscreen" translatable="false">Fullscreen</string>
     <string name="pref_fullscreen_summary" translatable="false">Toggle immersive mode in your device display</string>

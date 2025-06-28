@@ -516,6 +516,13 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             containerDataChanged = true;
         }
 
+        String wincomponents = shortcut != null ? shortcut.getExtra("wincomponents", container.getWinComponents()) : container.getWinComponents();
+        if (!wincomponents.equals(container.getExtra("wincomponents"))) {
+            extractWinComponentFiles();
+            container.putExtra("wincomponents", wincomponents);
+            containerDataChanged = true;
+        }
+
         String dxwrapper = this.dxwrapper;
         String dxwrapper2 = "";
         if (dxwrapper.contains("dxvk") || dxwrapper.contains("vkd3d")) {
@@ -534,13 +541,6 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         }
 
         if (dxwrapper.equals("cnc-ddraw")) envVars.put("CNC_DDRAW_CONFIG_FILE", "C:\\ProgramData\\cnc-ddraw\\ddraw.ini");
-
-        String wincomponents = shortcut != null ? shortcut.getExtra("wincomponents", container.getWinComponents()) : container.getWinComponents();
-        if (!wincomponents.equals(container.getExtra("wincomponents"))) {
-            extractWinComponentFiles();
-            container.putExtra("wincomponents", wincomponents);
-            containerDataChanged = true;
-        }
 
         String desktopTheme = container.getDesktopTheme();
         if (!(desktopTheme+","+xServer.screenInfo).equals(container.getExtra("desktopTheme"))) {
@@ -999,8 +999,11 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
     }
 
     private void extractDXWrapperFiles(String dxwrapper) {
-        final String[] dlls = {"d3d10.dll", "d3d10_1.dll", "d3d10core.dll", "d3d11.dll", "d3d12.dll", "d3d12core.dll", "d3d8.dll", "d3d9.dll", "dxgi.dll", "ddraw.dll"};
-        if (firstTimeBoot && !dxwrapper.equals("vkd3d")) cloneOriginalDllFiles(dlls);
+        final String[] dlls = {"d3d10.dll", "d3d10_1.dll", "d3d10core.dll", "d3d11.dll", "d3d12.dll", "d3d12core.dll", "d3d8.dll", "d3d9.dll", "dxgi.dll", "ddraw.dll", "wined3d.dll"};
+        if (firstTimeBoot) {
+            cloneOriginalDllFiles(dlls);
+            firstTimeBoot = false;
+        }
         File rootDir = imageFs.getRootDir();
         File windowsDir = new File(rootDir, ImageFs.WINEPREFIX+"/drive_c/windows");
 
