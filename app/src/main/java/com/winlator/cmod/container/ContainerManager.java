@@ -17,6 +17,7 @@ import com.winlator.cmod.core.TarCompressorUtils;
 import com.winlator.cmod.core.WineInfo;
 import com.winlator.cmod.xenvironment.ImageFs;
 
+import java.io.FilenameFilter;
 import java.util.Arrays;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -229,38 +230,38 @@ public class ContainerManager {
         return null;
     }
 
-    private void extractCommonDlls(WineInfo wineInfo, String srcName, String dstName, JSONObject commonDlls, File containerDir, OnExtractFileListener onExtractFileListener) throws JSONException {
+    private void extractCommonDlls(WineInfo wineInfo, String srcName, String dstName, File containerDir, OnExtractFileListener onExtractFileListener) throws JSONException {
         File srcDir = new File(wineInfo.path + "/lib/wine/" + srcName);
-        JSONArray dlnames = commonDlls.getJSONArray(dstName);
 
-        for (int i = 0; i < dlnames.length(); i++) {
-            String dlname = dlnames.getString(i);
-            File dstFile = new File(containerDir, ".wine/drive_c/windows/"+dstName+"/"+dlname);
+        File[] srcfiles = srcDir.listFiles(file -> file.isFile());
+
+        for (File file : srcfiles) {
+            String dllName = file.getName();
+            if (dllName.equals("iexplore.exe") && wineInfo.isArm64EC() && srcName.equals("aarch64-windows"))
+                file = new File(wineInfo.path + "/lib/wine/" + "i386-windows/iexplore.exe");
+            File dstFile = new File(containerDir, ".wine/drive_c/windows/" + dstName + "/" + dllName);
             if (dstFile.exists()) continue;
             if (onExtractFileListener != null ) {
                 dstFile = onExtractFileListener.onExtractFile(dstFile, 0);
                 if (dstFile == null) continue;
             }
-            FileUtils.copy(new File(srcDir, dlname), dstFile);
+            FileUtils.copy(file, dstFile);
         }
     }
 
     public boolean extractContainerPatternFile(Container container, String wineVersion, File containerDir, OnExtractFileListener onExtractFileListener) {
-        String containerPattern;
         WineInfo wineInfo = WineInfo.fromIdentifier(context, wineVersion);
-        if (wineInfo.isArm64EC()) containerPattern = "container_pattern_arm64ec.tzst";
-        else containerPattern = "container_pattern_x86_64.tzst";
+        String containerPattern = wineVersion + "_container_pattern.tzst";
         boolean result = TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, context, containerPattern, containerDir, onExtractFileListener);
 
         if (result) {
             try {
-                JSONObject commonDlls = new JSONObject(FileUtils.readString(context, "common_dlls.json"));
                 if (wineInfo.isArm64EC())
-                    extractCommonDlls(wineInfo, "aarch64-windows", "system32", commonDlls, containerDir, onExtractFileListener); // arm64ec only
+                    extractCommonDlls(wineInfo, "aarch64-windows", "system32", containerDir, onExtractFileListener); // arm64ec only
                 else
-                    extractCommonDlls(wineInfo, "x86_64-windows", "system32", commonDlls, containerDir, onExtractFileListener);
+                    extractCommonDlls(wineInfo, "x86_64-windows", "system32", containerDir, onExtractFileListener);
 
-                extractCommonDlls(wineInfo, "i386-windows", "syswow64", commonDlls, containerDir, onExtractFileListener);
+                extractCommonDlls(wineInfo, "i386-windows", "syswow64", containerDir, onExtractFileListener);
             }
             catch (JSONException e) {
                 return false;
