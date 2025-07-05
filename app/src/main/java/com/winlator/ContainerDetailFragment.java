@@ -443,7 +443,8 @@ public class ContainerDetailFragment extends Fragment {
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {}
             });
-            sbDPI.setProgress(registryEditor.getDwordValue("Control Panel\\Desktop", "LogPixels", Integer.valueOf(96)).intValue());
+            if (registryEditor.getHexValues("Control Panel\\Desktop", "LogPixels") != null)
+                sbDPI.setProgress(registryEditor.getDwordValue("Control Panel\\Desktop", "LogPixels", Integer.valueOf(96)).intValue());
 
             List<String> mouseWarpOverrideList = Arrays.asList(context.getString(R.string.disable), context.getString(R.string.enable), context.getString(R.string.force));
             Spinner sMouseWarpOverride = view.findViewById(R.id.SMouseWarpOverride);
