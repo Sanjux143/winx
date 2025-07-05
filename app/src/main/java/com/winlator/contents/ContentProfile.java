@@ -23,12 +23,13 @@ public class ContentProfile {
         CONTENT_TYPE_VIRGL("VirGL"),
         CONTENT_TYPE_DXVK("DXVK"),
         CONTENT_TYPE_VKD3D("VKD3D"),
+        CONTENT_TYPE_WINED3D("WineD3D"),
         CONTENT_TYPE_BOX64("Box64");
 
         final String typeName;
 
-        ContentType(String typeNmae) {
-            this.typeName = typeNmae;
+        ContentType(String typeName) {
+            this.typeName = typeName;
         }
 
         @NonNull

@@ -41,6 +41,7 @@ import com.winlator.contentdialog.DXVK_VKD3DConfigDialog;
 import com.winlator.contentdialog.DebugDialog;
 import com.winlator.contentdialog.NavigationDialog;
 import com.winlator.contentdialog.VirGLConfigDialog;
+import com.winlator.contentdialog.WineD3DConfigDialog;
 import com.winlator.contents.ContentProfile;
 import com.winlator.contents.ContentsManager;
 import com.winlator.core.AppUtils;
@@ -269,6 +270,8 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
 
             if (dxwrapper.contains("dxvk") || dxwrapper.contains("vkd3d"))
                 this.dxwrapperConfig = DXVK_VKD3DConfigDialog.parseConfig(dxwrapperConfig);
+            else if (dxwrapper.contains("wined3d"))
+                this.dxwrapperConfig = WineD3DConfigDialog.parseConfig(dxwrapperConfig);
 
             if (!wineInfo.isWin64()) {
                 onExtractFileListener = (file, size) -> {
@@ -528,6 +531,8 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         if (dxwrapper.contains("dxvk") || dxwrapper.contains("vkd3d")) {
             dxwrapper = "dxvk-" + dxwrapperConfig.get("dxvk_version");
             dxwrapper2 = "vkd3d-" + dxwrapperConfig.get("vkd3dVersion");
+        } else if (dxwrapper.contains("wined3d")) {
+            dxwrapper = "wined3d-" + dxwrapperConfig.get("wined3d_version");
         }
 
         if (!dxwrapper.equals(container.getExtra("dxwrapper")) || !dxwrapper2.equals(container.getExtra("dxwrapper2"))) {
@@ -1008,9 +1013,6 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         File windowsDir = new File(rootDir, ImageFs.WINEPREFIX+"/drive_c/windows");
 
         switch (dxwrapper) {
-            case "wined3d":
-                restoreOriginalDllFiles(dlls);
-                break;
             case "cnc-ddraw":
                 restoreOriginalDllFiles(dlls);
                 final String assetDir = "dxwrapper/cnc-ddraw-"+DefaultVersion.CNC_DDRAW;
@@ -1044,6 +1046,15 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                         contentsManager.applyContent(profile);
                     else
                         TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, "dxwrapper/" + dxwrapper + ".tzst", windowsDir, onExtractFileListener);
+                } else if (dxwrapper.startsWith("wined3d")) {
+                    ContentProfile profile = contentsManager.getProfileByEntryName(dxwrapper);
+                    restoreOriginalDllFiles(dlls);
+                    if (profile != null)
+                        contentsManager.applyContent(profile);
+                    else {
+                        if (!(dxwrapper.equals("wined3d-"+DefaultVersion.WINED3D)))
+                            TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, "dxwrapper/" + dxwrapper + ".tzst", windowsDir, onExtractFileListener);
+                    }
                 }
                 break;
         }

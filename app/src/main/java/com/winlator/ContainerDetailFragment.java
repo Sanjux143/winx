@@ -39,6 +39,7 @@ import com.winlator.contentdialog.ContentDialog;
 import com.winlator.contentdialog.DXVK_VKD3DConfigDialog;
 import com.winlator.contentdialog.VirGLConfigDialog;
 import com.winlator.contentdialog.VortekConfigDialog;
+import com.winlator.contentdialog.WineD3DConfigDialog;
 import com.winlator.contents.ContentProfile;
 import com.winlator.contents.ContentsManager;
 import com.winlator.core.AppUtils;
@@ -77,7 +78,6 @@ public class ContainerDetailFragment extends Fragment {
     private final int containerId;
     private Container container;
     private PreloaderDialog preloaderDialog;
-    private JSONArray gpuCards;
     private Callback<String> openDirectoryCallback;
 
     public ContainerDetailFragment() {
@@ -93,11 +93,6 @@ public class ContainerDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(false);
         preloaderDialog = new PreloaderDialog(getActivity());
-
-        try {
-            gpuCards = new JSONArray(FileUtils.readString(getContext(), "gpu_cards.json"));
-        }
-        catch (JSONException e) {}
     }
 
     @Override
@@ -377,34 +372,21 @@ public class ContainerDetailFragment extends Fragment {
             SeekBar sbDPI = view.findViewById(R.id.SBDPI);
             registryEditor.setDwordValue("Control Panel\\Desktop", "LogPixels", sbDPI.getProgress());
 
-            Spinner sCSMT = view.findViewById(R.id.SCSMT);
-            registryEditor.setDwordValue("Software\\Wine\\Direct3D", "csmt", sCSMT.getSelectedItemPosition() != 0 ? 3 : 0);
-
-            Spinner sGPUName = view.findViewById(R.id.SGPUName);
-            try {
-                JSONObject gpuName = gpuCards.getJSONObject(sGPUName.getSelectedItemPosition());
-                registryEditor.setDwordValue("Software\\Wine\\Direct3D", "VideoPciDeviceID", gpuName.getInt("deviceID"));
-                registryEditor.setDwordValue("Software\\Wine\\Direct3D", "VideoPciVendorID", gpuName.getInt("vendorID"));
-            }
-            catch (JSONException e) {}
-
-            Spinner sOffscreenRenderingMode = view.findViewById(R.id.SOffscreenRenderingMode);
-            registryEditor.setStringValue("Software\\Wine\\Direct3D", "OffScreenRenderingMode", sOffscreenRenderingMode.getSelectedItem().toString().toLowerCase(Locale.ENGLISH));
-
-            Spinner sStrictShaderMath = view.findViewById(R.id.SStrictShaderMath);
-            registryEditor.setDwordValue("Software\\Wine\\Direct3D", "strict_shader_math", sStrictShaderMath.getSelectedItemPosition());
-
-            Spinner sVideoMemorySize = view.findViewById(R.id.SVideoMemorySize);
-            registryEditor.setStringValue("Software\\Wine\\Direct3D", "VideoMemorySize", StringUtils.parseNumber(sVideoMemorySize.getSelectedItem()));
-
-            Spinner sRenderer = view.findViewById(R.id.SRenderer);
-            registryEditor.setStringValue("Software\\Wine\\Direct3D", "renderer", sRenderer.getSelectedItem().toString().toLowerCase(Locale.ENGLISH));
-
             Spinner sMouseWarpOverride = view.findViewById(R.id.SMouseWarpOverride);
             registryEditor.setStringValue("Software\\Wine\\DirectInput", "MouseWarpOverride", sMouseWarpOverride.getSelectedItem().toString().toLowerCase(Locale.ENGLISH));
 
-            registryEditor.setStringValue("Software\\Wine\\Direct3D", "shader_backend", "glsl");
-            registryEditor.setStringValue("Software\\Wine\\Direct3D", "UseGLSL", "enabled");
+            if (container.getDXWrapper().equals("wined3d")) {
+                KeyValueSet config = new KeyValueSet(container.getDXWrapperConfig());
+                registryEditor.setDwordValue("Software\\Wine\\Direct3D", "csmt", Integer.parseInt(config.get("csmt")) != 0 ? 3 : 0);
+                registryEditor.setDwordValue("Software\\Wine\\Direct3D", "VideoPciDeviceID", Integer.parseInt(config.get("deviceID")));
+                registryEditor.setDwordValue("Software\\Wine\\Direct3D", "VideoPciVendorID", Integer.parseInt(config.get("vendorID")));
+                registryEditor.setStringValue("Software\\Wine\\Direct3D", "OffScreenRenderingMode", config.get("OffScreenRenderingMode").toLowerCase(Locale.ENGLISH));
+                registryEditor.setDwordValue("Software\\Wine\\Direct3D", "strict_shader_math", Integer.parseInt(config.get("strict_shader_math")));
+                registryEditor.setStringValue("Software\\Wine\\Direct3D", "VideoMemorySize", config.get("VideoMemorySize"));
+                registryEditor.setStringValue("Software\\Wine\\Direct3D", "renderer", config.get("renderer").toLowerCase(Locale.ENGLISH));
+                registryEditor.setStringValue("Software\\Wine\\Direct3D", "shader_backend", "glsl");
+                registryEditor.setStringValue("Software\\Wine\\Direct3D", "UseGLSL", "enabled");
+            }
         }
     }
 
@@ -463,54 +445,11 @@ public class ContainerDetailFragment extends Fragment {
             });
             sbDPI.setProgress(registryEditor.getDwordValue("Control Panel\\Desktop", "LogPixels", Integer.valueOf(96)).intValue());
 
-            List<String> stateList = Arrays.asList(context.getString(R.string.disable), context.getString(R.string.enable));
-            Spinner sCSMT = view.findViewById(R.id.SCSMT);
-            sCSMT.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, stateList));
-            sCSMT.setSelection(registryEditor.getDwordValue("Software\\Wine\\Direct3D", "csmt", 3) != 0 ? 1 : 0);
-
-            Spinner sGPUName = view.findViewById(R.id.SGPUName);
-            loadGPUNameSpinner(sGPUName, registryEditor.getDwordValue("Software\\Wine\\Direct3D", "VideoPciDeviceID", 1728));
-
-            List<String> offscreenRenderingModeList = Arrays.asList("Backbuffer", "FBO");
-            Spinner sOffscreenRenderingMode = view.findViewById(R.id.SOffscreenRenderingMode);
-            sOffscreenRenderingMode.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, offscreenRenderingModeList));
-            AppUtils.setSpinnerSelectionFromValue(sOffscreenRenderingMode, registryEditor.getStringValue("Software\\Wine\\Direct3D", "OffScreenRenderingMode", "fbo"));
-
-            Spinner sStrictShaderMath = view.findViewById(R.id.SStrictShaderMath);
-            sStrictShaderMath.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, stateList));
-            sStrictShaderMath.setSelection(Math.min(registryEditor.getDwordValue("Software\\Wine\\Direct3D", "strict_shader_math", 1), 1));
-
-            Spinner sVideoMemorySize = view.findViewById(R.id.SVideoMemorySize);
-            String videoMemorySize = registryEditor.getStringValue("Software\\Wine\\Direct3D", "VideoMemorySize", "2048");
-            AppUtils.setSpinnerSelectionFromNumber(sVideoMemorySize, videoMemorySize);
-
-            List<String> rendererList = Arrays.asList("gl", "vulkan", "no3d");
-            Spinner sRenderer = view.findViewById(R.id.SRenderer);
-            sRenderer.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, rendererList));
-            AppUtils.setSpinnerSelectionFromValue(sRenderer, registryEditor.getStringValue("Software\\Wine\\Direct3D", "renderer", "gl"));
-
             List<String> mouseWarpOverrideList = Arrays.asList(context.getString(R.string.disable), context.getString(R.string.enable), context.getString(R.string.force));
             Spinner sMouseWarpOverride = view.findViewById(R.id.SMouseWarpOverride);
             sMouseWarpOverride.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, mouseWarpOverrideList));
             AppUtils.setSpinnerSelectionFromValue(sMouseWarpOverride, registryEditor.getStringValue("Software\\Wine\\DirectInput", "MouseWarpOverride", "disable"));
         }
-    }
-
-    private void loadGPUNameSpinner(Spinner spinner, int selectedDeviceID) {
-        List<String> values = new ArrayList<>();
-        int selectedPosition = 0;
-
-        try {
-            for (int i = 0; i < gpuCards.length(); i++) {
-                JSONObject item = gpuCards.getJSONObject(i);
-                if (item.getInt("deviceID") == selectedDeviceID) selectedPosition = i;
-                values.add(item.getString("name"));
-            }
-        }
-        catch (JSONException e) {}
-
-        spinner.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, values));
-        spinner.setSelection(selectedPosition);
     }
 
     public static String getScreenSize(View view) {
@@ -617,7 +556,11 @@ public class ContainerDetailFragment extends Fragment {
                 if (dxwrapper.contains("dxvk")) {
                     vDXWrapperConfig.setOnClickListener((v) -> (new DXVK_VKD3DConfigDialog(vDXWrapperConfig)).show());
                     vDXWrapperConfig.setVisibility(View.VISIBLE);
-                } else vDXWrapperConfig.setVisibility(View.GONE);
+                } else if (dxwrapper.contains("wined3d")) {
+                    vDXWrapperConfig.setOnClickListener((v) -> (new WineD3DConfigDialog(vDXWrapperConfig)).show());
+                    vDXWrapperConfig.setVisibility(View.VISIBLE);
+                }
+                else vDXWrapperConfig.setVisibility(View.GONE);
             }
 
             @Override

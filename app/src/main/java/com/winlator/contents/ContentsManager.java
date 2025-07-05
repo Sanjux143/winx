@@ -31,6 +31,10 @@ public class ContentsManager {
             "${syswow64}/d3d10_1.dll", "${syswow64}/d3d10core.dll", "${syswow64}/d3d11.dll", "${syswow64}/dxgi.dll"};
     public static final String[] VKD3D_TRUST_FILES = {"${system32}/d3d12core.dll", "${system32}/d3d12.dll",
             "${syswow64}/d3d12core.dll", "${syswow64}/d3d12.dll"};
+    public static final String[] WINED3D_TRUST_FILES = {"${system32}/d3d8.dll", "${system32}/d3d9.dll", "${system32}/d3d10.dll", "${system32}/d3d10_1.dll",
+            "${system32}/d3d10core.dll", "${system32}/d3d11.dll", "${system32}/dxgi.dll", "${system32}/ddraw.dll", "${system32}/wined3d.dll",
+            "${syswow64}/d3d8.dll", "${syswow64}/d3d9.dll", "${syswow64}/d3d10.dll", "${syswow64}/d3d10_1.dll", "${syswow64}/d3d10core.dll",
+            "${syswow64}/d3d11.dll", "${syswow64}/dxgi.dll", "${syswow64}/ddraw.dll", "${syswow64}/wined3d.dll"};
     public static final String[] BOX64_TRUST_FILES = {"${localbin}/box64"};
     private Map<String, String> dirTemplateMap;
     private Map<ContentProfile.ContentType, List<String>> trustedFilesMap;
@@ -327,6 +331,7 @@ public class ContentsManager {
                     case CONTENT_TYPE_VIRGL -> VIRGL_TRUST_FILES;
                     case CONTENT_TYPE_DXVK -> DXVK_TRUST_FILES;
                     case CONTENT_TYPE_VKD3D -> VKD3D_TRUST_FILES;
+                    case CONTENT_TYPE_WINED3D -> WINED3D_TRUST_FILES;
                     case CONTENT_TYPE_BOX64 -> BOX64_TRUST_FILES;
                     default -> new String[0];
                 };
