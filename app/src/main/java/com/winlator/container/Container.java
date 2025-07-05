@@ -64,6 +64,7 @@ public class Container {
     private String lc_all = "";
     private int primaryController = 1;
     private String controllerMapping = new String(new char[XrControllerMapping.values().length]);
+    private int dpi = 96;
 
     public Container(int id) {
         this.id = id;
@@ -334,6 +335,12 @@ public class Container {
         this.inputType = inputType;
     }
 
+    public void setDPI(int dpi) {
+        this.dpi = dpi;
+    }
+
+    public int getDPI() { return dpi; }
+
     public Iterable<String[]> drivesIterator() {
         return drivesIterator(drives);
     }
@@ -387,6 +394,7 @@ public class Container {
             data.put("lc_all", lc_all);
             data.put("primaryController", primaryController);
             data.put("controllerMapping", controllerMapping);
+            data.put("dpi", dpi);
 
             if (!WineInfo.isMainWineVersion(wineVersion)) data.put("wineVersion", wineVersion);
             FileUtils.writeString(getConfigFile(), data.toString());
@@ -484,6 +492,9 @@ public class Container {
                     break;
                 case "controllerMapping" :
                     controllerMapping = data.getString(key);
+                    break;
+                case "dpi" :
+                    dpi = data.getInt(key);
                     break;
             }
         }

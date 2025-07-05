@@ -252,6 +252,8 @@ public class ContainerDetailFragment extends Fragment {
         setControllerMapping(view.findViewById(R.id.SThumbstickLeft), Container.XrControllerMapping.THUMBSTICK_LEFT, XKeycode.KEY_LEFT.ordinal());
         setControllerMapping(view.findViewById(R.id.SThumbstickRight), Container.XrControllerMapping.THUMBSTICK_RIGHT, XKeycode.KEY_RIGHT.ordinal());
 
+        final SeekBar sbDPI = view.findViewById(R.id.SBDPI);
+
         createWineConfigurationTab(view);
         final EnvVarsView envVarsView = createEnvVarsTab(view);
         createWinComponentsTab(view, isEditMode() ? container.getWinComponents() : Container.DEFAULT_WINCOMPONENTS);
@@ -284,6 +286,7 @@ public class ContainerDetailFragment extends Fragment {
                 int rcfileId = rcfileIds[0];
                 int primaryController = sPrimaryController.getSelectedItemPosition();
                 String controllerMapping = getControllerMapping(view);
+                int dpi = sbDPI.getProgress();
 
                 int finalInputType = 0;
                 finalInputType |= cbEnableXInput.isChecked() ? WinHandler.FLAG_INPUT_TYPE_XINPUT : 0;
@@ -315,6 +318,7 @@ public class ContainerDetailFragment extends Fragment {
                     container.setLC_ALL(lc_all);
                     container.setPrimaryController(primaryController);
                     container.setControllerMapping(controllerMapping);
+                    container.setDPI(dpi);
                     container.saveData();
                     saveWineRegistryKeys(view);
                     getActivity().onBackPressed();
@@ -346,6 +350,7 @@ public class ContainerDetailFragment extends Fragment {
                     data.put("primaryController", primaryController);
                     data.put("controllerMapping", controllerMapping);
                     data.put("wineVersion", sWineVersion.getSelectedItem().toString());
+                    data.put("dpi", dpi);
 
                     preloaderDialog.show(R.string.creating_container);
                     manager.createContainerAsync(data, (container) -> {
@@ -443,8 +448,11 @@ public class ContainerDetailFragment extends Fragment {
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {}
             });
-            if (registryEditor.getHexValues("Control Panel\\Desktop", "LogPixels") != null)
-                sbDPI.setProgress(registryEditor.getDwordValue("Control Panel\\Desktop", "LogPixels", Integer.valueOf(96)).intValue());
+
+            if (container != null)
+                sbDPI.setProgress(container.getDPI());
+            else
+                sbDPI.setProgress(96);
 
             List<String> mouseWarpOverrideList = Arrays.asList(context.getString(R.string.disable), context.getString(R.string.enable), context.getString(R.string.force));
             Spinner sMouseWarpOverride = view.findViewById(R.id.SMouseWarpOverride);

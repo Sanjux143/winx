@@ -6,6 +6,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.winlator.R;
+import com.winlator.contents.ContentProfile;
+import com.winlator.contents.ContentsManager;
 import com.winlator.core.AppUtils;
 import com.winlator.core.DefaultVersion;
 import com.winlator.core.FileUtils;
@@ -40,6 +42,10 @@ public class WineD3DConfigDialog extends ContentDialog {
         final Spinner sStrictShaderMath = findViewById(R.id.SStrictShaderMath);
         final Spinner sVideoMemorySize = findViewById(R.id.SVideoMemorySize);
         final Spinner sRenderer = findViewById(R.id.SRenderer);
+
+        ContentsManager contentsManager = new ContentsManager(context);
+        contentsManager.syncContents();
+        loadWineD3DVersionSpinner(contentsManager, sWineD3DVersion);
 
         KeyValueSet config = parseConfig(anchor.getTag());
 
@@ -108,5 +114,18 @@ public class WineD3DConfigDialog extends ContentDialog {
 
         spinner.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, values));
         spinner.setSelection(selectedPosition);
+    }
+
+    private void loadWineD3DVersionSpinner(ContentsManager manager, Spinner spinner) {
+        String[] originalItems = context.getResources().getStringArray(R.array.wined3d_version_entries);
+        List<String> itemList = new ArrayList<>(Arrays.asList(originalItems));
+
+        for (ContentProfile profile : manager.getProfiles(ContentProfile.ContentType.CONTENT_TYPE_WINED3D)) {
+            String entryName = ContentsManager.getEntryName(profile);
+            int firstDashIndex = entryName.indexOf('-');
+            itemList.add(entryName.substring(firstDashIndex + 1));
+        }
+
+        spinner.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, itemList));
     }
 }
