@@ -25,7 +25,10 @@ import java.util.List;
 public class DXVK_VKD3DConfigDialog extends ContentDialog {
     public static final String DEFAULT_CONFIG = "dxvk_version=" + DefaultVersion.DXVK +
             ",framerate=0,maxDeviceMemory=0,async=1,asyncCache=0" +
-            ",vkd3dVersion=" + DefaultVersion.VKD3D + ",vkd3dLevel=12_1";
+            ",vkd3dVersion=" + DefaultVersion.VKD3D + ",vkd3dLevel=12_1" +
+            ",wined3d_version=" + DefaultVersion.WINED3D + ",csmt=3" +
+            ",OffScreenRenderingMode=fbo,strict_shader_math=1,VideoMemorySize=2048" +
+            ",renderer=gl,deviceID=1728,vendorID=4318";
     public static final int DXVK_TYPE_NONE = 0;
     public static final int DXVK_TYPE_ASYNC = 1;
     public static final int DXVK_TYPE_GPLASYNC = 2;

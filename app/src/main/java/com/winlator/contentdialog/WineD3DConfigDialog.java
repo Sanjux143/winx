@@ -9,7 +9,6 @@ import com.winlator.R;
 import com.winlator.contents.ContentProfile;
 import com.winlator.contents.ContentsManager;
 import com.winlator.core.AppUtils;
-import com.winlator.core.DefaultVersion;
 import com.winlator.core.FileUtils;
 import com.winlator.core.KeyValueSet;
 import com.winlator.core.StringUtils;
@@ -23,9 +22,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class WineD3DConfigDialog extends ContentDialog {
-    public static final String DEFAULT_CONFIG = "wined3d_version=" + DefaultVersion.WINED3D +
-            ",csmt=3,OffScreenRenderingMode=fbo,strict_shader_math=1,VideoMemorySize=2048" +
-            ",renderer=gl,deviceID=1728,vendorID=4318";
     private final Context context;
     private JSONArray gpuCards;
 
@@ -47,7 +43,7 @@ public class WineD3DConfigDialog extends ContentDialog {
         contentsManager.syncContents();
         loadWineD3DVersionSpinner(contentsManager, sWineD3DVersion);
 
-        KeyValueSet config = parseConfig(anchor.getTag());
+        KeyValueSet config = DXVK_VKD3DConfigDialog.parseConfig(anchor.getTag());
 
         AppUtils.setSpinnerSelectionFromIdentifier(sWineD3DVersion, config.get("wined3d_version"));
 
@@ -92,11 +88,6 @@ public class WineD3DConfigDialog extends ContentDialog {
 
             anchor.setTag(config.toString());
         });
-    }
-
-    public static KeyValueSet parseConfig(Object config) {
-        String data = config != null && !config.toString().isEmpty() ? config.toString() : DEFAULT_CONFIG;
-        return new KeyValueSet(data);
     }
 
     private void loadGPUNameSpinner(Spinner spinner, int selectedDeviceID) {

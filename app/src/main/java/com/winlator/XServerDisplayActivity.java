@@ -268,10 +268,8 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                 if (!inputType.isEmpty()) winHandler.setInputType(Byte.parseByte(inputType));
             }
 
-            if (dxwrapper.contains("dxvk") || dxwrapper.contains("vkd3d"))
+            if (dxwrapper.contains("dxvk") || dxwrapper.contains("vkd3d") || dxwrapper.contains("wined3d"))
                 this.dxwrapperConfig = DXVK_VKD3DConfigDialog.parseConfig(dxwrapperConfig);
-            else if (dxwrapper.contains("wined3d"))
-                this.dxwrapperConfig = WineD3DConfigDialog.parseConfig(dxwrapperConfig);
 
             if (!wineInfo.isWin64()) {
                 onExtractFileListener = (file, size) -> {
