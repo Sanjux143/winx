@@ -382,15 +382,17 @@ public class ContainerDetailFragment extends Fragment {
 
             if (container.getDXWrapper().equals("wined3d")) {
                 KeyValueSet config = new KeyValueSet(container.getDXWrapperConfig());
-                registryEditor.setDwordValue("Software\\Wine\\Direct3D", "csmt", Integer.parseInt(config.get("csmt")) != 0 ? 3 : 0);
-                registryEditor.setDwordValue("Software\\Wine\\Direct3D", "VideoPciDeviceID", Integer.parseInt(config.get("deviceID")));
-                registryEditor.setDwordValue("Software\\Wine\\Direct3D", "VideoPciVendorID", Integer.parseInt(config.get("vendorID")));
-                registryEditor.setStringValue("Software\\Wine\\Direct3D", "OffScreenRenderingMode", config.get("OffScreenRenderingMode").toLowerCase(Locale.ENGLISH));
-                registryEditor.setDwordValue("Software\\Wine\\Direct3D", "strict_shader_math", Integer.parseInt(config.get("strict_shader_math")));
-                registryEditor.setStringValue("Software\\Wine\\Direct3D", "VideoMemorySize", config.get("VideoMemorySize"));
-                registryEditor.setStringValue("Software\\Wine\\Direct3D", "renderer", config.get("renderer").toLowerCase(Locale.ENGLISH));
-                registryEditor.setStringValue("Software\\Wine\\Direct3D", "shader_backend", "glsl");
-                registryEditor.setStringValue("Software\\Wine\\Direct3D", "UseGLSL", "enabled");
+                if (!config.isEmpty()) {
+                    registryEditor.setDwordValue("Software\\Wine\\Direct3D", "csmt", Integer.parseInt(config.get("csmt")) != 0 ? 3 : 0);
+                    registryEditor.setDwordValue("Software\\Wine\\Direct3D", "VideoPciDeviceID", Integer.parseInt(config.get("deviceID")));
+                    registryEditor.setDwordValue("Software\\Wine\\Direct3D", "VideoPciVendorID", Integer.parseInt(config.get("vendorID")));
+                    registryEditor.setStringValue("Software\\Wine\\Direct3D", "OffScreenRenderingMode", config.get("OffScreenRenderingMode").toLowerCase(Locale.ENGLISH));
+                    registryEditor.setDwordValue("Software\\Wine\\Direct3D", "strict_shader_math", Integer.parseInt(config.get("strict_shader_math")));
+                    registryEditor.setStringValue("Software\\Wine\\Direct3D", "VideoMemorySize", config.get("VideoMemorySize"));
+                    registryEditor.setStringValue("Software\\Wine\\Direct3D", "renderer", config.get("renderer").toLowerCase(Locale.ENGLISH));
+                    registryEditor.setStringValue("Software\\Wine\\Direct3D", "shader_backend", "glsl");
+                    registryEditor.setStringValue("Software\\Wine\\Direct3D", "UseGLSL", "enabled");
+                }
             }
         }
     }
