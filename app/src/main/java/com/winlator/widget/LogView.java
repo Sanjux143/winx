@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class LogView extends View {
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -37,6 +38,7 @@ public class LogView extends View {
     private boolean scrollingHorizontally = false;
     private boolean scrollingVertically = false;
     private final Object lock = new Object();
+    private BufferedWriter writer;
 
     public LogView(Context context) {
         this(context, null);
@@ -52,7 +54,12 @@ public class LogView extends View {
 
     public LogView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        FileUtils.delete(getLogFile());
+        try {
+            writer = new BufferedWriter(new FileWriter(getLogFile()));
+        }
+        catch(IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -176,8 +183,15 @@ public class LogView extends View {
 
     public void append(String line) {
         synchronized (lock) {
-            lines.add("["+DateFormat.format("HH:mm:ss", System.currentTimeMillis())+"]  "+line.replace("\n", ""));
-            computeScrollSize();
+            try {
+                lines.add("["+DateFormat.format("HH:mm:ss", System.currentTimeMillis())+"]  "+line.replace("\n", ""));
+                computeScrollSize();
+                writer.write(line + "\n");
+                writer.flush();
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         postInvalidate();
     }
@@ -185,11 +199,18 @@ public class LogView extends View {
     private static File getLogFile() {
         File winlatorDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "Winlator");
         winlatorDir.mkdirs();
-        return new File(winlatorDir, "logs.txt");
+        String logFile = "log_" + DateFormat.format("yyyy-MM-dd_HH-mm-ss", new Date()) + ".txt";
+        return new File(winlatorDir, logFile);
+    }
+
+    private static File getUserLogFile() {
+        File winlatorDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "Winlator");
+        winlatorDir.mkdirs();
+        return new File(winlatorDir, "log_user.txt");
     }
 
     public void exportToFile() {
-        final File logFile = getLogFile();
+        final File logFile = getUserLogFile();
         if (logFile.isFile()) logFile.delete();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(logFile))) {
             synchronized (lock) {
