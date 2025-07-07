@@ -2176,7 +2176,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         if (firstTimeBoot) {
             Log.d("XServerDisplayActivity", "First time container boot, re-extracting wrapper");
             TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, "graphics_driver/wrapper" + ".tzst", rootDir);
-            TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, "graphics_driver/zink_libs" + ".tzst", rootDir);
+            TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, "graphics_driver/extra_libs" + ".tzst", rootDir);
         }
 
         if (adrenoToolsDriverId != "System") {
