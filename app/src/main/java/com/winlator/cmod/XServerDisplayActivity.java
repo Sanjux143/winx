@@ -56,6 +56,7 @@ import com.winlator.cmod.container.Shortcut;
 import com.winlator.cmod.contentdialog.ContentDialog;
 import com.winlator.cmod.contentdialog.DXVKConfigDialog;
 import com.winlator.cmod.contentdialog.DebugDialog;
+import com.winlator.cmod.contentdialog.GraphicsDriverConfigDialog;
 import com.winlator.cmod.contentdialog.ScreenEffectDialog;
 import com.winlator.cmod.contentdialog.VKD3DConfigDialog;
 import com.winlator.cmod.contents.ContentProfile;
@@ -142,6 +143,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -164,6 +166,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
     private Runnable editInputControlsCallback;
     private Shortcut shortcut;
     private String graphicsDriver = Container.DEFAULT_GRAPHICS_DRIVER;
+    private HashMap<String, String> graphicsDriverConfig;
     private String audioDriver = Container.DEFAULT_AUDIO_DRIVER;
     private String emulator = Container.DEFAULT_EMULATOR;
     private String dxwrapper = Container.DEFAULT_DXWRAPPER;
@@ -511,6 +514,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             }
 
             graphicsDriver = container.getGraphicsDriver();
+            String graphicsDriverConfig = container.getGraphicsDriverConfig();
             audioDriver = container.getAudioDriver();
             emulator = container.getEmulator();
             midiSoundFont = container.getMIDISoundFont();
@@ -527,6 +531,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
 
             if (shortcut != null) {
                 graphicsDriver = shortcut.getExtra("graphicsDriver", container.getGraphicsDriver());
+                graphicsDriverConfig = shortcut.getExtra("graphicsDriverConfig", container.getGraphicsDriverConfig());
                 audioDriver = shortcut.getExtra("audioDriver", container.getAudioDriver());
                 emulator = shortcut.getExtra("emulator", container.getEmulator());
                 dxwrapper = shortcut.getExtra("dxwrapper", container.getDXWrapper());
@@ -544,7 +549,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
 
             }
 
-
+            this.graphicsDriverConfig = GraphicsDriverConfigDialog.parseGraphicsDriverConfig(graphicsDriverConfig);
 
             if (dxwrapper.equals("dxvk") || dxwrapper.equals("vkd3d")) {
                 this.dxwrapperConfig = DXVKConfigDialog.parseConfig(dxwrapperConfig);
@@ -1559,8 +1564,6 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         }).start();
     }
 
-
-
     private void appendBufferedLog(BufferedReader reader, TextView outputView, boolean isError) throws IOException {
         ArrayDeque<String> logBuffer = new ArrayDeque<>(MAX_LOG_LINES);
         StringBuilder batchBuffer = new StringBuilder();
@@ -1592,86 +1595,6 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             runOnUiThread(() -> outputView.setText(logContent));
         }
     }
-
-//    private ContentDialog winetricksDialog;
-//
-//    private void showWinetricksContentDialog(Container container, ContentsManager contentsManager) {
-//        // Only create if it doesn’t exist or is dismissed
-//        if (winetricksDialog == null) {
-//            winetricksDialog = new ContentDialog(this, R.layout.winetricks_content_dialog);
-//            winetricksDialog.setTitle("Winetricks");
-//            winetricksDialog.setIcon(R.drawable.icon_env_var);
-//
-//            // Initialize dialog components
-//            EditText editWinetricksVerb = winetricksDialog.findViewById(R.id.editWinetricksVerb);
-//            TextView textWinetricksOutput = winetricksDialog.findViewById(R.id.textWinetricksOutput);
-//            Button btnExecuteWinetricks = winetricksDialog.findViewById(R.id.btnExecuteWinetricks);
-//            Button btnExecuteWinetricksLatest = winetricksDialog.findViewById(R.id.btnExecuteWinetricksLatest);
-//            Button btnOpenWinetricksFolder = winetricksDialog.findViewById(R.id.btnOpenWinetricksFolder);
-//            Button btnTransparentToggle = winetricksDialog.findViewById(R.id.btnTransparentToggle);
-//
-//            // ADD a "Minimize" button to your layout, or repurpose an existing button:
-//            Button btnMinimize = new Button(this);
-//            btnMinimize.setText("Minimize");
-//            // Insert this button into the right-side LinearLayout programmatically
-//            LinearLayout rightLayout = winetricksDialog.findViewById(R.id.rightLayout); // Suppose we gave it an ID
-//            rightLayout.addView(btnMinimize);
-//
-//            btnMinimize.setOnClickListener(v -> {
-//                // Hide without dismissing
-//                if (winetricksDialog != null && winetricksDialog.isShowing()) {
-//                    winetricksDialog.hide();
-//                }
-//            });
-//
-//        // Execute Winetricks with the specified verb
-//        btnExecuteWinetricks.setOnClickListener(v -> {
-//            String verb = editWinetricksVerb.getText().toString().trim();
-//            if (!verb.isEmpty()) {
-//                runWinetricksWithVerb(container, contentsManager, verb, textWinetricksOutput);
-//            } else {
-//                Toast.makeText(this, "Please enter a Winetricks verb", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        // Execute Winetricks Latest with the specified verb
-//        btnExecuteWinetricksLatest.setOnClickListener(v -> {
-//            String verb = editWinetricksVerb.getText().toString().trim();
-//            if (!verb.isEmpty()) {
-//                runWinetricksLatestWithVerb(container, contentsManager, verb, textWinetricksOutput);
-//            } else {
-//                Toast.makeText(this, "Please enter a Winetricks verb", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        // Open the Winetricks folder script without arguments
-//        btnOpenWinetricksFolder.setOnClickListener(v -> {
-//            runWinetricksFolder(container, contentsManager, textWinetricksOutput);
-//        });
-//
-//        // Toggle 50% transparency
-//        btnTransparentToggle.setOnClickListener(v -> {
-//            android.view.Window window = winetricksDialog.getWindow();
-//            if (window != null) {
-//                android.view.WindowManager.LayoutParams lp = window.getAttributes();
-//                // Check if already at 50% alpha – if so, restore to 100%
-//                if (lp.alpha < 1.0f) {
-//                    lp.alpha = 1.0f; // full opacity
-//                } else {
-//                    lp.alpha = 0.5f; // 50% transparency
-//                }
-//                window.setAttributes(lp);
-//            }
-//        });
-//
-//            // Optionally prevent dismiss on outside touch
-//            winetricksDialog.setCanceledOnTouchOutside(false);
-//        }
-//
-//        // Finally show (or re-show) the dialog
-//        winetricksDialog.show();
-//    }
-
 
     private void runWinetricksFolder(Container container, ContentsManager contentsManager, TextView outputView) {
         // The path to where you'd like to store your dynamic script
@@ -2103,54 +2026,19 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         inputControlsView.invalidate();
     }
 
-//    public void showGamepadConfiguratorDialog() {
-//        // Retrieve the ExternalController from WinHandler
-//        ExternalController currentController = controller;
-//
-//        if (currentController == null) {
-//            // Handle gracefully if no controller is connected
-//            Log.e("WinHandler", "No controller connected. Cannot open configurator dialog.");
-//            runOnUiThread(() -> Toast.makeText(this, "No controller connected. Please connect a controller to proceed.", Toast.LENGTH_SHORT).show());
-//            return;
-//        }
-//
-//        // Use ContentDialog to create a themed dialog
-//        ContentDialog dialog = new ContentDialog(this, R.layout.dialog_gamepad_configurator);
-//        dialog.setTitle("Gamepad Configurator");
-//        dialog.setIcon(R.drawable.icon_gamepad);
-//
-//        // Initialize and configure GamepadConfiguratorDialog
-//        GamepadConfiguratorDialog configuratorDialog = new GamepadConfiguratorDialog(this, currentController, dialog);
-//        configuratorDialog.setupMappingSpinners();
-//        configuratorDialog.refreshSpinners();
-//        configuratorDialog.setupProfileControls();
-//
-//        // Set custom save functionality for "Save" button
-//        dialog.setOnConfirmCallback(() -> {
-//            configuratorDialog.saveMappings();
-//            Toast.makeText(this, "Mappings saved!", Toast.LENGTH_SHORT).show();
-//            dialog.dismiss();
-//        });
-//
-//        dialog.setOnCancelCallback(() -> dialog.dismiss());
-//
-//        // Show dialog
-//        dialog.show();
-//    }
-
     private void extractGraphicsDriverFiles() {
         String adrenoToolsDriverId = "";
         String selectedDriverVersion;
 
-        String currentWrapperVersion = container.getWrapperGraphicsDriverVersion();
+        String currentWrapperVersion = graphicsDriverConfig.get("version");
         selectedDriverVersion = currentWrapperVersion;
 
         if (shortcut != null) {
-            currentWrapperVersion = shortcut.getExtra("wrapperGraphicsDriverVersion", container.getWrapperGraphicsDriverVersion());
+            currentWrapperVersion = shortcut.getExtra("wrapperGraphicsDriverVersion", graphicsDriverConfig.get("version"));
             selectedDriverVersion = currentWrapperVersion;
         }
 
-        adrenoToolsDriverId = (selectedDriverVersion.contains("System")) ? "System" : selectedDriverVersion;
+        adrenoToolsDriverId = (selectedDriverVersion.contains(DefaultVersion.WRAPPER)) ? DefaultVersion.WRAPPER : selectedDriverVersion;
         Log.d("GraphicsDriverExtraction", "Adrenotools DriverID: " + adrenoToolsDriverId);
 
         File rootDir = imageFs.getRootDir();
@@ -2183,7 +2071,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             AdrenotoolsManager adrenotoolsManager = new AdrenotoolsManager(this);
             adrenotoolsManager.setDriverById(envVars, imageFs, adrenoToolsDriverId);
         }
-        String blacklistedExtensions = container.getBlacklistedExtensions();
+        String blacklistedExtensions = graphicsDriverConfig.get("blacklistedExtensions");
         envVars.put("WRAPPER_EXTENSION_BLACKLIST", blacklistedExtensions);
 
         try (WineRegistryEditor registryEditor = new WineRegistryEditor(userRegFile)) {

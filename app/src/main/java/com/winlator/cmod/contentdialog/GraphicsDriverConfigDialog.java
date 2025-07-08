@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.HashMap;
+import java.util.Map;
 
 public class GraphicsDriverConfigDialog extends ContentDialog {
 
@@ -81,21 +82,56 @@ public class GraphicsDriverConfigDialog extends ContentDialog {
         }
     }
 
-    public interface OnGraphicsDriverVersionSelectedListener {
-        void onGraphicsDriverVersionSelected(String version, String blacklistedExtensions);
-    }
-  
-    public GraphicsDriverConfigDialog(View anchor, String initialVersion, String blExtensions, String graphicsDriver, OnGraphicsDriverVersionSelectedListener listener) {
-        super(anchor.getContext(), R.layout.graphics_driver_config_dialog);
-        initializeDialog(anchor, initialVersion, blExtensions, graphicsDriver, null, listener);
+    public static HashMap<String, String> parseGraphicsDriverConfig(String graphicsDriverConfig) {
+        HashMap<String, String> mappedConfig = new HashMap<>();
+        String[] configElements = graphicsDriverConfig.split(";");
+        for (String element : configElements) {
+            String key;
+            String value;
+            String[] splittedElement = element.split("=");
+            key = splittedElement[0];
+            if (splittedElement.length > 1)
+                value = element.split("=")[1];
+            else
+                value = "";
+            mappedConfig.put(key, value);
+        }
+        return mappedConfig;
     }
 
-    private void initializeDialog(View anchor, String initialVersion, String blExtensions, String graphicsDriver, @Nullable File rootDir, OnGraphicsDriverVersionSelectedListener listener) {
+    public static String getVersion(String graphicsDriverConfig) {
+        HashMap<String, String> config = parseGraphicsDriverConfig(graphicsDriverConfig);
+        return config.get("version");
+    }
+
+    public static String getExtensionsBlacklist(String graphicsDriverConfig) {
+        HashMap<String, String> config = parseGraphicsDriverConfig(graphicsDriverConfig);
+        return config.get("blacklistedExtensions");
+    }
+
+    public static String writeGraphicsDriverConfig(String version, String blacklistedExtensions) {
+        String graphicsDriverConfig = "version=" + version + ";" + "blacklistedExtensions=" + blacklistedExtensions;
+        return graphicsDriverConfig;
+    }
+  
+    public GraphicsDriverConfigDialog(View anchor, String graphicsDriver, TextView graphicsDriverVersionView) {
+        super(anchor.getContext(), R.layout.graphics_driver_config_dialog);
+        initializeDialog(anchor, graphicsDriver, graphicsDriverVersionView);
+    }
+
+    private void initializeDialog(View anchor, String graphicsDriver, TextView graphicsDriverVersionView) {
         setIcon(R.drawable.icon_settings);
         setTitle(anchor.getContext().getString(R.string.graphics_driver_configuration));
 
+        String graphicsDriverConfig = anchor.getTag().toString();
+
         sVersion = findViewById(R.id.SGraphicsDriverVersion);
         sAvailableExtensions = findViewById(R.id.SGraphicsDriverAvailableExtensions);
+
+        HashMap<String, String> config = parseGraphicsDriverConfig(graphicsDriverConfig);
+
+        String initialVersion = config.get("version");
+        String blExtensions = config.get("blacklistedExtensions");
 
         // Update the selectedVersion whenever the user selects a different version
         sVersion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -120,7 +156,6 @@ public class GraphicsDriverConfigDialog extends ContentDialog {
         populateGraphicsDriverVersions(anchor.getContext(), contentsManager, initialVersion, blExtensions, graphicsDriver);
 
         setOnConfirmCallback(() -> {
-            anchor.setTag(selectedVersion);
             for (HashMap.Entry<String, Boolean> entry : extensionsState.entrySet()) {
                 if(!entry.getKey().isEmpty() && !entry.getValue()) {
                     blacklistedExtensions += entry.getKey() + ",";
@@ -130,77 +165,12 @@ public class GraphicsDriverConfigDialog extends ContentDialog {
             if (!blacklistedExtensions.isEmpty())
                 blacklistedExtensions = blacklistedExtensions.substring(0, blacklistedExtensions.length() - 1);
 
-//            if (rootDir != null) {
-//                // Apply the selected version to the container
-//                Log.d(TAG, "Applying selected version to container: " + selectedVersion);
-//                containerManager.extractGraphicsDriverFiles(selectedVersion, rootDir, null);
-//            }
+            if (graphicsDriverVersionView != null)
+                graphicsDriverVersionView.setText(selectedVersion);
 
-            // Pass the selected version back to the listener
-            if (listener != null) {
-                Log.d(TAG, "Blacklisted extensions " + blacklistedExtensions);
-                listener.onGraphicsDriverVersionSelected(selectedVersion, blacklistedExtensions);
-            }
+            anchor.setTag(writeGraphicsDriverConfig(selectedVersion, blacklistedExtensions));
         });
     }
-
-
-    // Updated constructor to accept a container
-//    public GraphicsDriverConfigDialog(View anchor, Container container, ContainerManager containerManager, @Nullable String initialVersion, OnGraphicsDriverVersionSelectedListener listener) {
-//        super(anchor.getContext(), R.layout.graphics_driver_config_dialog);
-//        this.containerManager = containerManager;
-//
-//        setIcon(R.drawable.icon_settings);
-//        setTitle(anchor.getContext().getString(R.string.graphics_driver_configuration));
-//
-//        sVersion = findViewById(R.id.SGraphicsDriverVersion);
-//
-//        // Ensure ContentsManager syncContents is called
-//        ContentsManager contentsManager = new ContentsManager(anchor.getContext());
-//        contentsManager.syncContents();
-//
-//        // Populate the spinner with available versions from ContentsManager and pre-select the container's version
-//        String containerVersion = container != null ? container.getGraphicsDriverVersion() : initialVersion;
-//        populateGraphicsDriverVersions(anchor.getContext(), contentsManager, containerVersion);
-//
-//        // Update the selectedVersion whenever the user selects a different version
-//        sVersion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                selectedVersion = sVersion.getSelectedItem().toString();
-//                Log.d(TAG, "User selected version: " + selectedVersion); // Log the selected version
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//                // Do nothing
-//            }
-//        });
-//
-//        setOnConfirmCallback(() -> {
-//            anchor.setTag(selectedVersion);
-//
-//            if (container != null) {
-//                // Apply the selected version to the container
-//                Log.d(TAG, "Applying selected version to container: " + selectedVersion);
-//                container.setGraphicsDriverVersion(selectedVersion);
-//
-//                // Attempt to extract the graphics driver files
-//                boolean extractionSuccess = containerManager.extractGraphicsDriverFiles(selectedVersion, container.getRootDir(), null);
-//                Log.d(TAG, "Graphics driver extraction " + (extractionSuccess ? "succeeded" : "failed") + " for version: " + selectedVersion);
-//
-//                if (!extractionSuccess) {
-//                    // Handle extraction failure (optional: you might want to notify the user here)
-//                    Log.e(TAG, "Failed to extract graphics driver files for version: " + selectedVersion);
-//                }
-//            }
-//
-//            // Pass the selected version back to ContainerDetailFragment or other listeners
-//            if (listener != null) {
-//                listener.onGraphicsDriverVersionSelected(selectedVersion);
-//            }
-//        });
-//    }
 
     private void populateGraphicsDriverVersions(Context context, ContentsManager contentsManager, @Nullable String initialVersion, @Nullable String blExtensions, String graphicsDriver) {
         List<String> wrapperVersions = new ArrayList<>();
