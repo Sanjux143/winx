@@ -116,7 +116,7 @@
     </string-array>
     <string-array name="fexcore_version_entries">
         <item>2505</item>
-        <item>2506</item>
+        <item>2507</item>
     </string-array>
     <string-array name="dinput_mapper_type_entries">
         <item>@string/dinput_legacy</item>
