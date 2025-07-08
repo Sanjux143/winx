@@ -57,7 +57,7 @@ public class Container {
     private boolean showFPS;
     private boolean fullscreenStretched;
     private boolean wow64Mode = true;
-    private byte startupSelection = STARTUP_SELECTION_AGGRESSIVE;
+    private byte startupSelection = STARTUP_SELECTION_ESSENTIAL;
     private String cpuList;
     private String cpuListWoW64;
     private String desktopTheme = WineThemeManager.DEFAULT_DESKTOP_THEME;
