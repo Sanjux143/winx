@@ -92,10 +92,6 @@ public class ContainerDetailFragment extends Fragment {
     private JSONArray gpuCards;
     private Callback<String> openDirectoryCallback;
 
-    private String wrapperGraphicsDriverVersion = "";
-    private String oldWrapperGraphicsDriverVersion = "";
-    private String blacklistedExtensions = "";
-
     private static boolean isDarkMode;
 
     private ImageFs imageFs;
@@ -119,19 +115,6 @@ public class ContainerDetailFragment extends Fragment {
             "SDL_ALLOW_TOPMOST=0",
             "SDL_MOUSE_FOCUS_CLICKTHROUGH=1"
     };
-
-
-    // Interface to notify about graphics driver version changes
-    public interface OnGraphicsDriverVersionChangeListener {
-        void onGraphicsDriverVersionChanged();
-    }
-
-    // Method to set the listener
-    public void setOnGraphicsDriverVersionChangeListener(OnGraphicsDriverVersionChangeListener listener) {
-        this.graphicsDriverVersionChangeListener = listener;
-    }
-
-    private OnGraphicsDriverVersionChangeListener graphicsDriverVersionChangeListener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -361,8 +344,6 @@ public class ContainerDetailFragment extends Fragment {
         // Set container name and graphics driver version based on mode
         if (isEditMode()) {
             etName.setText(container.getName());
-            wrapperGraphicsDriverVersion = container.getWrapperGraphicsDriverVersion();
-            blacklistedExtensions = container.getBlacklistedExtensions();
         } else {
             etName.setText(getString(R.string.container) + "-" + manager.getNextContainerId());
         }
@@ -382,6 +363,7 @@ public class ContainerDetailFragment extends Fragment {
         vDXWrapperConfig.setTag(isEditMode() ? container.getDXWrapperConfig() : Container.DEFAULT_DXWRAPPERCONFIG);
 
         final View vGraphicsDriverConfig = view.findViewById(R.id.BTGraphicsDriverConfig);
+        vGraphicsDriverConfig.setTag(isEditMode() ? container.getGraphicsDriverConfig() : Container.DEFAULT_GRAPHICSDRIVERCONFIG);
 
         setupDXWrapperSpinner(sDXWrapper, vDXWrapperConfig);
         setupDDrawSpinner(sDDrawrapper, isEditMode() ? container.getDDrawWrapper() : Container.DEFAULT_DDRAWRAPPER);
@@ -489,7 +471,7 @@ public class ContainerDetailFragment extends Fragment {
 
         final Spinner sStartupSelection = view.findViewById(R.id.SStartupSelection);
         byte previousStartupSelection = isEditMode() ? container.getStartupSelection() : -1;
-        sStartupSelection.setSelection(previousStartupSelection != -1 ? previousStartupSelection : Container.STARTUP_SELECTION_AGGRESSIVE);
+        sStartupSelection.setSelection(previousStartupSelection != -1 ? previousStartupSelection : Container.STARTUP_SELECTION_ESSENTIAL);
 
         final Spinner sBox64Preset = view.findViewById(R.id.SBox64Preset);
         Box86_64PresetManager.loadSpinner("box64", sBox64Preset, isEditMode() ? container.getBox64Preset() : preferences.getString("box64_preset", Box86_64Preset.COMPATIBILITY));
@@ -555,15 +537,13 @@ public class ContainerDetailFragment extends Fragment {
                 String screenSize = getScreenSize(view);
                 String envVars = envVarsView.getEnvVars();
                 String graphicsDriver = StringUtils.parseIdentifier(sGraphicsDriver.getSelectedItem());
-                String wrapperGraphicsDriverVersion = (this.wrapperGraphicsDriverVersion != "") ? this.wrapperGraphicsDriverVersion : DefaultVersion.WRAPPER;
-                String oldWrapperGraphicsDriverVersion = (this.oldWrapperGraphicsDriverVersion != "") ? this.oldWrapperGraphicsDriverVersion : DefaultVersion.WRAPPER;
+                String graphicsDriverConfig = vGraphicsDriverConfig.getTag().toString();
                 String dxwrapper = StringUtils.parseIdentifier(sDXWrapper.getSelectedItem());
                 String ddrawrapper = StringUtils.parseIdentifier(sDDrawrapper.getSelectedItem());
                 String dxwrapperConfig = vDXWrapperConfig.getTag().toString();
                 String audioDriver = StringUtils.parseIdentifier(sAudioDriver.getSelectedItem());
                 String emulator = StringUtils.parseIdentifier(sEmulator.getSelectedItem());
                 String wincomponents = getWinComponents(view);
-                String blacklistedExtensions = this.blacklistedExtensions;
                 String drives = getDrives(view);
                 boolean showFPS = cbShowFPS.isChecked();
                 boolean fullscreenStretched = cbFullscreenStretched.isChecked();
@@ -613,15 +593,13 @@ public class ContainerDetailFragment extends Fragment {
                     container.setCPUList(cpuList);
                     container.setCPUListWoW64(cpuListWoW64);
                     container.setGraphicsDriver(graphicsDriver);
-                    container.setWrapperGraphicsDriverVersion(wrapperGraphicsDriverVersion);
-                    container.setOldWrapperGraphicsDriverVersion(oldWrapperGraphicsDriverVersion);
+                    container.setGraphicsDriverConfig(graphicsDriverConfig);
                     container.setDXWrapper(dxwrapper);
                     container.setDDrawWrapper(ddrawrapper);
                     container.setDXWrapperConfig(dxwrapperConfig);
                     container.setAudioDriver(audioDriver);
                     container.setEmulator(emulator);
                     container.setWinComponents(wincomponents);
-                    container.setBlacklistedExtensions(blacklistedExtensions);
                     container.setDrives(drives);
                     container.setShowFPS(showFPS);
                     container.setFullscreenStretched(fullscreenStretched);
@@ -650,15 +628,13 @@ public class ContainerDetailFragment extends Fragment {
                     data.put("cpuList", cpuList);
                     data.put("cpuListWoW64", cpuListWoW64);
                     data.put("graphicsDriver", graphicsDriver);
-                    data.put("wrapperGraphicsDriverVersion",wrapperGraphicsDriverVersion);
-                    data.put("oldWrapperGraphicsDriverVersion", oldWrapperGraphicsDriverVersion);
+                    data.put("graphicsDriverConfig", graphicsDriverConfig);
                     data.put("dxwrapper", dxwrapper);
                     data.put("ddrawrapper", ddrawrapper);
                     data.put("dxwrapperConfig", dxwrapperConfig);
                     data.put("audioDriver", audioDriver);
                     data.put("emulator", emulator);
                     data.put("wincomponents", wincomponents);
-                    data.put("blacklistedextensions", blacklistedExtensions);
                     data.put("drives", drives);
                     data.put("showFPS", showFPS);
                     data.put("fullscreenStretched", fullscreenStretched);
@@ -686,9 +662,6 @@ public class ContainerDetailFragment extends Fragment {
                     manager.createContainerAsync(data, (container) -> {
                         if (container != null) {
                             this.container = container;
-                            container.setWrapperGraphicsDriverVersion(wrapperGraphicsDriverVersion);
-                            container.setOldWrapperGraphicsDriverVersion(oldWrapperGraphicsDriverVersion);
-                            container.setBlacklistedExtensions(blacklistedExtensions);
                             saveWineRegistryKeys(view);
                             FEXCoreManager.saveFEXCoreSpinners(container, sFEXCoreTSOPreset, sFEXCoreMultiBlock, sFEXCoreX87ReducedPrecision);
                         }
@@ -725,8 +698,6 @@ public class ContainerDetailFragment extends Fragment {
 
             Spinner sVideoMemorySize = view.findViewById(R.id.SVideoMemorySize);
             String videoMemorySize = StringUtils.parseNumber(sVideoMemorySize.getSelectedItem());
-            if (videoMemorySize.equals("0"))
-                videoMemorySize = String.valueOf(GPUInformation.getMemorySize());
             registryEditor.setStringValue("Software\\Wine\\Direct3D", "VideoMemorySize", videoMemorySize);
 
             Spinner sMouseWarpOverride = view.findViewById(R.id.SMouseWarpOverride);
@@ -791,17 +762,6 @@ public class ContainerDetailFragment extends Fragment {
 
             Spinner sVideoMemorySize = view.findViewById(R.id.SVideoMemorySize);
             String videoMemorySize = registryEditor.getStringValue("Software\\Wine\\Direct3D", "VideoMemorySize", "2048");
-            ArrayList<String> memorySizeValues = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.video_memory_size_entries)));
-            boolean foundMemory = false;
-            for (String memorySize : memorySizeValues) {
-                memorySize = StringUtils.parseNumber(memorySize);
-                if (memorySize.contains(videoMemorySize)) {
-                    foundMemory = true;
-                    break;
-                }
-            }
-            if (!foundMemory)
-                videoMemorySize = "0";
             AppUtils.setSpinnerSelectionFromNumber(sVideoMemorySize, videoMemorySize);
 
             List<String> mouseWarpOverrideList = Arrays.asList(context.getString(R.string.disable), context.getString(R.string.enable), context.getString(R.string.force));
@@ -871,32 +831,17 @@ public class ContainerDetailFragment extends Fragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
         boolean found = AppUtils.setSpinnerSelectionFromIdentifier(sScreenSize, selectedValue);
         if (!found) {
             AppUtils.setSpinnerSelectionFromValue(sScreenSize, "custom");
             String[] screenSize = selectedValue.split("x");
-            ((EditText)view.findViewById(R.id.ETScreenWidth)).setText(screenSize[0]);
-            ((EditText)view.findViewById(R.id.ETScreenHeight)).setText(screenSize[1]);
+            ((EditText) view.findViewById(R.id.ETScreenWidth)).setText(screenSize[0]);
+            ((EditText) view.findViewById(R.id.ETScreenHeight)).setText(screenSize[1]);
         }
-    }
-
-    private void showGraphicsDriverConfigDialog(View anchor, String graphicsDriver) {
-        String graphicsDriverVersion = (wrapperGraphicsDriverVersion != "") ? wrapperGraphicsDriverVersion : DefaultVersion.WRAPPER;
-        String blacklistedExtensions = this.blacklistedExtensions;
-             
-        // Create a new GraphicsDriverConfigDialog
-        new GraphicsDriverConfigDialog(anchor, graphicsDriverVersion, blacklistedExtensions, graphicsDriver,  (version, blExtensions) -> {
-            // Update the fragment-level variable with the selected version
-            this.oldWrapperGraphicsDriverVersion = this.wrapperGraphicsDriverVersion;
-            this.wrapperGraphicsDriverVersion = version;
-            this.blacklistedExtensions = blExtensions;
-            Log.d("ContainerDetailFragment", "Selected graphics driver version: " + version);
-            Log.d("ContainerDDetailFragment", "Old graphics driver version: " + version);
-            Log.d("ContainerDetailFragment", "Selected blacklisted extensions: " + blExtensions);
-        }).show();
     }
 
     // New method: Adds support for the GraphicsDriverConfigDialog
@@ -918,7 +863,7 @@ public class ContainerDetailFragment extends Fragment {
             AppUtils.setSpinnerSelectionFromIdentifier(sDXWrapper, selectedDXWrapper);
 
             vGraphicsDriverConfig.setOnClickListener((v) -> {
-                showGraphicsDriverConfigDialog(vGraphicsDriverConfig, graphicsDriver);
+                new GraphicsDriverConfigDialog(vGraphicsDriverConfig, graphicsDriver, null).show();
             });
             vGraphicsDriverConfig.setVisibility(View.VISIBLE);
         };

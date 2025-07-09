@@ -72,8 +72,14 @@
         <item>2048 MB</item>
         <item>4096 MB</item>
     </string-array>
+    <string-array name="device_memory_entries">
+    <item>0 (Default)</item>
+    <item>512 MB</item>
+    <item>1024 MB</item>
+    <item>2048 MB</item>
+    <item>4096 MB</item>
+    </string-array>
     <string-array name="video_memory_size_entries">
-        <item>0 (Device)</item>
         <item>32 MB</item>
         <item>64 MB</item>
         <item>128 MB</item>
@@ -116,7 +122,7 @@
     </string-array>
     <string-array name="fexcore_version_entries">
         <item>2505</item>
-        <item>2506</item>
+        <item>2507</item>
     </string-array>
     <string-array name="dinput_mapper_type_entries">
         <item>@string/dinput_legacy</item>

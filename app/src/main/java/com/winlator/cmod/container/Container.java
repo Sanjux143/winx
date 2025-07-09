@@ -32,6 +32,7 @@ public class Container {
     public static final String DEFAULT_EMULATOR = "FEXCore";
     public static final String DEFAULT_DXWRAPPER = "dxvk";
     public static final String DEFAULT_DXWRAPPERCONFIG = "version=" + DefaultVersion.DXVK + ",framerate=0,maxDeviceMemory=0,async=0,asyncCache=0" + ",vkd3dVersion=" + DefaultVersion.VKD3D + ",vkd3dLevel=12_1";
+    public static final String DEFAULT_GRAPHICSDRIVERCONFIG = "version=" + DefaultVersion.WRAPPER + ";blacklistedExtensions=" + ";maxDeviceMemory=0";
     public static final String DEFAULT_DDRAWRAPPER = "wined3d";
     public static final String DEFAULT_WINCOMPONENTS = "direct3d=1,directsound=0,directmusic=0,directshow=0,directplay=0,xaudio=0,vcrun2010=1,opengl=0";
     public static final String FALLBACK_WINCOMPONENTS = "direct3d=1,directsound=1,directmusic=1,directshow=1,directplay=1,xaudio=1,vcrun2010=1,opengl=0";
@@ -45,6 +46,7 @@ public class Container {
     private String screenSize = DEFAULT_SCREEN_SIZE;
     private String envVars = DEFAULT_ENV_VARS;
     private String graphicsDriver = DEFAULT_GRAPHICS_DRIVER;
+    private String graphicsDriverConfig = DEFAULT_GRAPHICSDRIVERCONFIG;
     private String dxwrapper = DEFAULT_DXWRAPPER;
     private String ddrawrapper = DEFAULT_DDRAWRAPPER;
     private String dxwrapperConfig = "";
@@ -55,7 +57,7 @@ public class Container {
     private boolean showFPS;
     private boolean fullscreenStretched;
     private boolean wow64Mode = true;
-    private byte startupSelection = STARTUP_SELECTION_AGGRESSIVE;
+    private byte startupSelection = STARTUP_SELECTION_ESSENTIAL;
     private String cpuList;
     private String cpuListWoW64;
     private String desktopTheme = WineThemeManager.DEFAULT_DESKTOP_THEME;
@@ -68,13 +70,10 @@ public class Container {
     private String lc_all = "";
     private int primaryController = 1;
     private String controllerMapping = new String(new char[XrControllerMapping.values().length]);
-    private String blacklistedExtensions;
     private String oldfexcoreVersion;
     private String fexcoreVersion = DefaultVersion.FEXCORE;
     private String oldbox64Version;
     private String box64Version = DefaultVersion.BOX64;
-    private String wrapperGraphicsDriverVersion = "System";
-    private String oldWrapperGraphicsDriverVersion = "System";
 
     private String emulator;
 
@@ -89,22 +88,6 @@ public class Container {
     public void setBox64Version(String version) { this.box64Version = version; }
     public String getOldBox64Version() { return this.oldbox64Version; }
     public void setOldBox64Version(String version) { this.oldbox64Version = version; }
-    
-    public String getWrapperGraphicsDriverVersion() {
-        return wrapperGraphicsDriverVersion;
-    }
-
-    public void setWrapperGraphicsDriverVersion(String graphicsDriverVersion) {
-        this.wrapperGraphicsDriverVersion = graphicsDriverVersion;
-    }
-
-    public String getOldWrapperGraphicsDriverVersion() {
-        return oldWrapperGraphicsDriverVersion;
-    }
-
-    public void setOldWrapperGraphicsDriverVersion(String graphicsDriverVersion) {
-        this.oldWrapperGraphicsDriverVersion = graphicsDriverVersion;
-    }
 
     public void setEmulator(String emulator) {
         this.emulator = emulator;
@@ -162,6 +145,10 @@ public class Container {
         this.graphicsDriver = graphicsDriver;
     }
 
+    public String getGraphicsDriverConfig() { return this.graphicsDriverConfig; }
+
+    public void setGraphicsDriverConfig(String graphicsDriverConfig) { this.graphicsDriverConfig = graphicsDriverConfig; }
+
     public String getDXWrapper() {
         return dxwrapper;
     }
@@ -197,10 +184,6 @@ public class Container {
     public void setWinComponents(String wincomponents) {
         this.wincomponents = wincomponents;
     }
-
-    public String getBlacklistedExtensions() { return blacklistedExtensions; }
-
-    public void setBlacklistedExtensions(String blacklistedExtensions) { this.blacklistedExtensions = blacklistedExtensions; }
 
     public String getDrives() {
         return drives;
@@ -420,15 +403,13 @@ public class Container {
             data.put("cpuList", cpuList);
             data.put("cpuListWoW64", cpuListWoW64);
             data.put("graphicsDriver", graphicsDriver);
-            data.put("wrapperGraphicsDriverVersion", wrapperGraphicsDriverVersion);
-            data.put("oldWrapperGraphicsDriverVersion", oldWrapperGraphicsDriverVersion);
+            data.put("graphicsDriverConfig", graphicsDriverConfig);
             data.put("emulator", emulator);
             data.put("dxwrapper", dxwrapper);
             data.put("ddrawrapper", ddrawrapper);
             if (!dxwrapperConfig.isEmpty()) data.put("dxwrapperConfig", dxwrapperConfig);
             data.put("audioDriver", audioDriver);
             data.put("wincomponents", wincomponents);
-            data.put("blacklistedextensions", blacklistedExtensions);
             data.put("drives", drives);
             data.put("showFPS", showFPS);
             data.put("fullscreenStretched", fullscreenStretched);
@@ -480,20 +461,14 @@ public class Container {
                 case "graphicsDriver" :
                     setGraphicsDriver(data.getString(key));
                     break;
-                case "wrapperGraphicsDriverVersion":
-                    setWrapperGraphicsDriverVersion(data.getString(key));
-                    break;
-                case "oldWrapperGraphicsDriverVersion":
-                    setOldWrapperGraphicsDriverVersion(data.getString(key));
+                case "graphicsDriverConfig" :
+                    setGraphicsDriverConfig(data.getString(key));
                     break;
                 case "emulator":
                     setEmulator(data.getString(key));
                     break;
                 case "wincomponents" :
                     setWinComponents(data.getString(key));
-                    break;
-                case "blacklistedextensions":
-                    setBlacklistedExtensions(data.getString(key));
                     break;
                 case "dxwrapper" :
                     setDXWrapper(data.getString(key));

@@ -615,4 +615,5 @@ E.g. <b>META</b> for <i>META key</i>, \n
     <string name="share_android_clipboard">Share Android Clipboard with Wine</string>
     <string name="ddraw_wrapper">DDraw/Glide Wrapper</string>
     <string name="fexcore_version">FEXCore Version</string>
+    <string name="graphics_driver_max_device_memory">Max Device Memory</string>
 </resources>

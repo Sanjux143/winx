@@ -56,6 +56,7 @@ import com.winlator.cmod.container.Shortcut;
 import com.winlator.cmod.contentdialog.ContentDialog;
 import com.winlator.cmod.contentdialog.DXVKConfigDialog;
 import com.winlator.cmod.contentdialog.DebugDialog;
+import com.winlator.cmod.contentdialog.GraphicsDriverConfigDialog;
 import com.winlator.cmod.contentdialog.ScreenEffectDialog;
 import com.winlator.cmod.contentdialog.VKD3DConfigDialog;
 import com.winlator.cmod.contents.ContentProfile;
@@ -101,6 +102,7 @@ import com.winlator.cmod.widget.MagnifierView;
 import com.winlator.cmod.widget.TouchpadView;
 import com.winlator.cmod.widget.WinetricksFloatingView;
 import com.winlator.cmod.widget.XServerView;
+import com.winlator.cmod.winhandler.MouseEventFlags;
 import com.winlator.cmod.winhandler.TaskManagerDialog;
 import com.winlator.cmod.winhandler.WinHandler;
 import com.winlator.cmod.xconnector.UnixSocketConfig;
@@ -142,6 +144,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -164,6 +167,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
     private Runnable editInputControlsCallback;
     private Shortcut shortcut;
     private String graphicsDriver = Container.DEFAULT_GRAPHICS_DRIVER;
+    private HashMap<String, String> graphicsDriverConfig;
     private String audioDriver = Container.DEFAULT_AUDIO_DRIVER;
     private String emulator = Container.DEFAULT_EMULATOR;
     private String dxwrapper = Container.DEFAULT_DXWRAPPER;
@@ -511,6 +515,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             }
 
             graphicsDriver = container.getGraphicsDriver();
+            String graphicsDriverConfig = container.getGraphicsDriverConfig();
             audioDriver = container.getAudioDriver();
             emulator = container.getEmulator();
             midiSoundFont = container.getMIDISoundFont();
@@ -527,6 +532,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
 
             if (shortcut != null) {
                 graphicsDriver = shortcut.getExtra("graphicsDriver", container.getGraphicsDriver());
+                graphicsDriverConfig = shortcut.getExtra("graphicsDriverConfig", container.getGraphicsDriverConfig());
                 audioDriver = shortcut.getExtra("audioDriver", container.getAudioDriver());
                 emulator = shortcut.getExtra("emulator", container.getEmulator());
                 dxwrapper = shortcut.getExtra("dxwrapper", container.getDXWrapper());
@@ -544,7 +550,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
 
             }
 
-
+            this.graphicsDriverConfig = GraphicsDriverConfigDialog.parseGraphicsDriverConfig(graphicsDriverConfig);
 
             if (dxwrapper.equals("dxvk") || dxwrapper.equals("vkd3d")) {
                 this.dxwrapperConfig = DXVKConfigDialog.parseConfig(dxwrapperConfig);
@@ -730,50 +736,73 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
 
     // Inside XServerDisplayActivity class
     private void handleCapturedPointer(MotionEvent event) {
-
         boolean handled = false;
-
-        // Update XServer pointer position
-        float dx = event.getX();
-        float dy = event.getY();
-
-        xServer.injectPointerMoveDelta((int) dx, (int) dy);
 
         int actionButton = event.getActionButton();
         switch (event.getAction()) {
             case MotionEvent.ACTION_BUTTON_PRESS:
                 if (actionButton == MotionEvent.BUTTON_PRIMARY) {
-                    xServer.injectPointerButtonPress(Pointer.Button.BUTTON_LEFT);
+                    if (xServer.isForceMouseControl() || xServer.isRelativeMouseMovement())
+                        xServer.getWinHandler().mouseEvent(MouseEventFlags.LEFTDOWN, 0, 0, 0);
+                    else
+                        xServer.injectPointerButtonPress(Pointer.Button.BUTTON_LEFT);
                 } else if (actionButton == MotionEvent.BUTTON_SECONDARY) {
-                    xServer.injectPointerButtonPress(Pointer.Button.BUTTON_RIGHT);
+                    if (xServer.isRelativeMouseMovement() || xServer.isForceMouseControl())
+                        xServer.getWinHandler().mouseEvent(MouseEventFlags.RIGHTDOWN, 0, 0, 0);
+                    else
+                        xServer.injectPointerButtonPress(Pointer.Button.BUTTON_RIGHT);
                 } else if (actionButton == MotionEvent.BUTTON_TERTIARY) {
-                    xServer.injectPointerButtonPress(Pointer.Button.BUTTON_MIDDLE); // Handle middle mouse button press
+                    if (xServer.isForceMouseControl() || xServer.isRelativeMouseMovement())
+                        xServer.getWinHandler().mouseEvent(MouseEventFlags.MIDDLEDOWN, 0, 0, 0);
+                    else
+                        xServer.injectPointerButtonPress(Pointer.Button.BUTTON_MIDDLE); // Add this line for middle mouse button press
                 }
                 handled = true;
                 break;
             case MotionEvent.ACTION_BUTTON_RELEASE:
                 if (actionButton == MotionEvent.BUTTON_PRIMARY) {
-                    xServer.injectPointerButtonRelease(Pointer.Button.BUTTON_LEFT);
+                    if (xServer.isRelativeMouseMovement() || xServer.isForceMouseControl())
+                        xServer.getWinHandler().mouseEvent(MouseEventFlags.LEFTUP, 0, 0, 0);
+                    else
+                        xServer.injectPointerButtonRelease(Pointer.Button.BUTTON_LEFT);
                 } else if (actionButton == MotionEvent.BUTTON_SECONDARY) {
-                    xServer.injectPointerButtonRelease(Pointer.Button.BUTTON_RIGHT);
+                    if (xServer.isRelativeMouseMovement() || xServer.isForceMouseControl())
+                        xServer.getWinHandler().mouseEvent(MouseEventFlags.RIGHTUP, 0, 0, 0);
+                    else
+                        xServer.injectPointerButtonRelease(Pointer.Button.BUTTON_RIGHT);
                 } else if (actionButton == MotionEvent.BUTTON_TERTIARY) {
-                    xServer.injectPointerButtonRelease(Pointer.Button.BUTTON_MIDDLE); // Handle middle mouse button release
+                    if (xServer.isRelativeMouseMovement() || xServer.isForceMouseControl())
+                        xServer.getWinHandler().mouseEvent(MouseEventFlags.MIDDLEUP, 0, 0, 0);
+                    else
+                        xServer.injectPointerButtonRelease(Pointer.Button.BUTTON_MIDDLE); // Add this line for middle mouse button release
                 }
                 handled = true;
                 break;
+            case MotionEvent.ACTION_MOVE:
             case MotionEvent.ACTION_HOVER_MOVE:
                 float[] transformedPoint = XForm.transformPoint(xform, event.getX(), event.getY());
-                xServer.injectPointerMove((int)transformedPoint[0], (int)transformedPoint[1]);
+                if (xServer.isRelativeMouseMovement() || xServer.isForceMouseControl())
+                    xServer.getWinHandler().mouseEvent(MouseEventFlags.MOVE, (int)transformedPoint[0], (int)transformedPoint[1], 0);
+                else
+                    xServer.injectPointerMove((int)transformedPoint[0], (int)transformedPoint[1]);
                 handled = true;
                 break;
             case MotionEvent.ACTION_SCROLL:
                 float scrollY = event.getAxisValue(MotionEvent.AXIS_VSCROLL);
                 if (scrollY <= -1.0f) {
-                    xServer.injectPointerButtonPress(Pointer.Button.BUTTON_SCROLL_DOWN);
-                    xServer.injectPointerButtonRelease(Pointer.Button.BUTTON_SCROLL_DOWN);
+                    if (xServer.isRelativeMouseMovement() || xServer.isForceMouseControl())
+                        xServer.getWinHandler().mouseEvent(MouseEventFlags.WHEEL, 0, 0, (int)scrollY * 270);
+                    else {
+                        xServer.injectPointerButtonPress(Pointer.Button.BUTTON_SCROLL_DOWN);
+                        xServer.injectPointerButtonRelease(Pointer.Button.BUTTON_SCROLL_DOWN);
+                    }
                 } else if (scrollY >= 1.0f) {
-                    xServer.injectPointerButtonPress(Pointer.Button.BUTTON_SCROLL_UP);
-                    xServer.injectPointerButtonRelease(Pointer.Button.BUTTON_SCROLL_UP);
+                    if (xServer.isRelativeMouseMovement() || xServer.isForceMouseControl())
+                        xServer.getWinHandler().mouseEvent(MouseEventFlags.WHEEL, 0, 0,(int)scrollY * 270);
+                    else {
+                        xServer.injectPointerButtonPress(Pointer.Button.BUTTON_SCROLL_UP);
+                        xServer.injectPointerButtonRelease(Pointer.Button.BUTTON_SCROLL_UP);
+                    }
                 }
                 handled = true;
                 break;
@@ -1559,8 +1588,6 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         }).start();
     }
 
-
-
     private void appendBufferedLog(BufferedReader reader, TextView outputView, boolean isError) throws IOException {
         ArrayDeque<String> logBuffer = new ArrayDeque<>(MAX_LOG_LINES);
         StringBuilder batchBuffer = new StringBuilder();
@@ -1592,86 +1619,6 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             runOnUiThread(() -> outputView.setText(logContent));
         }
     }
-
-//    private ContentDialog winetricksDialog;
-//
-//    private void showWinetricksContentDialog(Container container, ContentsManager contentsManager) {
-//        // Only create if it doesn’t exist or is dismissed
-//        if (winetricksDialog == null) {
-//            winetricksDialog = new ContentDialog(this, R.layout.winetricks_content_dialog);
-//            winetricksDialog.setTitle("Winetricks");
-//            winetricksDialog.setIcon(R.drawable.icon_env_var);
-//
-//            // Initialize dialog components
-//            EditText editWinetricksVerb = winetricksDialog.findViewById(R.id.editWinetricksVerb);
-//            TextView textWinetricksOutput = winetricksDialog.findViewById(R.id.textWinetricksOutput);
-//            Button btnExecuteWinetricks = winetricksDialog.findViewById(R.id.btnExecuteWinetricks);
-//            Button btnExecuteWinetricksLatest = winetricksDialog.findViewById(R.id.btnExecuteWinetricksLatest);
-//            Button btnOpenWinetricksFolder = winetricksDialog.findViewById(R.id.btnOpenWinetricksFolder);
-//            Button btnTransparentToggle = winetricksDialog.findViewById(R.id.btnTransparentToggle);
-//
-//            // ADD a "Minimize" button to your layout, or repurpose an existing button:
-//            Button btnMinimize = new Button(this);
-//            btnMinimize.setText("Minimize");
-//            // Insert this button into the right-side LinearLayout programmatically
-//            LinearLayout rightLayout = winetricksDialog.findViewById(R.id.rightLayout); // Suppose we gave it an ID
-//            rightLayout.addView(btnMinimize);
-//
-//            btnMinimize.setOnClickListener(v -> {
-//                // Hide without dismissing
-//                if (winetricksDialog != null && winetricksDialog.isShowing()) {
-//                    winetricksDialog.hide();
-//                }
-//            });
-//
-//        // Execute Winetricks with the specified verb
-//        btnExecuteWinetricks.setOnClickListener(v -> {
-//            String verb = editWinetricksVerb.getText().toString().trim();
-//            if (!verb.isEmpty()) {
-//                runWinetricksWithVerb(container, contentsManager, verb, textWinetricksOutput);
-//            } else {
-//                Toast.makeText(this, "Please enter a Winetricks verb", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        // Execute Winetricks Latest with the specified verb
-//        btnExecuteWinetricksLatest.setOnClickListener(v -> {
-//            String verb = editWinetricksVerb.getText().toString().trim();
-//            if (!verb.isEmpty()) {
-//                runWinetricksLatestWithVerb(container, contentsManager, verb, textWinetricksOutput);
-//            } else {
-//                Toast.makeText(this, "Please enter a Winetricks verb", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        // Open the Winetricks folder script without arguments
-//        btnOpenWinetricksFolder.setOnClickListener(v -> {
-//            runWinetricksFolder(container, contentsManager, textWinetricksOutput);
-//        });
-//
-//        // Toggle 50% transparency
-//        btnTransparentToggle.setOnClickListener(v -> {
-//            android.view.Window window = winetricksDialog.getWindow();
-//            if (window != null) {
-//                android.view.WindowManager.LayoutParams lp = window.getAttributes();
-//                // Check if already at 50% alpha – if so, restore to 100%
-//                if (lp.alpha < 1.0f) {
-//                    lp.alpha = 1.0f; // full opacity
-//                } else {
-//                    lp.alpha = 0.5f; // 50% transparency
-//                }
-//                window.setAttributes(lp);
-//            }
-//        });
-//
-//            // Optionally prevent dismiss on outside touch
-//            winetricksDialog.setCanceledOnTouchOutside(false);
-//        }
-//
-//        // Finally show (or re-show) the dialog
-//        winetricksDialog.show();
-//    }
-
 
     private void runWinetricksFolder(Container container, ContentsManager contentsManager, TextView outputView) {
         // The path to where you'd like to store your dynamic script
@@ -2103,58 +2050,22 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         inputControlsView.invalidate();
     }
 
-//    public void showGamepadConfiguratorDialog() {
-//        // Retrieve the ExternalController from WinHandler
-//        ExternalController currentController = controller;
-//
-//        if (currentController == null) {
-//            // Handle gracefully if no controller is connected
-//            Log.e("WinHandler", "No controller connected. Cannot open configurator dialog.");
-//            runOnUiThread(() -> Toast.makeText(this, "No controller connected. Please connect a controller to proceed.", Toast.LENGTH_SHORT).show());
-//            return;
-//        }
-//
-//        // Use ContentDialog to create a themed dialog
-//        ContentDialog dialog = new ContentDialog(this, R.layout.dialog_gamepad_configurator);
-//        dialog.setTitle("Gamepad Configurator");
-//        dialog.setIcon(R.drawable.icon_gamepad);
-//
-//        // Initialize and configure GamepadConfiguratorDialog
-//        GamepadConfiguratorDialog configuratorDialog = new GamepadConfiguratorDialog(this, currentController, dialog);
-//        configuratorDialog.setupMappingSpinners();
-//        configuratorDialog.refreshSpinners();
-//        configuratorDialog.setupProfileControls();
-//
-//        // Set custom save functionality for "Save" button
-//        dialog.setOnConfirmCallback(() -> {
-//            configuratorDialog.saveMappings();
-//            Toast.makeText(this, "Mappings saved!", Toast.LENGTH_SHORT).show();
-//            dialog.dismiss();
-//        });
-//
-//        dialog.setOnCancelCallback(() -> dialog.dismiss());
-//
-//        // Show dialog
-//        dialog.show();
-//    }
-
     private void extractGraphicsDriverFiles() {
         String adrenoToolsDriverId = "";
         String selectedDriverVersion;
 
-        String currentWrapperVersion = container.getWrapperGraphicsDriverVersion();
+        String currentWrapperVersion = graphicsDriverConfig.get("version");
         selectedDriverVersion = currentWrapperVersion;
 
         if (shortcut != null) {
-            currentWrapperVersion = shortcut.getExtra("wrapperGraphicsDriverVersion", container.getWrapperGraphicsDriverVersion());
+            currentWrapperVersion = shortcut.getExtra("wrapperGraphicsDriverVersion", graphicsDriverConfig.get("version"));
             selectedDriverVersion = currentWrapperVersion;
         }
 
-        adrenoToolsDriverId = (selectedDriverVersion.contains("System")) ? "System" : selectedDriverVersion;
+        adrenoToolsDriverId = (selectedDriverVersion.contains(DefaultVersion.WRAPPER)) ? DefaultVersion.WRAPPER : selectedDriverVersion;
         Log.d("GraphicsDriverExtraction", "Adrenotools DriverID: " + adrenoToolsDriverId);
 
         File rootDir = imageFs.getRootDir();
-        File userRegFile = new File(rootDir, ImageFs.WINEPREFIX + "/user.reg");
 
         if (dxwrapper.equals("dxvk")) {
             DXVKConfigDialog.setEnvVars(this, dxwrapperConfig, envVars);
@@ -2183,13 +2094,12 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             AdrenotoolsManager adrenotoolsManager = new AdrenotoolsManager(this);
             adrenotoolsManager.setDriverById(envVars, imageFs, adrenoToolsDriverId);
         }
-        String blacklistedExtensions = container.getBlacklistedExtensions();
+        String blacklistedExtensions = graphicsDriverConfig.get("blacklistedExtensions");
         envVars.put("WRAPPER_EXTENSION_BLACKLIST", blacklistedExtensions);
 
-        try (WineRegistryEditor registryEditor = new WineRegistryEditor(userRegFile)) {
-            String videoMemorySize = registryEditor.getStringValue("Software\\Wine\\Direct3D", "VideoMemorySize", String.valueOf(GPUInformation.getMemorySize()));
-            envVars.put("UTIL_LAYER_VMEM_MAX_SIZE", videoMemorySize);
-        }
+        String maxDeviceMemory = graphicsDriverConfig.get("maxDeviceMemory");
+        if (maxDeviceMemory != null && Integer.parseInt(maxDeviceMemory) > 0)
+            envVars.put("UTIL_LAYER_VMEM_MAX_SIZE", maxDeviceMemory);
     }
 
     private void copyFile(File sourceFile, File destFile) throws IOException {

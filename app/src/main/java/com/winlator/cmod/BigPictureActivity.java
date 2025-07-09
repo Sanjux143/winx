@@ -972,7 +972,7 @@ public class BigPictureActivity extends AppCompatActivity {
         String graphicsDriver = shortcut.getExtra("graphicsDriver");
         
         setTextOrPlaceholder(graphicsDriverView, graphicsDriver, container.getGraphicsDriver());
-        setTextOrPlaceholder(graphicsDriverVersionView, shortcut.getExtra("wrapperGraphicsDriverVersion"), container.getWrapperGraphicsDriverVersion());
+        setTextOrPlaceholder(graphicsDriverVersionView, shortcut.getExtra("graphicsDroverConfig"), container.getGraphicsDriverConfig());
         setTextOrPlaceholder(dxWrapperView, shortcut.getExtra("dxwrapper"), container.getDXWrapper());
         setTextOrPlaceholder(dxWrapperConfigView, shortcut.getExtra("dxwrapperConfig"), container.getDXWrapperConfig());
         setTextOrPlaceholder(audioDriverView, shortcut.getExtra("audioDriver"), container.getAudioDriver());

@@ -55,16 +55,8 @@ public class ShortcutSettingsDialog extends ContentDialog {
     private final ShortcutsFragment fragment;
     private final Shortcut shortcut;
     private InputControlsManager inputControlsManager;
-//    private ContentsManager contentsManager;
-//
-//    private boolean overrideGraphicsDriver = false;
-
-    private TextView tvGraphicsDriverVersion; 
-
+    private TextView tvGraphicsDriverVersion;
     private String box64Version;
-
-    private String selectedCPUList;
-    private String selectedCPUListWoW64;
 
 
     public ShortcutSettingsDialog(ShortcutsFragment fragment, Shortcut shortcut) {
@@ -131,6 +123,7 @@ public class ShortcutSettingsDialog extends ContentDialog {
         contentsManager.syncContents();
 
         final View vGraphicsDriverConfig = findViewById(R.id.BTGraphicsDriverConfig);
+        vGraphicsDriverConfig.setTag(shortcut.getExtra("graphicsDriverConfig", shortcut.container.getGraphicsDriverConfig()));
         
         final View vDXWrapperConfig = findViewById(R.id.BTDXWrapperConfig);
         vDXWrapperConfig.setTag(shortcut.getExtra("dxwrapperConfig", shortcut.container.getDXWrapperConfig()));
@@ -286,10 +279,6 @@ public class ShortcutSettingsDialog extends ContentDialog {
             rcfileIds[0] = id;
         });
 
-//        // Get CPU lists from the container
-//        selectedCPUList = shortcut.container.getCPUList(true);
-//        selectedCPUListWoW64 = shortcut.container.getCPUListWoW64(true);
-
         final Spinner sControlsProfile = findViewById(R.id.SControlsProfile);
         loadControlsProfileSpinner(sControlsProfile, shortcut.getExtra("controlsProfile", "0"));
 
@@ -298,8 +287,6 @@ public class ShortcutSettingsDialog extends ContentDialog {
         boolean isXInputDisabled = shortcut.getExtra("disableXinput", "0").equals("1");
         cbDisabledXInput.setChecked(isXInputDisabled);
 
-
-        //        ContainerDetailFragment.createWinComponentsTab(getContentView(), shortcut.getExtra("wincomponents", shortcut.container.getWinComponents()));
         ContainerDetailFragment.createWinComponentsTabFromShortcut(this, getContentView(),
                 shortcut.getExtra("wincomponents", shortcut.container.getWinComponents()), isDarkMode);
 
@@ -371,7 +358,7 @@ public class ShortcutSettingsDialog extends ContentDialog {
                 shortcut.putExtra("execArgs", !execArgs.isEmpty() ? execArgs : null);
                 shortcut.putExtra("screenSize", !screenSize.equals(shortcut.container.getScreenSize()) ? screenSize : null);
                 shortcut.putExtra("graphicsDriver", !graphicsDriver.equals(shortcut.container.getGraphicsDriver()) ? graphicsDriver : null);
-                shortcut.putExtra("wrapperGraphicsDriverVersion", graphicsDriverConfig);
+                shortcut.putExtra("graphicsDriverConfig", !graphicsDriverConfig.equals(shortcut.container.getGraphicsDriverConfig()) ? graphicsDriverConfig : null);
                 shortcut.putExtra("dxwrapper", !dxwrapper.equals(shortcut.container.getDXWrapper()) ? dxwrapper : null);
                 shortcut.putExtra("ddrawrapper", !ddrawrapper.equals(shortcut.container.getDDrawWrapper()) ? ddrawrapper : null);
                 shortcut.putExtra("dxwrapperConfig", !dxwrapperConfig.equals(shortcut.container.getDXWrapperConfig()) ? dxwrapperConfig : null);
@@ -398,10 +385,6 @@ public class ShortcutSettingsDialog extends ContentDialog {
                 String envVars = envVarsView.getEnvVars();
                 shortcut.putExtra("envVars", !envVars.isEmpty() ? envVars : null);
 
-//                if (box64Version != null) {
-//                    shortcut.putExtra("box64Version", box64Version);
-//                }
-
                 String box64Preset = Box86_64PresetManager.getSpinnerSelectedId(sBox64Preset);
                 shortcut.putExtra("box64Preset", !box64Preset.equals(shortcut.container.getBox64Preset()) ? box64Preset : null);
 
@@ -416,14 +399,10 @@ public class ShortcutSettingsDialog extends ContentDialog {
 
                 // Save all changes to the shortcut
                 shortcut.saveData();
-//                shortcut.putExtra("overrideGraphicsDriver", overrideGraphicsDriver ? "1" : null);
+//
                 FEXCoreManager.saveFEXCoreSpinners(shortcut.container, sFEXCoreTSOPreset, sFEXCoreMultiBlock, sFEXCoreX87ReducedPrecision); 
             }
         });
-    }
-    
-    private void updateGraphicsDriverVersionText(String version) {
-        tvGraphicsDriverVersion.setText(version);
     }
 
     // Utility method to apply styles to dynamically added TextViews based on their content
@@ -561,23 +540,6 @@ public class ShortcutSettingsDialog extends ContentDialog {
         }
     }
 
-    private void showGraphicsDriverConfigDialog(View anchor, String graphicsDriver) {
-        // Use the shortcut's graphics driver version to initialize the dialog
-        String graphicsDriverVersion;
-        graphicsDriverVersion = shortcut.getExtra("wrapperGraphicsDriverVersion", shortcut.container.getWrapperGraphicsDriverVersion());
-
-        String blExtensions = shortcut.getExtra("blacklistedextensions", shortcut.container.getBlacklistedExtensions());
-
-        new GraphicsDriverConfigDialog(anchor, graphicsDriverVersion, blExtensions, graphicsDriver, (version, blackListedExtensions) -> {
-            // Update the shortcut's graphics driver version with the selected version from the dialog.
-            shortcut.putExtra("oldWrapperGraphicsDriverVersion", graphicsDriverVersion);
-            shortcut.putExtra("wrapperGraphicsDriverVersion", version);
-            shortcut.putExtra("blacklistedextensions", blackListedExtensions);
-            updateGraphicsDriverVersionText(version);
-        }).show();
-    }
-
-
     private void updateExtra(String extraName, String containerValue, String newValue) {
         String extraValue = shortcut.getExtra(extraName);
         if (extraValue.isEmpty() && containerValue.equals(newValue))
@@ -709,6 +671,13 @@ public class ShortcutSettingsDialog extends ContentDialog {
         
         Runnable update = () -> {
             String graphicsDriver = StringUtils.parseIdentifier(sGraphicsDriver.getSelectedItem());
+            String graphicsDriverConfig = vGraphicsDriverConfig.getTag().toString();
+
+            tvGraphicsDriverVersion.setText(GraphicsDriverConfigDialog.getVersion(graphicsDriverConfig));
+
+            vGraphicsDriverConfig.setOnClickListener((v) -> {
+                new GraphicsDriverConfigDialog(vGraphicsDriverConfig, graphicsDriver, tvGraphicsDriverVersion).show();
+            });
 
             ArrayList<String> items = new ArrayList<>();
             for (String value : dxwrapperEntries) {
@@ -721,26 +690,11 @@ public class ShortcutSettingsDialog extends ContentDialog {
         sGraphicsDriver.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-               String driver = StringUtils.parseIdentifier(parent.getItemAtPosition(position));
-                Log.d("Selected driver in shortcut", driver);     
-                switch(driver) {
-                    case "wrapper":
-                        vGraphicsDriverConfig.setVisibility(View.VISIBLE);
-                        vGraphicsDriverConfig.setTag(shortcut.getExtra("wrapperGraphicsDriverVersion", shortcut.container.getWrapperGraphicsDriverVersion()));
-                        updateGraphicsDriverVersionText(shortcut.getExtra("wrapperGraphicsDriverVersion", shortcut.container.getWrapperGraphicsDriverVersion()));
-                        break;
-                }
-                vGraphicsDriverConfig.setOnClickListener((v) -> {
-                        showGraphicsDriverConfigDialog(vGraphicsDriverConfig, StringUtils.parseIdentifier(driver));
-                });
                 update.run();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                String driver = StringUtils.parseIdentifier(parent.getSelectedItem());
-                Log.d("Selected driver in shortcut", driver);
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
 
         AppUtils.setSpinnerSelectionFromIdentifier(sGraphicsDriver, selectedGraphicsDriver);

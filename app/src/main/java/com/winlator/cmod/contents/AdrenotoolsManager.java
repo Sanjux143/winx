@@ -8,9 +8,11 @@ import android.util.Log;
 import com.winlator.cmod.container.Container;
 import com.winlator.cmod.container.Shortcut;
 import com.winlator.cmod.container.ContainerManager;
+import com.winlator.cmod.core.DefaultVersion;
 import com.winlator.cmod.core.EnvVars;
 import com.winlator.cmod.core.FileUtils;
 import com.winlator.cmod.core.GPUInformation;
+import com.winlator.cmod.contentdialog.GraphicsDriverConfigDialog;
 import com.winlator.cmod.core.TarCompressorUtils;
 import com.winlator.cmod.xenvironment.ImageFs;
 import java.io.File;
@@ -19,6 +21,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.json.JSONException;
@@ -78,10 +81,11 @@ public class AdrenotoolsManager {
     private void reloadContainers(String adrenoToolsDriverId) {
         ContainerManager containerManager = new ContainerManager(mContext);
         for (Container container : containerManager.getContainers()) {
-            Log.d("AdrenotoolsManager", "Checking if container driver version " + container.getWrapperGraphicsDriverVersion() + " matches " + getDriverName(adrenoToolsDriverId));
-            if (container.getWrapperGraphicsDriverVersion().contains(getDriverName(adrenoToolsDriverId))) {
+            HashMap<String, String> config = GraphicsDriverConfigDialog.parseGraphicsDriverConfig(container.getGraphicsDriverConfig());
+            Log.d("AdrenotoolsManager", "Checking if container driver version " + config.get("version") + " matches " + getDriverName(adrenoToolsDriverId));
+            if (config.get("version").contains(getDriverName(adrenoToolsDriverId))) {
                 Log.d("AdrenotoolsManager", "Found a match for container " + container.getName());
-                container.setWrapperGraphicsDriverVersion("System");
+                container.setGraphicsDriverConfig(GraphicsDriverConfigDialog.writeGraphicsDriverConfig(DefaultVersion.WRAPPER, config.get("blacklistedExtensions"), config.get("maxDeviceMemory")));
                 container.saveData();
             }     
         }

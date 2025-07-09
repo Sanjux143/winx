@@ -395,19 +395,6 @@ public class InputControlsView extends View {
         return (int)Mathf.roundTo(getHeight(), snappingSize);
     }
 
-//    private void createMouseMoveTimer() {
-//        if (profile != null && mouseMoveTimer == null) {
-//            final float cursorSpeed = profile.getCursorSpeed();
-//            mouseMoveTimer = new Timer();
-//            mouseMoveTimer.schedule(new TimerTask() {
-//                @Override
-//                public void run() {
-//                    xServer.injectPointerMoveDelta((int)(mouseMoveOffset.x * 10 * cursorSpeed), (int)(mouseMoveOffset.y * 10 * cursorSpeed));
-//                }
-//            }, 0, 1000 / 60);
-//        }
-//    }
-
     private void createMouseMoveTimer() {
         WinHandler winHandler = xServer.getWinHandler();
         if (mouseMoveTimer == null && profile != null) {
