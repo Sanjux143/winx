@@ -12,9 +12,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-      with:
-        lfs: true
       
+    - name: download missing files
+      run: |
+       cd ./app/src/main/assets
+
+       rm -rf proton-9.0-arm64ec.txz
+       rm -rf proton-9.0-x86_64.txz
+       rm -rf images.txz
+
+       wget https://github.com/Pipetto-crypto/winlator/raw/refs/heads/dev/app/src/main/assets/proton-9.0-arm64ec.txz
+       wget https://github.com/Pipetto-crypto/winlator/raw/refs/heads/dev/app/src/main/assets/proton-9.0-x86_64.txz
+       wget https://github.com/Pipetto-crypto/winlator/raw/refs/heads/dev/app/src/main/assets/imagefs.txz
+    
     - name: set up JDK 11
       uses: actions/setup-java@v4
       with:
