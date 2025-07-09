@@ -21,6 +21,7 @@ import com.winlator.cmod.contents.ContentsManager;
 import com.winlator.cmod.core.AppUtils;
 import com.winlator.cmod.core.DefaultVersion;
 import com.winlator.cmod.core.GPUInformation;
+import com.winlator.cmod.core.StringUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,8 +36,10 @@ public class GraphicsDriverConfigDialog extends ContentDialog {
     HashMap<String, Boolean> extensionsState = new HashMap<>();
     private Spinner sVersion;
     private Spinner sAvailableExtensions;
+    private Spinner sMaxDeviceMemory;
     private String selectedVersion;
     private String blacklistedExtensions = "";
+    private String selectedDeviceMemory;
 
     protected class ExtensionAdapter extends ArrayAdapter<String> {
         ArrayList<String> extensions;
@@ -109,8 +112,9 @@ public class GraphicsDriverConfigDialog extends ContentDialog {
         return config.get("blacklistedExtensions");
     }
 
-    public static String writeGraphicsDriverConfig(String version, String blacklistedExtensions) {
-        String graphicsDriverConfig = "version=" + version + ";" + "blacklistedExtensions=" + blacklistedExtensions;
+    public static String writeGraphicsDriverConfig(String version, String blacklistedExtensions, String maxDeviceMemory) {
+        String graphicsDriverConfig = "version=" + version + ";" + "blacklistedExtensions=" + blacklistedExtensions + ";" + "maxDeviceMemory=" + StringUtils.parseNumber(maxDeviceMemory);
+        Log.i(TAG, "Written config " + graphicsDriverConfig);
         return graphicsDriverConfig;
     }
   
@@ -127,11 +131,13 @@ public class GraphicsDriverConfigDialog extends ContentDialog {
 
         sVersion = findViewById(R.id.SGraphicsDriverVersion);
         sAvailableExtensions = findViewById(R.id.SGraphicsDriverAvailableExtensions);
+        sMaxDeviceMemory = findViewById(R.id.SGraphicsDriverMaxDeviceMemory);
 
         HashMap<String, String> config = parseGraphicsDriverConfig(graphicsDriverConfig);
 
         String initialVersion = config.get("version");
         String blExtensions = config.get("blacklistedExtensions");
+        String maxDeviceMemory = config.get("maxDeviceMemory");
 
         // Update the selectedVersion whenever the user selects a different version
         sVersion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -148,12 +154,24 @@ public class GraphicsDriverConfigDialog extends ContentDialog {
             }
         });
 
+        sMaxDeviceMemory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedDeviceMemory = sMaxDeviceMemory.getSelectedItem().toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         // Ensure ContentsManager syncContents is called
         ContentsManager contentsManager = new ContentsManager(anchor.getContext());
         contentsManager.syncContents();
         
         // Populate the spinner with available versions from ContentsManager and pre-select the initial version
-        populateGraphicsDriverVersions(anchor.getContext(), contentsManager, initialVersion, blExtensions, graphicsDriver);
+        populateGraphicsDriverVersions(anchor.getContext(), contentsManager, initialVersion, blExtensions, maxDeviceMemory, graphicsDriver);
 
         setOnConfirmCallback(() -> {
             for (HashMap.Entry<String, Boolean> entry : extensionsState.entrySet()) {
@@ -168,21 +186,25 @@ public class GraphicsDriverConfigDialog extends ContentDialog {
             if (graphicsDriverVersionView != null)
                 graphicsDriverVersionView.setText(selectedVersion);
 
-            anchor.setTag(writeGraphicsDriverConfig(selectedVersion, blacklistedExtensions));
+            anchor.setTag(writeGraphicsDriverConfig(selectedVersion, blacklistedExtensions, selectedDeviceMemory));
         });
     }
 
-    private void populateGraphicsDriverVersions(Context context, ContentsManager contentsManager, @Nullable String initialVersion, @Nullable String blExtensions, String graphicsDriver) {
+    private void populateGraphicsDriverVersions(Context context, ContentsManager contentsManager, @Nullable String initialVersion, @Nullable String blExtensions, String maxDeviceMemory, String graphicsDriver) {
         List<String> wrapperVersions = new ArrayList<>();
-        ArrayList<String> availableExtensions = new ArrayList<>();
+        ArrayList<String> availableExtensions;
+        List<String> maxDeviceMemoryEntries = new ArrayList<>();
 
         String[] wrapperDefaultVersions = context.getResources().getStringArray(R.array.wrapper_graphics_driver_version_entries);
+        String[] maxDeviceMemoryDefaultEntries = context.getResources().getStringArray(R.array.device_memory_entries);
 
         wrapperVersions.addAll(Arrays.asList(wrapperDefaultVersions));
         
         // Add installed versions from AdrenotoolsManager
         AdrenotoolsManager adrenotoolsManager = new AdrenotoolsManager(context);
         wrapperVersions.addAll(adrenotoolsManager.enumarateInstalledDrivers());
+
+        maxDeviceMemoryEntries.addAll(Arrays.asList(maxDeviceMemoryDefaultEntries));
 
         availableExtensions = new ArrayList<>(Arrays.asList(GPUInformation.enumerateExtensions()));
 
@@ -194,6 +216,7 @@ public class GraphicsDriverConfigDialog extends ContentDialog {
 
         // Set the adapter and select the initial version
         ArrayAdapter<String> wrapperAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, wrapperVersions);
+        ArrayAdapter<String> maxDeviceMemoryAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, maxDeviceMemoryEntries);
         ExtensionAdapter extensionsAdapter = new ExtensionAdapter(context, availableExtensions);
 
         String[] bl = blExtensions.split("\\,");
@@ -206,7 +229,7 @@ public class GraphicsDriverConfigDialog extends ContentDialog {
         }
         
         sVersion.setAdapter(wrapperAdapter);
-
+        sMaxDeviceMemory.setAdapter(maxDeviceMemoryAdapter);
         sAvailableExtensions.setAdapter(extensionsAdapter);
         
         // We can start logging selected graphics driver and initial version
@@ -215,6 +238,7 @@ public class GraphicsDriverConfigDialog extends ContentDialog {
 
         // Use the custom selection logic
         setSpinnerSelectionWithFallback(sVersion, initialVersion, graphicsDriver);
+        AppUtils.setSpinnerSelectionFromNumber(sMaxDeviceMemory, maxDeviceMemory);
 
         // We can log the spinner values now
         Log.d(TAG, "Spinner selected position: " + sVersion.getSelectedItemPosition());

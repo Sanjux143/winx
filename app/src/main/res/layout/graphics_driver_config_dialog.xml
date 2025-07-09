@@ -35,5 +35,19 @@
             android:layout_height="wrap_content"
             android:id="@+id/SGraphicsDriverAvailableExtensions"
             android:spinnerMode="dialog"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/graphics_driver_max_device_memory"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:paddingBottom="8dp"/>
+
+        <Spinner
+            style="@style/ComboBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/SGraphicsDriverMaxDeviceMemory"
+            android:spinnerMode="dialog"/>
     </LinearLayout>
 </ScrollView>

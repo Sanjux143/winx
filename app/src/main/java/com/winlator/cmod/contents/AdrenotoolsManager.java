@@ -85,7 +85,7 @@ public class AdrenotoolsManager {
             Log.d("AdrenotoolsManager", "Checking if container driver version " + config.get("version") + " matches " + getDriverName(adrenoToolsDriverId));
             if (config.get("version").contains(getDriverName(adrenoToolsDriverId))) {
                 Log.d("AdrenotoolsManager", "Found a match for container " + container.getName());
-                container.setGraphicsDriverConfig(GraphicsDriverConfigDialog.writeGraphicsDriverConfig(DefaultVersion.WRAPPER, config.get("blacklistedExtensions")));
+                container.setGraphicsDriverConfig(GraphicsDriverConfigDialog.writeGraphicsDriverConfig(DefaultVersion.WRAPPER, config.get("blacklistedExtensions"), config.get("maxDeviceMemory")));
                 container.saveData();
             }     
         }

@@ -2066,7 +2066,6 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         Log.d("GraphicsDriverExtraction", "Adrenotools DriverID: " + adrenoToolsDriverId);
 
         File rootDir = imageFs.getRootDir();
-        File userRegFile = new File(rootDir, ImageFs.WINEPREFIX + "/user.reg");
 
         if (dxwrapper.equals("dxvk")) {
             DXVKConfigDialog.setEnvVars(this, dxwrapperConfig, envVars);
@@ -2098,10 +2097,9 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         String blacklistedExtensions = graphicsDriverConfig.get("blacklistedExtensions");
         envVars.put("WRAPPER_EXTENSION_BLACKLIST", blacklistedExtensions);
 
-        try (WineRegistryEditor registryEditor = new WineRegistryEditor(userRegFile)) {
-            String videoMemorySize = registryEditor.getStringValue("Software\\Wine\\Direct3D", "VideoMemorySize", String.valueOf(GPUInformation.getMemorySize()));
-            envVars.put("UTIL_LAYER_VMEM_MAX_SIZE", videoMemorySize);
-        }
+        String maxDeviceMemory = graphicsDriverConfig.get("maxDeviceMemory");
+        if (maxDeviceMemory != null && Integer.parseInt(maxDeviceMemory) > 0)
+            envVars.put("UTIL_LAYER_VMEM_MAX_SIZE", maxDeviceMemory);
     }
 
     private void copyFile(File sourceFile, File destFile) throws IOException {

@@ -72,8 +72,14 @@
         <item>2048 MB</item>
         <item>4096 MB</item>
     </string-array>
+    <string-array name="device_memory_entries">
+    <item>0 (Default)</item>
+    <item>512 MB</item>
+    <item>1024 MB</item>
+    <item>2048 MB</item>
+    <item>4096 MB</item>
+    </string-array>
     <string-array name="video_memory_size_entries">
-        <item>0 (Device)</item>
         <item>32 MB</item>
         <item>64 MB</item>
         <item>128 MB</item>
