@@ -393,6 +393,8 @@ public class ContainerDetailFragment extends Fragment {
                     registryEditor.setStringValue("Software\\Wine\\Direct3D", "shader_backend", "glsl");
                     registryEditor.setStringValue("Software\\Wine\\Direct3D", "UseGLSL", "enabled");
                 }
+            } else {
+                registryEditor.setStringValue("Software\\Wine\\Direct3D", "renderer", "no3d");
             }
         }
     }

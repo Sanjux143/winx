@@ -27,7 +27,8 @@ public class VortekConfigDialog extends ContentDialog {
     DEFAULT_VK_MAX_VERSION = stringBuilder.toString();
   }
 
-  public static final String DEFAULT_CONFIG = "vkMaxVersion=" + DEFAULT_VK_MAX_VERSION + ",maxDeviceMemory=4096";
+  public static final String DEFAULT_CONFIG = "vkMaxVersion=" + DEFAULT_VK_MAX_VERSION +
+          ",maxDeviceMemory=512,imageCacheSize=256,resourceMemoryType=0";
 
   private final Context context;
 
@@ -39,6 +40,8 @@ public class VortekConfigDialog extends ContentDialog {
 
     final Spinner SVulkanVersion = findViewById(R.id.SVulkanVersion);
     final Spinner SMaxDeviceMemory = findViewById(R.id.SMaxDeviceMemory);
+    final Spinner SImageCacheSize = findViewById(R.id.SImageCacheSize);
+    final Spinner SResourceMemoryType = findViewById(R.id.SResourceMemoryType);
     MultiSelectionComboBox multiSelectionComboBox = findViewById(R.id.CBExposedExtensions);
 
     String[] arrayOfString = GPUHelper.vkGetDeviceExtensions();
@@ -54,12 +57,18 @@ public class VortekConfigDialog extends ContentDialog {
       multiSelectionComboBox.setSelectedItems(str.split("\\|"));
     } 
     AppUtils.setSpinnerSelectionFromValue(SVulkanVersion, config.get("vkMaxVersion", DEFAULT_VK_MAX_VERSION));
-    AppUtils.setSpinnerSelectionFromValue(SMaxDeviceMemory, config.get("maxDeviceMemory", String.valueOf(4096)));
+    AppUtils.setSpinnerSelectionFromValue(SMaxDeviceMemory, config.get("maxDeviceMemory", String.valueOf(512)));
+    AppUtils.setSpinnerSelectionFromNumber(SImageCacheSize, config.get("imageCacheSize", String.valueOf(256)));
+    SResourceMemoryType.setSelection(config.getInt("resourceMemoryType", 0));
+    android.util.Log.d("VORTEK", "config.get = " + config);
 
     setOnConfirmCallback(() -> {
-      config.put("maxDeviceMemory", SMaxDeviceMemory.getSelectedItem().toString());
       config.put("vkMaxVersion", SVulkanVersion.getSelectedItem().toString());
+      config.put("maxDeviceMemory", SMaxDeviceMemory.getSelectedItem().toString());
+      config.put("imageCacheSize", SImageCacheSize.getSelectedItem().toString());
+      config.put("resourceMemoryType", SResourceMemoryType.getSelectedItem().toString());
       config.put("exposedDeviceExtensions", String.join("|", multiSelectionComboBox.getSelectedItems()));
+      android.util.Log.d("VORTEK", "config.put = " + config);
       anchor.setTag(config.toString());
     });
   }

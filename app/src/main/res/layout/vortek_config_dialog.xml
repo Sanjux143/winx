@@ -33,6 +33,28 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/image_cache_size" />
+
+        <Spinner
+            style="@style/ComboBox"
+            android:layout_width="match_parent"
+            android:id="@+id/SImageCacheSize"
+            android:entries="@array/image_cache_size_entries" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/resource_memory_type" />
+
+        <Spinner
+            style="@style/ComboBox"
+            android:layout_width="match_parent"
+            android:id="@+id/SResourceMemoryType"
+            android:entries="@array/resource_memory_type_entries" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/exposed_extensions" />
 
         <com.winlator.widget.MultiSelectionComboBox

@@ -689,7 +689,10 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         touchpadView = new TouchpadView(this, xServer);
         touchpadView.setSensitivity(globalCursorSpeed);
         touchpadView.setFourFingersTapCallback(() -> {
-            if (!drawerLayout.isDrawerOpen(GravityCompat.START)) drawerLayout.openDrawer(GravityCompat.START);
+            //if (!drawerLayout.isDrawerOpen(GravityCompat.START)) drawerLayout.openDrawer(GravityCompat.START);
+            if (environment != null) {
+                (new NavigationDialog(this)).show();
+            }
         });
         rootView.addView(touchpadView);
 

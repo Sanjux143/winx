@@ -146,8 +146,12 @@ public class VortekRendererComponent extends EnvironmentComponent implements Con
   
   public static class Options {
     public String[] exposedDeviceExtensions = null;
+
+    public short imageCacheSize = 256;
     
-    public int maxDeviceMemory = 4096;
+    public short maxDeviceMemory = 4096;
+
+    public byte resourceMemoryType = 0;
     
     public int vkMaxVersion = VortekRendererComponent.VK_MAX_VERSION;
     
@@ -165,7 +169,9 @@ public class VortekRendererComponent extends EnvironmentComponent implements Con
         String[] arrayOfString = str2.split("\\.");
         options.vkMaxVersion = vkMakeVersion(Integer.parseInt(arrayOfString[0]), Integer.parseInt(arrayOfString[1]), 128);
       } 
-      options.maxDeviceMemory = param1KeyValueSet.getInt("maxDeviceMemory", 4096);
+      options.maxDeviceMemory = (short)param1KeyValueSet.getInt("maxDeviceMemory", 512);
+      options.imageCacheSize = (short)param1KeyValueSet.getInt("imageCacheSize", 256);
+      options.resourceMemoryType = (byte)param1KeyValueSet.getInt("resourceMemoryType", 0);
       return options;
     }
   }
