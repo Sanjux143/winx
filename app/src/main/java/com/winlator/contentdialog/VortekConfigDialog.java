@@ -58,17 +58,15 @@ public class VortekConfigDialog extends ContentDialog {
     } 
     AppUtils.setSpinnerSelectionFromValue(SVulkanVersion, config.get("vkMaxVersion", DEFAULT_VK_MAX_VERSION));
     AppUtils.setSpinnerSelectionFromValue(SMaxDeviceMemory, config.get("maxDeviceMemory", String.valueOf(512)));
-    AppUtils.setSpinnerSelectionFromNumber(SImageCacheSize, config.get("imageCacheSize", String.valueOf(256)));
+    AppUtils.setSpinnerSelectionFromValue(SImageCacheSize, config.get("imageCacheSize", String.valueOf(256)));
     SResourceMemoryType.setSelection(config.getInt("resourceMemoryType", 0));
-    android.util.Log.d("VORTEK", "config.get = " + config);
 
     setOnConfirmCallback(() -> {
       config.put("vkMaxVersion", SVulkanVersion.getSelectedItem().toString());
       config.put("maxDeviceMemory", SMaxDeviceMemory.getSelectedItem().toString());
       config.put("imageCacheSize", SImageCacheSize.getSelectedItem().toString());
-      config.put("resourceMemoryType", SResourceMemoryType.getSelectedItem().toString());
+      config.put("resourceMemoryType", SResourceMemoryType.getSelectedItemPosition());
       config.put("exposedDeviceExtensions", String.join("|", multiSelectionComboBox.getSelectedItems()));
-      android.util.Log.d("VORTEK", "config.put = " + config);
       anchor.setTag(config.toString());
     });
   }
