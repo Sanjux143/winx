@@ -126,6 +126,7 @@
     <string name="version">Version</string>
     <string name="dxvk" translatable="false">DXVK</string>
     <string name="vkd3d" translatable="false">VKD3D</string>
+    <string name="dgVoodoo" translatable="false">dgVoodoo</string>
     <string name="wined3d" translatable="false">WineD3D</string>
     <string name="unable_to_install_wine">Unable to install Wine</string>
     <string name="unable_to_remove_this_wine_version">Unable to remove this wine version</string>
@@ -182,8 +183,9 @@
     <string name="you_cannot_remove_this_preset">You cannot remove this preset</string>
     <string name="dxwrapper_help_content" translatable="false"><![CDATA[
         <i><b>WineD3D</b></i> is a translation layer for DirectX 1-11 to OpenGL.<br /><br />
-        <i><b>DXVK</b></i> is a translation layer for Direct3D 9-11 to Vulkan.<br /><br />
+        <i><b>DXVK</b></i> is a translation layer for Direct3D 8-11 to Vulkan.<br /><br />
         <i><b>VKD3D</b></i> is a translation layer for Direct3D 12 API to Vulkan.<br /><br />
+        <i><b>dgVoodoo</b></i> is an implementation of old graphics APIs (DirectX 1-7 etc.) for better compatibility with classic games<br /><br />
         <i><b>CNC DDraw</b></i> is an implementation of DirectDraw for better compatibility with classic games.
     ]]></string>
     <string name="box86_64_env_var_help__dynarec_safeflags" translatable="false"><![CDATA[
@@ -261,6 +263,7 @@
     <string name="enabled_async">Enable Async</string>
     <string name="enabled_async_cache">Enable Async Cache</string>
     <string name="vkd3d_feature_level">VKD3D Feature Level</string>
+    <string name="enable_dgVoodoo" translatable="false">Enable dgVoodoo-2.75</string>
     <string name="vulkan_version" translatable="false">Vulkan Version</string>
     <string name="opengl_version" translatable="false">OpenGL Version</string>
     <string name="disableVertexArrayBGRA" translatable="false">Disable vertex array BGRA</string>

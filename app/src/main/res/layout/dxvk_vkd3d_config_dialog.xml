@@ -135,5 +135,37 @@
                 style="@style/FieldSetLabel"
                 android:text="@string/vkd3d" />
         </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout style="@style/FieldSet"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="@string/enable_dgVoodoo" />
+
+                <ToggleButton
+                    android:id="@+id/enableDgVoodoo"
+                    android:layout_width="64dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/toggle_button_selector"
+                    android:textOn=""
+                    android:textOff="" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/FieldSetLabel"
+                android:text="@string/dgVoodoo" />
+        </FrameLayout>
     </LinearLayout>
 </ScrollView>

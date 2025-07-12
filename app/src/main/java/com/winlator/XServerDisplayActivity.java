@@ -526,20 +526,25 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
 
         String dxwrapper = this.dxwrapper;
         String dxwrapper2 = "";
+        String enableDgVoodoo = "";
         if (dxwrapper.contains("dxvk") || dxwrapper.contains("vkd3d")) {
             dxwrapper = "dxvk-" + dxwrapperConfig.get("dxvk_version");
             dxwrapper2 = "vkd3d-" + dxwrapperConfig.get("vkd3dVersion");
+            enableDgVoodoo = dxwrapperConfig.get("enableDgVoodoo");
         } else if (dxwrapper.contains("wined3d")) {
             dxwrapper = "wined3d-" + dxwrapperConfig.get("wined3d_version");
         }
 
-        if (!dxwrapper.equals(container.getExtra("dxwrapper")) || !dxwrapper2.equals(container.getExtra("dxwrapper2"))) {
+        if (!dxwrapper.equals(container.getExtra("dxwrapper")) ||
+                !dxwrapper2.equals(container.getExtra("dxwrapper2")) ||
+                !enableDgVoodoo.equals(container.getExtra("enableDgVoodoo"))) {
             extractDXWrapperFiles(dxwrapper);
             if (!dxwrapper2.isEmpty())
                 extractDXWrapperFiles(dxwrapper2);
 
             container.putExtra("dxwrapper", dxwrapper);
             container.putExtra("dxwrapper2", dxwrapper2);
+            container.putExtra("enableDgVoodoo", enableDgVoodoo);
             containerDataChanged = true;
         }
 
@@ -1040,6 +1045,9 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                         // d8vk merged into dxvk since dxvk-2.4, so we don't need to extract d8vk after that
                         if (compareVersion(StringUtils.parseNumber(dxwrapper), "2.4") < 0)
                             TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, "dxwrapper/d8vk-" + DefaultVersion.D8VK + ".tzst", windowsDir, onExtractFileListener);
+
+                        if (dxwrapperConfig.get("enableDgVoodoo").equals("1"))
+                            TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, "dxwrapper/dgVoodoo-" + DefaultVersion.DGVOODOO + ".tzst", windowsDir, onExtractFileListener);
                     }
                 } else if (dxwrapper.startsWith("vkd3d")) {
                     ContentProfile profile = contentsManager.getProfileByEntryName(dxwrapper);

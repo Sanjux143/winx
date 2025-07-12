@@ -11,6 +11,7 @@ public abstract class DefaultVersion {
     public static final String DXVK = "1.10.3-async";
     public static final String WINED3D = "Default";
     public static final String D8VK = "1.0";
+    public static final String DGVOODOO = "2.75";
     public static final String VKD3D = "2.12";
     public static final String CNC_DDRAW = "6.6";
 }
