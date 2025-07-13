@@ -148,11 +148,13 @@ public class ContainerDetailFragment extends Fragment {
 
         final Spinner sDXWrapper = view.findViewById(R.id.SDXWrapper);
 
-        final View vGraphicsDriverConfig = view.findViewById(R.id.GraphicsDriverConfig1); ///
+        final View vGraphicsDriverConfig = view.findViewById(R.id.GraphicsDriverConfig1);
 
         vDXWrapperConfig.setTag(isEditMode() ? container.getDXWrapperConfig() : "");
 
-        vGraphicsDriverConfig.setTag(isEditMode() ? container.getGraphicsDriverConfig() : ""); ///
+        vGraphicsDriverConfig.setTag(isEditMode() ? container.getGraphicsDriverConfig() : "");
+
+        view.findViewById(R.id.BTHelpGraphicsDriver).setOnClickListener((v) -> AppUtils.showHelpBox(context, v, R.string.graphics_driver_help_content));
 
         setupDXWrapperSpinner(sDXWrapper, vDXWrapperConfig);
         updateGraphicsDriverSpinner(getContext(), contentsManager, sGraphicsDriver);
