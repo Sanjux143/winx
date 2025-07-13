@@ -70,32 +70,13 @@ public class Container {
     private String lc_all = "";
     private int primaryController = 1;
     private String controllerMapping = new String(new char[XrControllerMapping.values().length]);
-    private String oldfexcoreVersion;
     private String fexcoreVersion = DefaultVersion.FEXCORE;
-    private String oldbox64Version;
     private String box64Version = DefaultVersion.BOX64;
-
     private String emulator;
+    private boolean isRelativeMouseMovement;
 
     private ContainerManager containerManager;
 
-    public String getFEXCoreVersion() { return this.fexcoreVersion; }
-    public void setFEXCoreVersion(String version) { this.fexcoreVersion = version; }
-    public String getOldFEXCoreVersion() { return this.oldfexcoreVersion; }
-    public void setOldFEXCoreVersion(String version) { this.oldfexcoreVersion = version; }
-
-    public String getBox64Version() { return box64Version; }
-    public void setBox64Version(String version) { this.box64Version = version; }
-    public String getOldBox64Version() { return this.oldbox64Version; }
-    public void setOldBox64Version(String version) { this.oldbox64Version = version; }
-
-    public void setEmulator(String emulator) {
-        this.emulator = emulator;
-    }
-
-    public String getEmulator() {
-        return this.emulator;
-    }
 
 
     public Container(int id) {
@@ -217,6 +198,14 @@ public class Container {
         this.controllerMapping = controllerMapping;
     }
 
+    public boolean isRelativeMouseMovement() {
+        return this.isRelativeMouseMovement;
+    }
+
+    public void setRelativeMouseMovement(boolean isRelativeMouseMovement) {
+        this.isRelativeMouseMovement = isRelativeMouseMovement;
+    }
+
     public boolean isFullscreenStretched() { return fullscreenStretched; }
 
     public boolean isShowFPS() {
@@ -275,6 +264,22 @@ public class Container {
 
     public void setBox64Preset(String box64Preset) {
         this.box64Preset = box64Preset;
+    }
+
+    public String getFEXCoreVersion() { return this.fexcoreVersion; }
+
+    public void setFEXCoreVersion(String version) { this.fexcoreVersion = version; }
+
+    public String getBox64Version() { return box64Version; }
+
+    public void setBox64Version(String version) { this.box64Version = version; }
+
+    public void setEmulator(String emulator) {
+        this.emulator = emulator;
+    }
+
+    public String getEmulator() {
+        return this.emulator;
     }
 
     public File getRootDir() {
@@ -412,14 +417,13 @@ public class Container {
             data.put("wincomponents", wincomponents);
             data.put("drives", drives);
             data.put("showFPS", showFPS);
+            data.put("relativeMouseMovement", isRelativeMouseMovement);
             data.put("fullscreenStretched", fullscreenStretched);
             data.put("inputType", inputType);
             data.put("wow64Mode", wow64Mode);
             data.put("startupSelection", startupSelection);
-            data.put("oldbox64Version", oldbox64Version);
             data.put("box64Version", box64Version);
             data.put("box64Preset", box64Preset);
-            data.put("oldfexcoreVersion", oldfexcoreVersion);
             data.put("fexcoreVersion", fexcoreVersion);
             data.put("desktopTheme", desktopTheme);
             data.put("extraData", extraData);
@@ -484,6 +488,9 @@ public class Container {
                 case "showFPS" :
                     setShowFPS(data.getBoolean(key));
                     break;
+                case "relativeMouseMovement":
+                    setRelativeMouseMovement(data.getBoolean(key));
+                    break;
                 case "fullscreenStretched" :
                     setFullscreenStretched(data.getBoolean(key));
                     break;
@@ -505,17 +512,11 @@ public class Container {
                 case "wineVersion" :
                     setWineVersion(data.getString(key));
                     break;
-                case "oldbox64Version":
-                    setOldBox64Version(data.getString(key));
-                    break;
                 case "box64Version":
                     setBox64Version(data.getString(key));
                     break;
                 case "box64Preset" :
                     setBox64Preset(data.getString(key));
-                    break;
-                case "oldfexcoreVersion":
-                    setOldFEXCoreVersion(data.getString(key));
                     break;
                 case "fexcoreVersion":
                     setFEXCoreVersion(data.getString(key));

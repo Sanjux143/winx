@@ -165,6 +165,9 @@ public class ContainerDetailFragment extends Fragment {
         Spinner sAudioDriver = view.findViewById(R.id.SAudioDriver);
         sAudioDriver.setPopupBackgroundResource(isDarkMode ? R.drawable.content_dialog_background_dark : R.drawable.content_dialog_background);
 
+        Spinner sEmulator64 = view.findViewById(R.id.SEmulator64);
+        sEmulator64.setPopupBackgroundResource(isDarkMode ? R.drawable.content_dialog_background_dark : R.drawable.content_dialog_background);
+
         Spinner sEmulator = view.findViewById(R.id.SEmulator);
         sEmulator.setPopupBackgroundResource(isDarkMode ? R.drawable.content_dialog_background_dark : R.drawable.content_dialog_background);
 
@@ -469,6 +472,9 @@ public class ContainerDetailFragment extends Fragment {
         final CheckBox cbWoW64Mode = view.findViewById(R.id.CBWoW64Mode);
         cbWoW64Mode.setChecked(!isEditMode() || container.isWoW64Mode());
 
+        final CheckBox cbRelativeMouseMovement = view.findViewById(R.id.CBRelativeMouseMovement);
+        cbRelativeMouseMovement.setChecked(isEditMode() && container.isRelativeMouseMovement());
+
         final Spinner sStartupSelection = view.findViewById(R.id.SStartupSelection);
         byte previousStartupSelection = isEditMode() ? container.getStartupSelection() : -1;
         sStartupSelection.setSelection(previousStartupSelection != -1 ? previousStartupSelection : Container.STARTUP_SELECTION_ESSENTIAL);
@@ -550,6 +556,7 @@ public class ContainerDetailFragment extends Fragment {
                 String cpuList = cpuListView.getCheckedCPUListAsString();
                 String cpuListWoW64 = cpuListViewWoW64.getCheckedCPUListAsString();
                 boolean wow64Mode = cbWoW64Mode.isChecked();
+                boolean isRelativeMouseMovement = cbRelativeMouseMovement.isChecked();
                 byte startupSelection = (byte) sStartupSelection.getSelectedItemPosition();
                 String box64Version = sBox64Version.getSelectedItem().toString();
                 String box64Preset = Box86_64PresetManager.getSpinnerSelectedId(sBox64Preset);
@@ -605,6 +612,7 @@ public class ContainerDetailFragment extends Fragment {
                     container.setFullscreenStretched(fullscreenStretched);
                     container.setInputType(finalInputType);
                     container.setWoW64Mode(wow64Mode);
+                    container.setRelativeMouseMovement(isRelativeMouseMovement);
                     container.setStartupSelection(startupSelection);
                     container.setBox64Version(box64Version);
                     container.setBox64Preset(box64Preset);
@@ -637,6 +645,7 @@ public class ContainerDetailFragment extends Fragment {
                     data.put("wincomponents", wincomponents);
                     data.put("drives", drives);
                     data.put("showFPS", showFPS);
+                    data.put("relativeMouseMovement", isRelativeMouseMovement);
                     data.put("fullscreenStretched", fullscreenStretched);
                     data.put("inputType", finalInputType);
                     data.put("wow64Mode", wow64Mode);
@@ -659,7 +668,7 @@ public class ContainerDetailFragment extends Fragment {
                     imageFs = ImageFs.find(imageFsRoot);
 
 
-                    manager.createContainerAsync(data, (container) -> {
+                    manager.createContainerAsync(data, contentsManager, (container) -> {
                         if (container != null) {
                             this.container = container;
                             saveWineRegistryKeys(view);
@@ -1088,18 +1097,21 @@ public class ContainerDetailFragment extends Fragment {
                 CheckBox cbWoW64Mode = view.findViewById(R.id.CBWoW64Mode);
                 FrameLayout fexcoreFL = view.findViewById(R.id.fexcoreFrame);
                 Spinner sEmulator = view.findViewById(R.id.SEmulator);
+                Spinner sEmulator64 = view.findViewById(R.id.SEmulator64);
+                sEmulator64.setEnabled(false);
                 String wineVersion = sWineVersion.getSelectedItem().toString();
-                WineInfo wineInfo = WineInfo.fromIdentifier(context, wineVersion);
+                WineInfo wineInfo = WineInfo.fromIdentifier(context, contentsManager, wineVersion);
                 if (wineInfo.isArm64EC()) {
                     fexcoreFL.setVisibility(View.VISIBLE);
                     sEmulator.setEnabled(true);
+                    sEmulator64.setSelection(0);
                     if (!isEditMode()) sEmulator.setSelection(0);
                 }
                 else {
                     fexcoreFL.setVisibility(View.GONE);
                     sEmulator.setEnabled(false);
                     sEmulator.setSelection(1);
-
+                    sEmulator64.setSelection(1);
                 }
                 loadBox64VersionSpinner(context, container, contentsManager, sBox64Version, wineInfo.isArm64EC());
                 cbWoW64Mode.setEnabled(true); // Always allow user to toggle WoW64 mode
@@ -1108,16 +1120,20 @@ public class ContainerDetailFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {
                 FrameLayout fexcoreFL = view.findViewById(R.id.fexcoreFrame);
                 Spinner sEmulator = view.findViewById(R.id.SEmulator);
+                Spinner sEmulator64 = view.findViewById(R.id.SEmulator64);
+                sEmulator64.setEnabled(false);
                 String wineVersion = sWineVersion.getSelectedItem().toString();
-                WineInfo wineInfo = WineInfo.fromIdentifier(context, wineVersion);
+                WineInfo wineInfo = WineInfo.fromIdentifier(context, contentsManager, wineVersion);
                 if (wineInfo.isArm64EC()) {
                     fexcoreFL.setVisibility(View.VISIBLE);
                     sEmulator.setEnabled(true);
+                    sEmulator64.setSelection(0);
                 }
                 else {
                     fexcoreFL.setVisibility(View.GONE);
                     sEmulator.setEnabled(false);
                     sEmulator.setSelection(1);
+                    sEmulator64.setSelection(1);
                 }
                 loadBox64VersionSpinner(context, container, contentsManager, sBox64Version, wineInfo.isArm64EC());
             }

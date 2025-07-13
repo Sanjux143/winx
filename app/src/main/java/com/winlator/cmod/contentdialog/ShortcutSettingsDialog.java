@@ -40,6 +40,7 @@ import com.winlator.cmod.fexcore.FEXCoreManager;
 import com.winlator.cmod.inputcontrols.ControlsProfile;
 import com.winlator.cmod.inputcontrols.InputControlsManager;
 import com.winlator.cmod.midi.MidiManager;
+import com.winlator.cmod.widget.CPUListView;
 import com.winlator.cmod.widget.EnvVarsView;
 import com.winlator.cmod.winhandler.WinHandler;
 
@@ -139,21 +140,25 @@ public class ShortcutSettingsDialog extends ContentDialog {
         AppUtils.setSpinnerSelectionFromIdentifier(sAudioDriver, shortcut.getExtra("audioDriver", shortcut.container.getAudioDriver()));
         final Spinner sEmulator = findViewById(R.id.SEmulator);
         AppUtils.setSpinnerSelectionFromIdentifier(sEmulator, shortcut.getExtra("emulator", shortcut.container.getEmulator()));
+        final Spinner sEmulator64 = findViewById(R.id.SEmulator64);
+        sEmulator64.setEnabled(false);
         final Spinner sMIDISoundFont = findViewById(R.id.SMIDISoundFont);
         MidiManager.loadSFSpinner(sMIDISoundFont);
         AppUtils.setSpinnerSelectionFromValue(sMIDISoundFont, shortcut.getExtra("midiSoundFont", shortcut.container.getMIDISoundFont()));
 
         FrameLayout fexcoreFL = findViewById(R.id.fexcoreFrame);
         String wineVersion = shortcut.container.getWineVersion();
-        WineInfo wineInfo = WineInfo.fromIdentifier(context, wineVersion);
+        WineInfo wineInfo = WineInfo.fromIdentifier(context, contentsManager, wineVersion);
         if (wineInfo.isArm64EC()) {
             fexcoreFL.setVisibility(View.VISIBLE);
             sEmulator.setEnabled(true);
+            sEmulator64.setSelection(0);
         }
         else {
             fexcoreFL.setVisibility(View.GONE);
             sEmulator.setEnabled(false);
             sEmulator.setSelection(1);
+            sEmulator64.setSelection(1);
         }
 
         loadBox64VersionSpinner(context, contentsManager, sBox64Version, wineInfo.isArm64EC());
@@ -287,6 +292,10 @@ public class ShortcutSettingsDialog extends ContentDialog {
         boolean isXInputDisabled = shortcut.getExtra("disableXinput", "0").equals("1");
         cbDisabledXInput.setChecked(isXInputDisabled);
 
+        final CheckBox cbRelativeMouseMovement = findViewById(R.id.CBRelativeMouseMovement);
+        String isRelativeMouseMovement = shortcut.getExtra("relativeMouseMovement", shortcut.container.isRelativeMouseMovement() ? "1" : "0");
+        cbRelativeMouseMovement.setChecked(isRelativeMouseMovement.equals("1") ? true : false);
+
         ContainerDetailFragment.createWinComponentsTabFromShortcut(this, getContentView(),
                 shortcut.getExtra("wincomponents", shortcut.container.getWinComponents()), isDarkMode);
 
@@ -318,6 +327,14 @@ public class ShortcutSettingsDialog extends ContentDialog {
         List<String> sGraphicsItemsList = new ArrayList<>(Arrays.asList(context.getResources().getStringArray(R.array.graphics_driver_entries)));
         sGraphicsDriver.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, sGraphicsItemsList));
         AppUtils.setSpinnerSelectionFromValue(sGraphicsDriver, selectedDriver);
+
+        final Spinner sStartupSelection = findViewById(R.id.SStartupSelection);
+        sStartupSelection.setSelection(Integer.parseInt(shortcut.getExtra("startupSelection", String.valueOf(shortcut.container.getStartupSelection()))));
+
+        final CPUListView cpuListView = findViewById(R.id.CPUListView);
+        cpuListView.setCheckedCPUList(shortcut.getExtra("cpuList", shortcut.container.getCPUList(true)));
+        final CPUListView cpuListViewWoW64 = findViewById(R.id.CPUListViewWoW64);
+        cpuListViewWoW64.setCheckedCPUList(shortcut.getExtra("cpuListWoW64", shortcut.container.getCPUListWoW64(true)));
 
         setOnConfirmCallback(() -> {
             String name = etName.getText().toString().trim();
@@ -353,6 +370,9 @@ public class ShortcutSettingsDialog extends ContentDialog {
 
                 boolean disabledXInput = cbDisabledXInput.isChecked();
                 shortcut.putExtra("disableXinput", disabledXInput ? "1" : null);
+
+                boolean relativeMouseMovement = cbRelativeMouseMovement.isChecked();
+                shortcut.putExtra("relativeMouseMovement", relativeMouseMovement ? "1" : "0");
 
                 String execArgs = etExecArgs.getText().toString();
                 shortcut.putExtra("execArgs", !execArgs.isEmpty() ? execArgs : null);
@@ -393,9 +413,18 @@ public class ShortcutSettingsDialog extends ContentDialog {
                 String fexcoreVersion = sFEXCoreVersion.getSelectedItem().toString();
                 shortcut.putExtra("fexcoreVersion", !fexcoreVersion.equals(shortcut.container.getFEXCoreVersion()) ? fexcoreVersion : null);
 
+                byte startupSelection = (byte)sStartupSelection.getSelectedItemPosition();
+                shortcut.putExtra("startupSelection", (startupSelection != shortcut.container.getStartupSelection()) ? String.valueOf(startupSelection) : null);
+
                 ArrayList<ControlsProfile> profiles = inputControlsManager.getProfiles(true);
                 int controlsProfile = sControlsProfile.getSelectedItemPosition() > 0 ? profiles.get(sControlsProfile.getSelectedItemPosition() - 1).id : 0;
                 shortcut.putExtra("controlsProfile", controlsProfile > 0 ? String.valueOf(controlsProfile) : null);
+
+                String cpuList = cpuListView.getCheckedCPUListAsString();
+                shortcut.putExtra("cpuList", !cpuList.equals(shortcut.container.getCPUList(true)) ? cpuList : null);
+
+                String cpuListWoW64 = cpuListViewWoW64.getCheckedCPUListAsString();
+                shortcut.putExtra("cpuListWoW64", !cpuListWoW64.equals(shortcut.container.getCPUListWoW64(true)) ? cpuListWoW64 : null);
 
                 // Save all changes to the shortcut
                 shortcut.saveData();
@@ -489,6 +518,7 @@ public class ShortcutSettingsDialog extends ContentDialog {
         Spinner sFEXCoreTSOPreset = findViewById(R.id.SFEXCoreTSOPreset);
         Spinner sFEXCoreMultiBlock = findViewById(R.id.SFEXCoreMultiblock);
         Spinner sFEXCoreX87ReducedPrecision = findViewById(R.id.SFEXCoreX87ReducedPrecision);
+        Spinner sStartupSelection = findViewById(R.id.SStartupSelection);
         
 
         // Set dark or light mode background for spinners
@@ -507,6 +537,7 @@ public class ShortcutSettingsDialog extends ContentDialog {
         sFEXCoreMultiBlock.setPopupBackgroundResource(isDarkMode ? R.drawable.content_dialog_background_dark : R.drawable.content_dialog_background);
         sFEXCoreX87ReducedPrecision.setPopupBackgroundResource(isDarkMode ? R.drawable.content_dialog_background_dark : R.drawable.content_dialog_background);
         sFEXCoreVersion.setPopupBackgroundResource(isDarkMode ? R.drawable.content_dialog_background_dark : R.drawable.content_dialog_background);
+        sStartupSelection.setPopupBackgroundResource(isDarkMode ? R.drawable.content_dialog_background_dark : R.drawable.content_dialog_background);
 
 //        EditText etLC_ALL = view.findViewById(R.id.ETlcall);
         EditText etExecArgs = view.findViewById(R.id.ETExecArgs);

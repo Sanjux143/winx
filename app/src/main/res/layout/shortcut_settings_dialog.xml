@@ -226,8 +226,16 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="64bit Emulator" />
+            <Spinner
+                style="@style/ComboBox"
+                android:layout_width="match_parent"
+                android:id="@+id/SEmulator64"
+                android:entries="@array/emulator_entries"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/dll_emulator" />
-
             <Spinner
                 style="@style/ComboBox"
                 android:layout_width="match_parent"
@@ -517,6 +525,30 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="@string/startup_selection" />
+
+                    <Spinner
+                        style="@style/ComboBox"
+                        android:layout_width="match_parent"
+                        android:id="@+id/SStartupSelection"
+                        android:entries="@array/startup_selection_entries" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/TVSystem"
+                    style="@style/FieldSetLabel"
+                    android:text="@string/system" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+
+                <LinearLayout style="@style/FieldSet">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:text="@string/profile" />
 
                     <Spinner
@@ -530,6 +562,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/disable_xinput_for_shortcut" />
+
+                    <CheckBox
+                        android:id="@+id/CBRelativeMouseMovement"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/relative_mouse_movement" />
 
                 </LinearLayout>
 
@@ -666,6 +704,32 @@
                     android:background="#ffffff"
                     android:text="@string/system" />
             </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/processor_affinity"
+                android:layout_marginTop="8dp" />
+
+            <com.winlator.cmod.widget.CPUListView
+                android:id="@+id/CPUListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/processor_affinity_32_bit_apps"
+                android:layout_marginTop="8dp" />
+
+            <com.winlator.cmod.widget.CPUListView
+                android:id="@+id/CPUListViewWoW64"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="4dp" />
 
         </LinearLayout>
     </LinearLayout>
