@@ -862,7 +862,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         }
         startTime = System.currentTimeMillis();
         handler.postDelayed(savePlaytimeRunnable, SAVE_INTERVAL_MS);
-
+        ProcessHelper.resumeAllWineProcesses();
     }
 
     @Override
@@ -886,6 +886,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
 
         savePlaytimeData();
         handler.removeCallbacks(savePlaytimeRunnable);
+        ProcessHelper.pauseAllWineProcesses();
     }
 
 
