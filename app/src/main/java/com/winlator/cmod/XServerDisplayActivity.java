@@ -586,6 +586,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         inputControlsManager = new InputControlsManager(this);
         xServer = new XServer(new ScreenInfo(screenSize));
         xServer.setWinHandler(winHandler);
+        xServer.setRelativeMouseMovement(isRelativeMouseMovement);
 
         boolean[] winStarted = {false};
 
@@ -597,12 +598,6 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                     xServerView.getRenderer().setCursorVisible(true);
                     preloaderDialog.closeOnUiThread();
                     winStarted[0] = true;
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            xServer.setRelativeMouseMovement(isRelativeMouseMovement);
-                        }
-                    }, 2000);
                 }
                     
                 if (frameRatingWindowId == window.id) frameRating.update();
