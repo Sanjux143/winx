@@ -670,30 +670,14 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             Executors.newSingleThreadExecutor().execute(() -> {
                     
                 if (!isGenerateWineprefix()) {
-
                     setupWineSystemFiles();
                     extractGraphicsDriverFiles();
 //                    container.setGraphicsDriverVersion(originalContainerDriverVersion);
 //                    container.saveData();
                     changeWineAudioDriver();
-                    if (container != null) {
-                        if (!wineInfo.isArm64EC())
-                            envVars.put("HODLL", "wow64cpu.dll");
-                        else if (emulator.toLowerCase().equals("fexcore"))
-                            envVars.put("HODLL", "libwow64fex.dll");
-                        else
-                            envVars.put("HODLL", "wowbox64.dll");
-                        if (isOpenWithAndroidBrowser)
-                            envVars.put("WINE_OPEN_WITH_ANDROID_BROWSER", "1");
-                        if (isShareAndroidClipboard) {
-                            envVars.put("WINE_FROM_ANDROID_CLIPBOARD", "1");
-                            envVars.put("WINE_TO_ANDROID_CLIPBOARD", "1");
-                        }
-                    }
 //                    runWinetricksAfterSetup();
                     // Run winetricks before setting up the X environment
 //                    runWinetricks("--force vcrun2010");  // Replace with the desired winetricks arguments
-
                 }
                 try {
                     setupXEnvironment();
