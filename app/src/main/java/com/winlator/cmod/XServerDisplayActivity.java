@@ -2071,6 +2071,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         String selectedDriverVersion;
 
         String currentWrapperVersion = graphicsDriverConfig.get("version");
+        String isAdrenotoolsTurnip = graphicsDriverConfig.get("adrenotoolsTurnip");
         selectedDriverVersion = currentWrapperVersion;
 
         if (shortcut != null) {
@@ -2096,7 +2097,10 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             envVars.put("MESA_VK_WSI_DEBUG", "sw");
         }
 
-        envVars.put("VK_ICD_FILENAMES", imageFs.getShareDir() + "/vulkan/icd.d/wrapper_icd.aarch64.json");
+        if (currentWrapperVersion.toLowerCase().contains("turnip") && isAdrenotoolsTurnip.equals("0"))
+            envVars.put("VK_ICD_FILENAMES", imageFs.getShareDir() + "/vulkan/icd.d/freedreno_icd.aarch64.json");
+        else
+            envVars.put("VK_ICD_FILENAMES", imageFs.getShareDir() + "/vulkan/icd.d/wrapper_icd.aarch64.json");
         envVars.put("GALLIUM_DRIVER", "zink");
         envVars.put("LIBGL_KOPPER_DISABLE", "true");
 
