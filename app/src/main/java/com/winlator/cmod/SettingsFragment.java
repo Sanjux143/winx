@@ -453,12 +453,6 @@ public class SettingsFragment extends Fragment {
             saveCustomApiKeySettings(editor);
 
             if (editor.commit()) {
-                // Now perform the extraction based on the saved state
-
-                extractLegacyInputFiles(enableLegacyInputMode);
-
-
-
                 NavigationView navigationView = getActivity().findViewById(R.id.NavigationView);
                 navigationView.setCheckedItem(R.id.main_menu_containers);
                 FragmentManager fragmentManager = getParentFragmentManager();
@@ -1070,32 +1064,6 @@ public class SettingsFragment extends Fragment {
             AppUtils.showToast(getContext(), "Data restore failed.");
         });
     }
-
-    private boolean extractLegacyInputFiles(boolean enableLegacyMode) {
-        Context context = getContext();
-        ImageFs imageFs = ImageFs.find(context);
-        File destinationDir = imageFs.getRootDir(); // Assuming you want to extract into the rootDir
-
-        // Determine the correct asset file name based on the mode
-        String assetFileName = enableLegacyMode ? "lj2-7.1.2-xinputdlls.tzst" : "lj2-7.1.3-xinputdlls.tzst";
-
-        // Set the compression type to ZSTD for .tzst files
-        TarCompressorUtils.Type compressionType = TarCompressorUtils.Type.ZSTD;
-
-        // Use the correct method to extract the asset file
-        boolean extractionSuccess = TarCompressorUtils.extract(compressionType, context, assetFileName, destinationDir);
-
-        // Log the result of the extraction process
-        if (extractionSuccess) {
-            String message = enableLegacyMode ? "7.1.2 legacy input files extracted successfully." : "7.1.3 input files extracted successfully.";
-            Log.i("SettingsFragment", message); // Info log for successful extraction
-        } else {
-            Log.e("SettingsFragment", "Failed to extract input files."); // Error log for failed extraction
-        }
-
-        return extractionSuccess;
-    }
-
 
     private void showAnalogStickConfigDialog() {
         // Inflate the dialog layout
