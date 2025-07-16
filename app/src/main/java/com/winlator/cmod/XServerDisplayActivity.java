@@ -586,7 +586,6 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         inputControlsManager = new InputControlsManager(this);
         xServer = new XServer(new ScreenInfo(screenSize));
         xServer.setWinHandler(winHandler);
-        xServer.setRelativeMouseMovement(isRelativeMouseMovement);
 
         boolean[] winStarted = {false};
 
@@ -1828,6 +1827,8 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             String simTouchScreen = shortcut.getExtra("simTouchScreen");
             touchpadView.setSimTouchScreen(simTouchScreen.equals("1"));
         }
+
+        xServer.setRelativeMouseMovement(isRelativeMouseMovement);
 
         AppUtils.observeSoftKeyboardVisibility(drawerLayout, renderer::setScreenOffsetYRelativeToCursor);
     }
