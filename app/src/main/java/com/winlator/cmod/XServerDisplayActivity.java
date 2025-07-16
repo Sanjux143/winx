@@ -597,12 +597,6 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                     xServerView.getRenderer().setCursorVisible(true);
                     preloaderDialog.closeOnUiThread();
                     winStarted[0] = true;
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            xServer.setRelativeMouseMovement(isRelativeMouseMovement);
-                        }
-                    }, 2000);
                 }
                     
                 if (frameRatingWindowId == window.id) frameRating.update();
@@ -675,30 +669,14 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             Executors.newSingleThreadExecutor().execute(() -> {
                     
                 if (!isGenerateWineprefix()) {
-
                     setupWineSystemFiles();
                     extractGraphicsDriverFiles();
 //                    container.setGraphicsDriverVersion(originalContainerDriverVersion);
 //                    container.saveData();
                     changeWineAudioDriver();
-                    if (container != null) {
-                        if (!wineInfo.isArm64EC())
-                            envVars.put("HODLL", "wow64cpu.dll");
-                        else if (emulator.toLowerCase().equals("fexcore"))
-                            envVars.put("HODLL", "libwow64fex.dll");
-                        else
-                            envVars.put("HODLL", "wowbox64.dll");
-                        if (isOpenWithAndroidBrowser)
-                            envVars.put("WINE_OPEN_WITH_ANDROID_BROWSER", "1");
-                        if (isShareAndroidClipboard) {
-                            envVars.put("WINE_FROM_ANDROID_CLIPBOARD", "1");
-                            envVars.put("WINE_TO_ANDROID_CLIPBOARD", "1");
-                        }
-                    }
 //                    runWinetricksAfterSetup();
                     // Run winetricks before setting up the X environment
 //                    runWinetricks("--force vcrun2010");  // Replace with the desired winetricks arguments
-
                 }
                 try {
                     setupXEnvironment();
@@ -1185,6 +1163,17 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         }
     }
 
+    private void extractInputDLLs(boolean isLegacyInput) {
+        String inputAsset = isLegacyInput ? "legacy_input_dlls.tzst" : "input_dlls.tzst";
+        File wineFolder = new File(imageFs.getWinePath() + "/lib/wine/");
+
+        Log.d("XServerDisplayActivity", "Extracting input dlls to " + wineFolder.getPath());
+
+        boolean success = TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, inputAsset, wineFolder);
+        if (!success)
+            Log.d("XServerDisplayActivity", "Failed to extract input dlls");
+    }
+
     private void setupWineSystemFiles() {
         String appVersion = String.valueOf(AppUtils.getVersionCode(this));
         String imgVersion = String.valueOf(imageFs.getVersion());
@@ -1246,6 +1235,9 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             container.putExtra("startupSelection", startupSelection);
             containerDataChanged = true;
         }
+
+        boolean isLegacyInput = preferences.getBoolean("legacy_mode_enabled", false);
+        extractInputDLLs(isLegacyInput);
 
         if (containerDataChanged) container.saveData();
     }
@@ -1836,6 +1828,8 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             touchpadView.setSimTouchScreen(simTouchScreen.equals("1"));
         }
 
+        xServer.setRelativeMouseMovement(isRelativeMouseMovement);
+
         AppUtils.observeSoftKeyboardVisibility(drawerLayout, renderer::setScreenOffsetYRelativeToCursor);
     }
 
@@ -1914,9 +1908,6 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         };
         loadProfileSpinner.run();
 
-        final CheckBox cbSimTouchScreen = dialog.findViewById(R.id.CBSimulateTouchScreen);
-        cbSimTouchScreen.setChecked(touchpadView.isSimTouchScreen());
-
         final CheckBox cbShowTouchscreenControls = dialog.findViewById(R.id.CBShowTouchscreenControls);
         cbShowTouchscreenControls.setChecked(inputControlsView.isShowTouchscreenControls());
 
@@ -1967,7 +1958,6 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                 showInputControls(inputControlsManager.getProfiles().get(position - 1));
             }
             else hideInputControls();
-            touchpadView.setSimTouchScreen(cbSimTouchScreen.isChecked());
             updateProfile.run();
         });
 
@@ -2081,6 +2071,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         String selectedDriverVersion;
 
         String currentWrapperVersion = graphicsDriverConfig.get("version");
+        String isAdrenotoolsTurnip = graphicsDriverConfig.get("adrenotoolsTurnip");
         selectedDriverVersion = currentWrapperVersion;
 
         if (shortcut != null) {
@@ -2106,7 +2097,10 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             envVars.put("MESA_VK_WSI_DEBUG", "sw");
         }
 
-        envVars.put("VK_ICD_FILENAMES", imageFs.getShareDir() + "/vulkan/icd.d/wrapper_icd.aarch64.json");
+        if (currentWrapperVersion.toLowerCase().contains("turnip") && isAdrenotoolsTurnip.equals("0"))
+            envVars.put("VK_ICD_FILENAMES", imageFs.getShareDir() + "/vulkan/icd.d/freedreno_icd.aarch64.json");
+        else
+            envVars.put("VK_ICD_FILENAMES", imageFs.getShareDir() + "/vulkan/icd.d/wrapper_icd.aarch64.json");
         envVars.put("GALLIUM_DRIVER", "zink");
         envVars.put("LIBGL_KOPPER_DISABLE", "true");
 
