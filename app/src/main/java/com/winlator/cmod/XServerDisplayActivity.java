@@ -1907,9 +1907,6 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         };
         loadProfileSpinner.run();
 
-        final CheckBox cbSimTouchScreen = dialog.findViewById(R.id.CBSimulateTouchScreen);
-        cbSimTouchScreen.setChecked(touchpadView.isSimTouchScreen());
-
         final CheckBox cbShowTouchscreenControls = dialog.findViewById(R.id.CBShowTouchscreenControls);
         cbShowTouchscreenControls.setChecked(inputControlsView.isShowTouchscreenControls());
 
@@ -1960,7 +1957,6 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                 showInputControls(inputControlsManager.getProfiles().get(position - 1));
             }
             else hideInputControls();
-            touchpadView.setSimTouchScreen(cbSimTouchScreen.isChecked());
             updateProfile.run();
         });
 

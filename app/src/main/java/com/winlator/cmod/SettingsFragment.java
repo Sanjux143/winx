@@ -91,8 +91,6 @@ public class SettingsFragment extends Fragment {
 	private CheckBox cbCursorLock;
     // Disable or enable Xinput Processing
     private CheckBox cbXinputToggle;
-    // Disable or enable Touchscreen Input Mode
-    private CheckBox cbXTouchscreenToggle;
 
     private CheckBox cbGyroEnabled;
     private SeekBar sbGyroXSensitivity;
@@ -177,10 +175,6 @@ public class SettingsFragment extends Fragment {
         // Initialize the xinput toggle checkbox
         cbXinputToggle = view.findViewById(R.id.CBXinputToggle);
         cbXinputToggle.setChecked(preferences.getBoolean("xinput_toggle", false));
-
-        // Initialize the Touchscreen mode toggle
-        cbXTouchscreenToggle = view.findViewById(R.id.CBXTouchscreenToggle);
-        cbXTouchscreenToggle.setChecked(preferences.getBoolean("touchscreen_toggle", false));
 
         // Inside onCreateView in SettingsFragment.java
         CheckBox cbLegacyInputMode = view.findViewById(R.id.CBLegacyInputMode);
@@ -420,7 +414,6 @@ public class SettingsFragment extends Fragment {
             editor.putInt("trigger_type", triggerRbIds.indexOf(rgTriggerType.getCheckedRadioButtonId()));
             editor.putBoolean("cursor_lock", cbCursorLock.isChecked()); // Save cursor lock state
             editor.putBoolean("xinput_toggle", cbXinputToggle.isChecked()); // Save xinput toggle state
-            editor.putBoolean("touchscreen_toggle", cbXTouchscreenToggle.isChecked()); // Save touchscreen toggle state
             editor.putBoolean("enable_file_provider", cbEnableFileProvider.isChecked());
             editor.putBoolean("open_with_android_browser", cbOpenInBrowser.isChecked());
             editor.putBoolean("share_android_clipboard", cbShareClipboard.isChecked());

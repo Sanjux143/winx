@@ -296,6 +296,10 @@ public class ShortcutSettingsDialog extends ContentDialog {
         String isRelativeMouseMovement = shortcut.getExtra("relativeMouseMovement", shortcut.container.isRelativeMouseMovement() ? "1" : "0");
         cbRelativeMouseMovement.setChecked(isRelativeMouseMovement.equals("1") ? true : false);
 
+        final CheckBox cbSimTouchScreen = findViewById(R.id.CBTouchscreenMode);
+        String isTouchScreenMode = shortcut.getExtra("simTouchScreen");
+        cbSimTouchScreen.setChecked(isTouchScreenMode.equals("1") ? true : false);
+
         ContainerDetailFragment.createWinComponentsTabFromShortcut(this, getContentView(),
                 shortcut.getExtra("wincomponents", shortcut.container.getWinComponents()), isDarkMode);
 
@@ -373,6 +377,9 @@ public class ShortcutSettingsDialog extends ContentDialog {
 
                 boolean relativeMouseMovement = cbRelativeMouseMovement.isChecked();
                 shortcut.putExtra("relativeMouseMovement", relativeMouseMovement ? "1" : "0");
+
+                boolean touchscreenMode = cbSimTouchScreen.isChecked();
+                shortcut.putExtra("simTouchScreen", touchscreenMode ? "1" : "0");
 
                 String execArgs = etExecArgs.getText().toString();
                 shortcut.putExtra("execArgs", !execArgs.isEmpty() ? execArgs : null);
