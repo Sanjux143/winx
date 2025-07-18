@@ -2072,6 +2072,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
 
         String currentWrapperVersion = graphicsDriverConfig.get("version");
         String isAdrenotoolsTurnip = graphicsDriverConfig.get("adrenotoolsTurnip");
+
         selectedDriverVersion = currentWrapperVersion;
 
         if (shortcut != null) {
@@ -2089,8 +2090,6 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         } else if (dxwrapper.equals("vkd3d")) {
             VKD3DConfigDialog.setEnvVars(this, dxwrapperConfig, envVars);
         }
-
-        if (!envVars.has("MESA_VK_WSI_PRESENT_MODE")) envVars.put("MESA_VK_WSI_PRESENT_MODE", "mailbox");
 
         boolean useDRI3 = preferences.getBoolean("use_dri3", true);
         if (!useDRI3) {
@@ -2120,6 +2119,15 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         String maxDeviceMemory = graphicsDriverConfig.get("maxDeviceMemory");
         if (maxDeviceMemory != null && Integer.parseInt(maxDeviceMemory) > 0)
             envVars.put("UTIL_LAYER_VMEM_MAX_SIZE", maxDeviceMemory);
+
+        String frameSync = graphicsDriverConfig.get("frameSync");
+        if (frameSync.equals("Always") && useDRI3) {
+            envVars.put("MESA_VK_WSI_DEBUG", "forcesync");
+        }
+        else if (frameSync.equals("Never")) {
+            envVars.put("WRAPPER_DISABLE_PRESENT_WAIT", "1");
+        }
+        envVars.put("MESA_VK_WSI_PRESENT_MODE", "mailbox");
     }
 
     private void copyFile(File sourceFile, File destFile) throws IOException {
