@@ -2185,9 +2185,9 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
 
         // Handle the PlayStation or Xbox Home button to open the drawer
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
-            if (event.getKeyCode() == KeyEvent.KEYCODE_BUTTON_MODE || event.getKeyCode() == KeyEvent.KEYCODE_HOME) {
-                openXServerDrawer(); // Method to open the XServer drawer
-                return true; // Indicate the event was handled
+            if (event.getKeyCode() == KeyEvent.KEYCODE_BUTTON_MODE || event.getKeyCode() == KeyEvent.KEYCODE_HOME || event.getKeyCode() == KeyEvent.KEYCODE_BUTTON_SELECT) {
+                boolean handled = inputControlsView.onKeyEvent(event) || (winHandler != null && winHandler.onKeyEvent(event)) && (xServer != null && xServer.keyboard.onKeyEvent(event));
+                return true;
             }
         }
 
