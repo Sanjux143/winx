@@ -194,6 +194,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
     private MidiHandler midiHandler;
     private String midiSoundFont = "";
     private String lc_all = "";
+    private String vkbasaltConfig = "";
     PreloaderDialog preloaderDialog = null;
     private Runnable configChangedCallback = null;
     private boolean isPaused = false;
@@ -560,6 +561,12 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                 xinputDisabledFromShortcut = parseBoolean(xinputDisabledString);
                 // Pass the value to WinHandler
                 winHandler.setXInputDisabled(xinputDisabledFromShortcut);
+                String sharpnessEffect = shortcut.getExtra("sharpnessEffect", "None");
+                if (!sharpnessEffect.equals("None")) {
+                    double sharpnessLevel = Double.parseDouble(shortcut.getExtra("sharpnessLevel", "100"));
+                    double sharpnessDenoise = Double.parseDouble(shortcut.getExtra("sharpnessDenoise", "100"));
+                    vkbasaltConfig = "effects=" + sharpnessEffect.toLowerCase() + ";" + "casSharpness=" + sharpnessLevel / 100 + ";" + "dlsSharpness=" + sharpnessLevel / 100  + ";" + "dlsDenoise=" + sharpnessDenoise / 100 + ";" + "enableOnLaunch=True";
+                }
                 Log.d("XServerDisplayActivity", "XInput Disabled from Shortcut: " + xinputDisabledFromShortcut);
             }
 
@@ -2128,6 +2135,10 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             envVars.put("WRAPPER_DISABLE_PRESENT_WAIT", "1");
         }
         envVars.put("MESA_VK_WSI_PRESENT_MODE", "mailbox");
+        if (!vkbasaltConfig.isEmpty()) {
+            envVars.put("ENABLE_VKBASALT", "1");
+            envVars.put("VKBASALT_CONFIG", vkbasaltConfig);
+        }
     }
 
     private void copyFile(File sourceFile, File destFile) throws IOException {
