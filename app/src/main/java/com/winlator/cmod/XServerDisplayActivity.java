@@ -786,7 +786,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                 if (xServer.isRelativeMouseMovement())
                     xServer.getWinHandler().mouseEvent(MouseEventFlags.MOVE, (int)transformedPoint[0], (int)transformedPoint[1], 0);
                 else
-                    xServer.injectPointerMove((int)transformedPoint[0], (int)transformedPoint[1]);
+                    xServer.injectPointerMoveDelta((int)transformedPoint[0], (int)transformedPoint[1]);
                 handled = true;
                 break;
             case MotionEvent.ACTION_SCROLL:
