@@ -786,7 +786,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                 if (xServer.isRelativeMouseMovement())
                     xServer.getWinHandler().mouseEvent(MouseEventFlags.MOVE, (int)transformedPoint[0], (int)transformedPoint[1], 0);
                 else
-                    xServer.injectPointerMove((int)transformedPoint[0], (int)transformedPoint[1]);
+                    xServer.injectPointerMoveDelta((int)transformedPoint[0], (int)transformedPoint[1]);
                 handled = true;
                 break;
             case MotionEvent.ACTION_SCROLL:
@@ -2216,21 +2216,30 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                 touchpadView.releasePointerCapture();
                 touchpadView.setOnCapturedPointerListener(null);
                 pointerCaptureRequested = false;
-                showToast(this, "Pointer capture released");
-            }
-            else if (touchpadView != null && !pointerCaptureRequested) {
-                touchpadView.requestPointerCapture();
-                touchpadView.setOnCapturedPointerListener(new View.OnCapturedPointerListener() {
-                    @Override
-                    public boolean onCapturedPointer(View view, MotionEvent event) {
-                        handleCapturedPointer(event);
-                        return true;
+
+                // Show toast message for pointer release
+                showToast(this, "Pointer capture released for 10 seconds");
+
+                // Schedule recapture after 10 seconds
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    if (touchpadView != null) {
+                        touchpadView.requestPointerCapture();
+                        touchpadView.setOnCapturedPointerListener(new View.OnCapturedPointerListener() {
+                            @Override
+                            public boolean onCapturedPointer(View view, MotionEvent event) {
+                                handleCapturedPointer(event);
+                                return true;
+                            }
+                        });
+                        pointerCaptureRequested = true;
+
+                        // Show toast message for pointer recapture
+                        showToast(this, "Pointer re-captured. If not working, press again to release and re-capture");
                     }
-                });
-                pointerCaptureRequested = true;
-                showToast(this, "Pointer re-captured");
+                }, RECAPTURE_DELAY_MS);
+
+                return true; // Indicate that the event was handled
             }
-            return true; // Indicate that the event was handled
         }
 
         // **NEW: Check if the floating view is visible and forward the key event to it**
