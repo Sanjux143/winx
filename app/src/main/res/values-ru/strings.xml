@@ -267,7 +267,8 @@
     <string name="enable_dgVoodoo" translatable="false">Включить dgVoodoo-2.75</string>
     <string name="vulkan_version" translatable="false">Версия Vulkan</string>
     <string name="opengl_version" translatable="false">Версия OpenGL</string>
-    <string name="disableVertexArrayBGRA" translatable="false">Disable vertex array BGRA</string>
+    <string name="disableVertexArrayBGRA" translatable="false">Отключить vertex array BGRA</string>
+    <string name="disableKHRdebug" translatable="false">Отключить KHR debug</string>
     <string name="exposed_extensions" translatable="false">Доступные расширения</string>
     <string name="image_cache_size" translatable="false">Размер кэша изображений</string>
     <string name="resource_memory_type" translatable="false">Тип памяти для ресурсов</string>

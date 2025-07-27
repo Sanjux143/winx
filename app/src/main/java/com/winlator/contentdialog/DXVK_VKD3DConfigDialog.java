@@ -28,7 +28,7 @@ public class DXVK_VKD3DConfigDialog extends ContentDialog {
             ",vkd3dVersion=" + DefaultVersion.VKD3D + ",vkd3dLevel=12_1" +
             ",wined3d_version=" + DefaultVersion.WINED3D + ",csmt=3" +
             ",OffScreenRenderingMode=fbo,strict_shader_math=1,VideoMemorySize=2048" +
-            ",renderer=gl,deviceID=1728,vendorID=4318,enableDgVoodoo=1";
+            ",renderer=gl,deviceID=266,vendorID=32902,enableDgVoodoo=1";
     public static final int DXVK_TYPE_NONE = 0;
     public static final int DXVK_TYPE_ASYNC = 1;
     public static final int DXVK_TYPE_GPLASYNC = 2;

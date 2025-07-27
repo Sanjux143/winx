@@ -28,21 +28,25 @@ public class VirGLConfigDialog extends ContentDialog {
 
     final Spinner SOpenglVersion = findViewById(R.id.SOpenglVersion);
     final CheckBox CBdisableVertexArrayBGRA = findViewById(R.id.CBdisableVertexArrayBGRA);
+    final CheckBox CBdisableKHRdebug = findViewById(R.id.CBdisableKHRdebug);
 
     KeyValueSet config = new KeyValueSet(anchor.getTag().toString());
     AppUtils.setSpinnerSelectionFromIdentifier(SOpenglVersion, config.get("glVersion", "3.1"));
     CBdisableVertexArrayBGRA.setChecked(config.getBoolean("disableVertexArrayBGRA", true));
+    CBdisableKHRdebug.setChecked(config.getBoolean("disableKHRdebug", true));
 
     setOnConfirmCallback(() -> {
       config.put("glVersion", SOpenglVersion.getSelectedItem().toString());
       config.put("disableVertexArrayBGRA", CBdisableVertexArrayBGRA.isChecked());
+      config.put("disableKHRdebug", CBdisableKHRdebug.isChecked());
       anchor.setTag(config.toString());
     });
   }
   
   public static void setEnvVars(KeyValueSet paramKeyValueSet, EnvVars paramEnvVars) {
     ArrayList<String> arrayList = new ArrayList();
-    arrayList.add("GL_KHR_debug");
+    if (paramKeyValueSet.getBoolean("disableKHRdebug", true))
+      arrayList.add("GL_KHR_debug");
     if (paramKeyValueSet.getBoolean("disableVertexArrayBGRA", true))
       arrayList.add("GL_EXT_vertex_array_bgra"); 
     String str = "";

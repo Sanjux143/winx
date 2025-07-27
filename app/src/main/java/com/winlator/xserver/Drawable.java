@@ -119,6 +119,9 @@ public class Drawable extends XResource {
     }
 
     public void copyArea(short srcX, short srcY, short dstX, short dstY, short width, short height, Drawable drawable, GraphicsContext.Function gcFunction) {
+        if (this.data == null || drawable.data == null)
+            return;
+
         dstX = (short)Mathf.clamp(dstX, 0, this.width-1);
         dstY = (short)Mathf.clamp(dstY, 0, this.height-1);
         if ((dstX + width) > this.width) width = (short)(this.width - dstX);
