@@ -26,7 +26,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.preference.PreferenceManager;
 
@@ -41,7 +40,6 @@ import com.winlator.contentdialog.DXVK_VKD3DConfigDialog;
 import com.winlator.contentdialog.DebugDialog;
 import com.winlator.contentdialog.NavigationDialog;
 import com.winlator.contentdialog.VirGLConfigDialog;
-import com.winlator.contentdialog.WineD3DConfigDialog;
 import com.winlator.contents.ContentProfile;
 import com.winlator.contents.ContentsManager;
 import com.winlator.core.AppUtils;
@@ -150,6 +148,8 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
     private boolean capturePointerOnExternalMouse = true;
     private final float[] xform = XForm.getInstance();
 
+    private boolean useOldVirGL;
+
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -253,6 +253,8 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             screenSize = container.getScreenSize();
             winHandler.setInputType((byte) container.getInputType());
             lc_all = container.getLC_ALL();
+
+            useOldVirGL = graphicsDriverConfig.getBoolean("useOldVirGL", false);
 
             if (shortcut != null) {
                 graphicsDriver = shortcut.getExtra("graphicsDriver", container.getGraphicsDriver());
@@ -644,7 +646,11 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
         }
 
         if (graphicsDriver.startsWith("virgl")) {
-            environment.addComponent(new VirGLRendererComponent(xServer, UnixSocketConfig.createSocket(rootPath, UnixSocketConfig.VIRGL_SERVER_PATH)));
+            if (!useOldVirGL)
+                environment.addComponent(new VirGLRendererComponent(xServer, UnixSocketConfig.createSocket(rootPath, UnixSocketConfig.VIRGL_SERVER_PATH)));
+            else {
+                startVirGLTestServer();
+            }
         }
         ///
         else if (graphicsDriver.startsWith("vortek")) {
@@ -832,8 +838,10 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
 
     private void extractGraphicsDriverFiles() {
         int cacheContainerId = preferences.getInt("cache_container_id", 0);
-        String cacheId = container.getExtra("graphicsDriver");
-        boolean changed = (!cacheId.equals(graphicsDriver)) || (cacheContainerId != container.id);
+        String cacheDriverId = container.getExtra("graphicsDriver");
+        String cacheOldVirGL = container.getExtra("useOldVirGL", "false");
+        boolean changed = (!cacheDriverId.equals(graphicsDriver)) || (cacheContainerId != container.id) ||
+                (!cacheOldVirGL.equals(String.valueOf(useOldVirGL)));
         File rootDir = imageFs.getRootDir();
 
         if (changed) {
@@ -842,6 +850,7 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
             FileUtils.delete(new File(imageFs.getLib64Dir(), "libvulkan_vortek.so"));
             FileUtils.delete(new File(imageFs.getLib64Dir(), "libGL.so.1"));
             container.putExtra("graphicsDriver", graphicsDriver);
+            container.putExtra("useOldVirGL", useOldVirGL);
             container.saveData();
             preferences.edit().putInt("cache_container_id", container.id).apply();
         }
@@ -888,8 +897,12 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                 ContentProfile profile = contentsManager.getProfileByEntryName(graphicsDriver);
                 if (profile != null)
                     contentsManager.applyContent(profile);
-                else
-                    TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, "graphics_driver/virgl-" + DefaultVersion.VIRGL + ".tzst", rootDir);
+                else {
+                    if (!useOldVirGL)
+                        TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, "graphics_driver/virgl-" + DefaultVersion.VIRGL + ".tzst", rootDir);
+                    else
+                        TarCompressorUtils.extract(TarCompressorUtils.Type.ZSTD, this, "graphics_driver/virgl-old-" + DefaultVersion.VIRGL + ".tzst", rootDir);
+                }
             }
         }
         ///
@@ -1378,5 +1391,32 @@ public class XServerDisplayActivity extends AppCompatActivity implements Navigat
                 handled = true;
                 break;
         }
+    }
+
+    private void startVirGLTestServer() {
+        Thread t = new Thread(new Runnable(){
+            @Override
+            public void run() {
+                // Taken from
+                // https://stackoverflow.com/questions/25879994/where-should-i-add-binary-executables-in-an-android-project
+                try {
+                    // creating exec process
+                    Log.v("THREAD", "virgl_test_server starting...");
+                    Process process =
+                            Runtime.getRuntime().exec(getApplicationInfo().nativeLibraryDir +
+                                    "/libvirgl_test_server.so");
+                    // reading and printing executable outcome
+                    byte[] buffer = new byte[2048];
+                    process.waitFor();
+                    process.getInputStream().read(buffer, 0 , buffer.length);
+                    System.out.println(new String(buffer));
+
+                } catch (IOException | InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
+        t.start();
     }
 }

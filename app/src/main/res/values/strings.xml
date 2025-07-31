@@ -273,8 +273,11 @@
     <string name="enable_dgVoodoo" translatable="false">Enable dgVoodoo-2.75</string>
     <string name="vulkan_version" translatable="false">Vulkan Version</string>
     <string name="opengl_version" translatable="false">OpenGL Version</string>
-    <string name="disableVertexArrayBGRA" translatable="false">Disable vertex array BGRA</string>
-    <string name="disableKHRdebug" translatable="false">Disable KHR debug</string>
+    <string name="disableVertexArrayBGRA" translatable="false">Disable "Vertex array BGRA"</string>
+    <string name="disableKHRdebug" translatable="false">Disable "KHR debug"</string>
+    <string name="disableTextureSRGBdecode" translatable="false">Disable "Texture sRGB decode"</string>
+    <string name="useOldVirGL" translatable="false">Use old VirGL server</string>
+    <string name="useOldVirGLinfo" translatable="false">(better compatibility, slower)</string>
     <string name="exposed_extensions" translatable="false">Exposed Extensions</string>
     <string name="image_cache_size" translatable="false">Image Cache Size</string>
     <string name="resource_memory_type" translatable="false">Resource Memory Type</string>

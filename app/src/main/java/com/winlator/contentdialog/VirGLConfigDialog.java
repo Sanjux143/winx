@@ -29,16 +29,22 @@ public class VirGLConfigDialog extends ContentDialog {
     final Spinner SOpenglVersion = findViewById(R.id.SOpenglVersion);
     final CheckBox CBdisableVertexArrayBGRA = findViewById(R.id.CBdisableVertexArrayBGRA);
     final CheckBox CBdisableKHRdebug = findViewById(R.id.CBdisableKHRdebug);
+    final CheckBox CBdisableTextureSRGBdecode = findViewById(R.id.CBdisableTextureSRGBdecode);
+    final CheckBox CBuseOldVirGL = findViewById(R.id.CBuseOldVirGL);
 
     KeyValueSet config = new KeyValueSet(anchor.getTag().toString());
     AppUtils.setSpinnerSelectionFromIdentifier(SOpenglVersion, config.get("glVersion", "3.1"));
     CBdisableVertexArrayBGRA.setChecked(config.getBoolean("disableVertexArrayBGRA", true));
-    CBdisableKHRdebug.setChecked(config.getBoolean("disableKHRdebug", true));
+    CBdisableKHRdebug.setChecked(config.getBoolean("disableKHRdebug", false));
+    CBdisableTextureSRGBdecode.setChecked(config.getBoolean("disableTextureSRGBdecode", true));
+    CBuseOldVirGL.setChecked(config.getBoolean("useOldVirGL", false));
 
     setOnConfirmCallback(() -> {
       config.put("glVersion", SOpenglVersion.getSelectedItem().toString());
       config.put("disableVertexArrayBGRA", CBdisableVertexArrayBGRA.isChecked());
       config.put("disableKHRdebug", CBdisableKHRdebug.isChecked());
+      config.put("disableTextureSRGBdecode", CBdisableTextureSRGBdecode.isChecked());
+      config.put("useOldVirGL", CBuseOldVirGL.isChecked());
       anchor.setTag(config.toString());
     });
   }
@@ -48,7 +54,10 @@ public class VirGLConfigDialog extends ContentDialog {
     if (paramKeyValueSet.getBoolean("disableKHRdebug", true))
       arrayList.add("GL_KHR_debug");
     if (paramKeyValueSet.getBoolean("disableVertexArrayBGRA", true))
-      arrayList.add("GL_EXT_vertex_array_bgra"); 
+      arrayList.add("GL_EXT_vertex_array_bgra");
+    if (paramKeyValueSet.getBoolean("disableTextureSRGBdecode", true))
+      arrayList.add("GL_EXT_texture_sRGB_decode");
+
     String str = "";
     for (String str1 : arrayList) {
       StringBuilder stringBuilder = new StringBuilder();
@@ -64,7 +73,18 @@ public class VirGLConfigDialog extends ContentDialog {
       str = stringBuilder.toString();
     } 
     if (!str.isEmpty())
-      paramEnvVars.put("MESA_EXTENSION_OVERRIDE", str); 
-    paramEnvVars.put("MESA_GL_VERSION_OVERRIDE", paramKeyValueSet.get("glVersion", "3.1"));
+      paramEnvVars.put("MESA_EXTENSION_OVERRIDE", str);
+
+    float mesaGLVersion = Float.parseFloat(paramKeyValueSet.get("glVersion", "3.1"));
+
+    if (paramKeyValueSet.getBoolean("useOldVirGL", false)) {
+      if (mesaGLVersion <= 2.1)
+        paramEnvVars.put("MESA_GLSL_VERSION_OVERRIDE", "120");
+      else if (mesaGLVersion > 2.1 && mesaGLVersion <= 3.3)
+        paramEnvVars.put("MESA_GLSL_VERSION_OVERRIDE", "330");
+    }
+
+    paramEnvVars.put("MESA_GL_VERSION_OVERRIDE", mesaGLVersion);
+
   }
 }
