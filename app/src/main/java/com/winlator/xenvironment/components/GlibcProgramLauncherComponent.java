@@ -155,7 +155,7 @@ public class GlibcProgramLauncherComponent extends GuestProgramLauncherComponent
             envVars.put("LD_PRELOAD", "libandroid-sysvshm.so");
         if (this.envVars != null) envVars.putAll(this.envVars);
 
-        String command = rootDir.getPath() + "/usr/local/bin/box64 ";
+        String command = rootDir.getPath();
 
         command += guestExecutable;
 
