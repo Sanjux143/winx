@@ -42,7 +42,6 @@ public class GlibcProgramLauncherComponent extends GuestProgramLauncherComponent
     public void start() {
         synchronized (lock) {
             stop();
-            extractBox86_64Files();
             pid = execGuestProgram();
         }
     }
