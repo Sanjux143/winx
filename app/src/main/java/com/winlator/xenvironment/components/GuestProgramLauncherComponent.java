@@ -34,7 +34,6 @@ public class GuestProgramLauncherComponent extends EnvironmentComponent {
     public void start() {
         synchronized (lock) {
             stop();
-            extractBox86_64Files();
             pid = execGuestProgram();
         }
     }
