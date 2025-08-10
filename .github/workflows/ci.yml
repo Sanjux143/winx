@@ -21,6 +21,7 @@ jobs:
        wget -O imagefs.txz https://github.com/TGP-17/winlator/raw/refs/heads/alexvorxx-glibc/app/src/main/assets/imagefs.txz
        wget -O imagefs_patches.txz https://github.com/TGP-17/winlator/raw/refs/heads/alexvorxx-glibc/app/src/main/assets/imagefs_patches.txz
        wget -O container_pattern.tzst https://github.com/TGP-17/winlator/raw/refs/heads/alexvorxx-glibc/app/src/main/assets/container_pattern.tzst
+       wget -O pulseaudio.tzst https://github.com/TGP-17/winlator/raw/refs/heads/alexvorxx-glibc/app/src/main/assets/pulseaudio.tzst
     
     - name: set up JDK 11
       uses: actions/setup-java@v4
