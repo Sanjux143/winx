@@ -19,7 +19,7 @@ jobs:
       run: |
        cd ./app/src/main/assets
        wget -O imagefs.txz https://github.com/TGP-17/winlator/raw/refs/heads/alexvorxx-glibc/app/src/main/assets/imagefs.txz
-       wget -O imagefs_patches.txz https://github.com/TGP-17/winlator/raw/refs/heads/alexvorxx-glibc/app/src/main/assets/imagefs_patches.txz
+       wget -O imagefs_patches.tzst https://github.com/TGP-17/winlator/raw/refs/heads/alexvorxx-glibc/app/src/main/assets/imagefs_patches.tzst
        wget -O container_pattern.tzst https://github.com/TGP-17/winlator/raw/refs/heads/alexvorxx-glibc/app/src/main/assets/container_pattern.tzst
        wget -O pulseaudio.tzst https://github.com/TGP-17/winlator/raw/refs/heads/alexvorxx-glibc/app/src/main/assets/pulseaudio.tzst
     
