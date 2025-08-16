@@ -78,9 +78,9 @@ public class Texture {
         this.format = format;
     }
 
-    public boolean isNeedsUpdate() {
-        return needsUpdate;
-    }
+    public boolean needsUpdate() {
+    return needsUpdate;
+}
 
     public void setNeedsUpdate(boolean needsUpdate) {
         this.needsUpdate = needsUpdate;
