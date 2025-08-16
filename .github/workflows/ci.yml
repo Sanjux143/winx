@@ -43,8 +43,7 @@ jobs:
         wget -O app/src/main/assets/wincomponents/direct3d.tzst https://raw.githubusercontent.com/alexvorxx/winlator/main/app/src/main/assets/wincomponents/direct3d.tzst
 
         # imagefs.txz
-        wget -O app/src/main/assets/imagefs.txz https://github.com/TGP-17/winlator/raw/refs/heads/alexvorxx-glibc/app/src/main/assets/imagefs.txz
-
+        wget -O app/src/main/assets/imagefs.txz https://media.githubusercontent.com/media/TGP-17/winlator/refs/heads/winlator_bionic/app/src/main/assets/imagefs.txz
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
