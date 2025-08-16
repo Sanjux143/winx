@@ -24,27 +24,26 @@ jobs:
         mkdir -p app/src/main/assets/wincomponents
 
         # box86_64
-        wget -O app/src/main/assets/box86_64/box64-0.3.1-4f6a66f.tzst https://raw.githubusercontent.com/alexvorxx/winlator/main/app/src/main/assets/box86_64/box64-0.3.1-4f6a66f.tzst
-        wget -O app/src/main/assets/box86_64/box64-0.3.5-11563f3.tzst https://raw.githubusercontent.com/alexvorxx/winlator/main/app/src/main/assets/box86_64/box64-0.3.5-11563f3.tzst
-        wget -O app/src/main/assets/box86_64/rcfiles/box64.rc https://raw.githubusercontent.com/alexvorxx/winlator/main/app/src/main/assets/box86_64/rcfiles/box64.rc
+        wget -O app/src/main/assets/box86_64/box64-0.3.1-4f6a66f.tzst https://media.githubusercontent.com/media/alexvorxx/winlator/refs/heads/main/app/src/main/assets/box86_64/box64-0.3.1-4f6a66f.tzst
+        wget -O app/src/main/assets/box86_64/box64-0.3.5-11563f3.tzst https://media.githubusercontent.com/media/alexvorxx/winlator/refs/heads/main/app/src/main/assets/box86_64/box64-0.3.5-11563f3.tzst
 
         # dxwrapper
-        wget -O app/src/main/assets/dxwrapper/dxvk-2.4-gplasync.tzst https://raw.githubusercontent.com/alexvorxx/winlator/main/app/src/main/assets/dxwrapper/dxvk-2.4-gplasync.tzst
-        wget -O app/src/main/assets/dxwrapper/wined3d-9.18.tzst https://raw.githubusercontent.com/alexvorxx/winlator/main/app/src/main/assets/dxwrapper/wined3d-9.18.tzst
+        wget -O app/src/main/assets/dxwrapper/dxvk-2.4-gplasync.tzst https://media.githubusercontent.com/media/alexvorxx/winlator/refs/heads/main/app/src/main/assets/dxwrapper/dxvk-2.4-gplasync.tzst
+        wget -O app/src/main/assets/dxwrapper/dxvk-1.10.3-async.tzst https://media.githubusercontent.com/media/alexvorxx/winlator/refs/heads/main/app/src/main/assets/dxwrapper/dxvk-1.10.3-async.tzst
 
         # graphics_driver
-        wget -O app/src/main/assets/graphics_driver/llvmpipe-25.0.0.tzst https://raw.githubusercontent.com/alexvorxx/winlator/main/app/src/main/assets/graphics_driver/llvmpipe-25.0.0.tzst
-        wget -O app/src/main/assets/graphics_driver/virgl-23.1.9.tzst https://raw.githubusercontent.com/alexvorxx/winlator/main/app/src/main/assets/graphics_driver/virgl-23.1.9.tzst
+        wget -O app/src/main/assets/graphics_driver/llvmpipe-25.0.0.tzst https://media.githubusercontent.com/media/alexvorxx/winlator/refs/heads/main/app/src/main/assets/graphics_driver/llvmpipe-25.0.0.tzst
+        wget -O app/src/main/assets/graphics_driver/vortek-2.0.tzst https://media.githubusercontent.com/media/alexvorxx/winlator/refs/heads/main/app/src/main/assets/graphics_driver/vortek-2.0.tzst
 
         # soundfonts
-        wget -O app/src/main/assets/soundfonts/wt_210k_G.sf2 https://raw.githubusercontent.com/alexvorxx/winlator/main/app/src/main/assets/soundfonts/wt_210k_G.sf2
-        wget -O app/src/main/assets/soundfonts/wt_210k_G_LICENSE.txt https://raw.githubusercontent.com/alexvorxx/winlator/main/app/src/main/assets/soundfonts/wt_210k_G_LICENSE.txt
+        wget -O app/src/main/assets/soundfonts/wt_210k_G.sf2 https://media.githubusercontent.com/media/alexvorxx/winlator/refs/heads/main/app/src/main/assets/soundfonts/wt_210k_G.sf2
+        wget -O app/src/main/assets/soundfonts/wt_210k_G_LICENSE.txt https://raw.githubusercontent.com/alexvorxx/winlator/refs/heads/main/app/src/main/assets/soundfonts/wt_210k_G_LICENSE.txt
 
         # wincomponents
         wget -O app/src/main/assets/wincomponents/direct3d.tzst https://raw.githubusercontent.com/alexvorxx/winlator/main/app/src/main/assets/wincomponents/direct3d.tzst
 
         # imagefs.txz
-        wget -O app/src/main/assets/imagefs.txz https://raw.githubusercontent.com/alexvorxx/winlator/main/app/src/main/assets/imagefs.txz
+        wget -O app/src/main/assets/imagefs.txz https://github.com/TGP-17/winlator/raw/refs/heads/alexvorxx-glibc/app/src/main/assets/imagefs.txz
 
     - name: Set up JDK 17
       uses: actions/setup-java@v4
