@@ -1,4 +1,4 @@
-name: Android CI
+name: Android CI with Direct Asset Downloads
 
 on:
   push:
@@ -15,35 +15,36 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Download missing files from alexvorxx folders
+    - name: Download required asset files
       run: |
-        folders=(
-         "box86_64"
-         "box86_64/rcfiles"
-         "dxwrapper"
-         "graphics_driver"
-         "soundfonts"
-         "wincomponents"
-        )
+        mkdir -p app/src/main/assets/box86_64/rcfiles
+        mkdir -p app/src/main/assets/dxwrapper
+        mkdir -p app/src/main/assets/graphics_driver
+        mkdir -p app/src/main/assets/soundfonts
+        mkdir -p app/src/main/assets/wincomponents
 
-        for folder in "${folders[@]}"; do
-          api="https://api.github.com/repos/alexvorxx/winlator/contents/app/src/main/assets/$folder"
-          target="app/src/main/assets/$folder"
+        # box86_64
+        wget -O app/src/main/assets/box86_64/box64-0.3.1-4f6a66f.tzst https://raw.githubusercontent.com/alexvorxx/winlator/main/app/src/main/assets/box86_64/box64-0.3.1-4f6a66f.tzst
+        wget -O app/src/main/assets/box86_64/box64-0.3.5-11563f3.tzst https://raw.githubusercontent.com/alexvorxx/winlator/main/app/src/main/assets/box86_64/box64-0.3.5-11563f3.tzst
+        wget -O app/src/main/assets/box86_64/rcfiles/box64.rc https://raw.githubusercontent.com/alexvorxx/winlator/main/app/src/main/assets/box86_64/rcfiles/box64.rc
 
-          mkdir -p "$target"
-          files=$(curl -s "$api" | jq -r '.[] | select(.type=="file") | .download_url')
+        # dxwrapper
+        wget -O app/src/main/assets/dxwrapper/dxvk-2.4-gplasync.tzst https://raw.githubusercontent.com/alexvorxx/winlator/main/app/src/main/assets/dxwrapper/dxvk-2.4-gplasync.tzst
+        wget -O app/src/main/assets/dxwrapper/wined3d-9.18.tzst https://raw.githubusercontent.com/alexvorxx/winlator/main/app/src/main/assets/dxwrapper/wined3d-9.18.tzst
 
-          for url in $files; do
-            fname=$(basename "$url")
-            echo "⬇️ Downloading $fname from $folder"
-            curl -L "$url" -o "$target/$fname"
-          done
-        done
+        # graphics_driver
+        wget -O app/src/main/assets/graphics_driver/llvmpipe-25.0.0.tzst https://raw.githubusercontent.com/alexvorxx/winlator/main/app/src/main/assets/graphics_driver/llvmpipe-25.0.0.tzst
+        wget -O app/src/main/assets/graphics_driver/virgl-23.1.9.tzst https://raw.githubusercontent.com/alexvorxx/winlator/main/app/src/main/assets/graphics_driver/virgl-23.1.9.tzst
 
-    - name: Download imagefs.txz
-      run: |
-        cd ./app/src/main/assets
-        wget -O imagefs.txz https://github.com/TGP-17/winlator/raw/refs/heads/alexvorxx-glibc/app/src/main/assets/imagefs.txz
+        # soundfonts
+        wget -O app/src/main/assets/soundfonts/wt_210k_G.sf2 https://raw.githubusercontent.com/alexvorxx/winlator/main/app/src/main/assets/soundfonts/wt_210k_G.sf2
+        wget -O app/src/main/assets/soundfonts/wt_210k_G_LICENSE.txt https://raw.githubusercontent.com/alexvorxx/winlator/main/app/src/main/assets/soundfonts/wt_210k_G_LICENSE.txt
+
+        # wincomponents
+        wget -O app/src/main/assets/wincomponents/direct3d.tzst https://raw.githubusercontent.com/alexvorxx/winlator/main/app/src/main/assets/wincomponents/direct3d.tzst
+
+        # imagefs.txz
+        wget -O app/src/main/assets/imagefs.txz https://raw.githubusercontent.com/alexvorxx/winlator/main/app/src/main/assets/imagefs.txz
 
     - name: Set up JDK 17
       uses: actions/setup-java@v4
