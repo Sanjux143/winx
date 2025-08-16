@@ -17,8 +17,8 @@ jobs:
       
     - name: download missing files
       run: |
-       cd ./app/src/main/assets
-       wget -O imagefs.txz https://github.com/TGP-17/winlator/raw/refs/heads/alexvorxx-glibc/app/src/main/assets/imagefs.txz
+       cd ./app/src/main/assets/wincomponents
+       wget -O direct3d.tzst https://media.githubusercontent.com/media/alexvorxx/winlator/refs/heads/main/app/src/main/assets/wincomponents/direct3d.tzst
     
     - name: set up JDK 17
       uses: actions/setup-java@v4
