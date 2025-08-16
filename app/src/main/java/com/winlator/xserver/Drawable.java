@@ -50,6 +50,14 @@ public class Drawable extends XResource {
         this.texture = texture;
     }
 
+    public boolean isDirty() {
+    return texture != null && texture.needsUpdate();
+}
+
+public void clearDirty() {
+    if (texture != null) texture.setNeedsUpdate(false);
+}
+
     public ByteBuffer getData() {
         return data;
     }
